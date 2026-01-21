@@ -4,7 +4,7 @@ subtitle: Web2 experiences
 metric: 12+
 metricText: years of experience
 b2subtitle: Projects
-b2content: AI agent swarm, RAG, DevSecOps improvements, marketplace pricing engine  
+b2content: AI agent swarm, RAG, DevSecOps pipeline, Orderbook, Marketplace pricing engine  
 b3subtitle: Typical Techstack
 b3content: Typescript, Rust, AWS, GCP, K8s, Coinbase Development Platform 
 link: Linkedin
