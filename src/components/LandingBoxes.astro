@@ -11,11 +11,11 @@ import * as Intro from "../content/landing/intro.md";
 import * as PublicGoods from "../content/landing/pg.md";
 import * as Team from "../content/landing/team.md";
 
-import * as Web3 from "../content/landing/web3.md";
+import * as CtoCiso from "../content/landing/ctociso.md";
 
 import hackImg1 from "../assets/ethglobal_sg.jpg";
 
-import * as Web3Profile from "../content/landing/web3-profile.md";
+import * as CtoCisoProfile from "../content/landing/ctociso-profile.md";
 
 console.log(Intro.frontmatter);
 ---
@@ -34,11 +34,11 @@ console.log(Intro.frontmatter);
 </div>
 
 <div>
-<Boxes content={Web3} >
+<Boxes content={CtoCiso} >
   <div slot="box2">
     <div class="m-auto p-8">
       <div class="text-slate-500  justify-center text-lg font-normal ">
-          <Web3Profile.Content />
+          <CtoCisoProfile.Content />
       </div>
       <div class="p-4">
         <img src={hackImg1.src} />
