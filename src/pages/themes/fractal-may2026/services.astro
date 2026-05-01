@@ -1,0 +1,165 @@
+---
+import Layout from "../../../layouts/FractalMay2026.astro";
+import BoxDimChip from "../../../components/BoxDimChip.astro";
+import { services, contact, boxLine } from "../../../data/spec";
+import { lSystemTree } from "../../../data/fractals";
+
+const phases = [
+	{ k: "T+0d",   t: "Diagnostic",     d: "Read-only access. Codebase audit. Stakeholder interviews. We hand you what we found." },
+	{ k: "T+30d",  t: "Engagement",     d: "Embedded with the team. Decisions made in your standups, not our slides." },
+	{ k: "T+90d",  t: "First milestone", d: "Concrete artifact in production. Threat model, hire, ship — whichever the diagnostic called." },
+	{ k: "T+180d", t: "Renew or close", d: "Either we earned the next quarter or we close clean and document the runbook." },
+];
+
+const faq = [
+	{ q: "How is this different from a consultant?", a: "Consultants advise. We embed, decide, and ship. Code commits land under our handle, on-call rotation includes us." },
+	{ q: "Do you compete with full-time hires?", a: "No — we precede them. Most engagements end with us writing the JD and interviewing the hire who replaces us." },
+	{ q: "How do you bill?", a: "Monthly retainer scoped to days/week. No platforms, no markups, no resold engineers." },
+	{ q: "Can you sign our customer's security questionnaire?", a: "Yes. We bring an SOC2 / ISO27001-aligned posture statement and have responded to MAS, FINMA, and US-financial vendor reviews." },
+];
+---
+<Layout
+	title="fractal.box — services · may 2026"
+	active="services"
+	iter={2}
+	pageTag="§II · SERVICES"
+	pageGreek="ƒ²(△) — three contractions, one attractor"
+>
+	<section style="padding-top:4rem;">
+		<div class="wrap">
+			<div class="eyebrow"><span class="blink"></span> // §II · the tree branches</div>
+			<h1 class="serif-h1">Three branches. Each opens with a thirty-day reading.</h1>
+			<p class="serif-lede">Engagement length scales with scope. We start small, the work earns its keep, the engagement grows.</p>
+
+			<aside style="margin-top:3rem; padding:1.5rem; border:1px solid var(--border); background:var(--bg-card); border-radius:0;">
+				<div style="display:flex; justify-content:space-between; align-items:center; gap:1rem; flex-wrap:wrap;">
+					<div class="idx" style="font-family:'JetBrains Mono',monospace; color:var(--mint); font-size:0.72rem; letter-spacing:0.2em; text-transform:uppercase;">// fig II — engagement decomposition · live</div>
+					<div style="--chip-color: var(--mint); --chip-border: var(--border-hi); --chip-bg: var(--bg-elevated); --chip-name: var(--amber); --chip-val: var(--math);">
+						<BoxDimChip for="ltree" compact />
+					</div>
+				</div>
+				<svg viewBox="-220 -10 440 200" aria-hidden="false" role="img" style="width:100%; height:auto; max-height:240px; margin-top:1rem;">
+					{services.map((s, i) => (
+						<g class="ltree-grp" transform={`translate(${-150 + i * 150} 180) rotate(180)`} style={`animation-delay: ${i * 0.4}s`}>
+							<path d={lSystemTree(5, 24, 22)} fill="none" stroke="#a6d4e0" stroke-width="0.9" stroke-linecap="round" class="ltree-path"/>
+						</g>
+					))}
+					<text x="-150" y="200" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="9" fill="#a6d4e0" letter-spacing="0.1em">CTO</text>
+					<text x="0" y="200" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="9" fill="#a6d4e0" letter-spacing="0.1em">CISO</text>
+					<text x="150" y="200" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="9" fill="#a6d4e0" letter-spacing="0.1em">ENG</text>
+				</svg>
+			</aside>
+		</div>
+	</section>
+
+	<section>
+		<div class="wrap">
+			<div class="section-tag"><span class="dot"></span> // detail</div>
+			<h2 class="serif-h2">By branch.</h2>
+
+			<div style="display:grid; gap:1.25rem; margin-top:2.5rem;">
+				{services.map((s, i) => (
+					<article style={`display:grid; grid-template-columns:1fr; gap:1.5rem; padding:2rem; border:1px solid var(--border); background:var(--bg-card); position:relative;`}>
+						<div style="display:grid; grid-template-columns:1fr; gap:0.5rem;">
+							<div class="idx" style="color:var(--mint); font-family:'JetBrains Mono',monospace; font-size:0.72rem; letter-spacing:0.2em; text-transform:uppercase;">SVC.0{i + 1} · {s.id}</div>
+							<h3 class="serif-h3" style="font-size:1.6rem; margin:0;">{s.name}</h3>
+							<p class="serif-lede" style="font-size:1rem; margin-top:0.4rem;">{s.lead}</p>
+						</div>
+						<ul style="margin:0; padding-left:1.1rem; color:var(--fg); font-size:0.95rem;">
+							{s.bullets.map((b) => <li style="margin:0.4rem 0;">{b}</li>)}
+						</ul>
+					</article>
+				))}
+			</div>
+		</div>
+	</section>
+
+	<div class="wrap koch-divider" aria-hidden="true">
+		<svg viewBox="-600 -14 1200 28" preserveAspectRatio="none">
+			<path d="M-600,0 L600,0" fill="none" stroke="currentColor" stroke-width="0.6" stroke-dasharray="2 6"/>
+		</svg>
+	</div>
+
+	<section>
+		<div class="wrap">
+			<div class="section-tag"><span class="dot"></span> // engagement timeline</div>
+			<h2 class="serif-h2">How an engagement unfolds.</h2>
+			<p class="lede">Read-only diagnostic first. We earn the rest.</p>
+
+			<ol style="margin-top:2.5rem; padding:0; list-style:none; display:grid; gap:0;">
+				{phases.map((p, i) => (
+					<li
+						class="phase"
+						style={`
+							display:grid; grid-template-columns:9rem 1fr; gap:1.5rem;
+							padding:1.5rem 0; border-top:1px solid var(--border);
+							animation: phase-in 600ms cubic-bezier(0.16, 1, 0.3, 1) ${0.15 * i}s both;
+						`}
+					>
+						<div>
+							<div style="font-family:'JetBrains Mono',monospace; color:var(--amber); font-size:1.3rem; letter-spacing:0.05em;">{p.k}</div>
+							<div style="font-family:'JetBrains Mono',monospace; color:var(--muted); font-size:0.7rem; letter-spacing:0.16em; text-transform:uppercase; margin-top:0.3rem;">phase {String(i + 1).padStart(2, "0")}</div>
+						</div>
+						<div>
+							<h3 class="serif-h3" style="margin:0 0 0.4rem;">{p.t}</h3>
+							<p style="color:var(--muted); margin:0;">{p.d}</p>
+						</div>
+					</li>
+				))}
+			</ol>
+		</div>
+	</section>
+
+	<section>
+		<div class="wrap">
+			<div class="section-tag"><span class="dot"></span> // FAQ</div>
+			<h2 class="serif-h2">Common questions, briefly.</h2>
+			<div style="margin-top:2.5rem; border-top:1px solid var(--border);">
+				{faq.map((f) => (
+					<details style="border-bottom:1px solid var(--border); padding:1.1rem 0;">
+						<summary style="cursor:pointer; font-family:'Iowan Old Style',Georgia,serif; font-size:1.1rem; color:var(--fg); list-style:none; display:flex; gap:0.7rem; align-items:baseline;">
+							<span style="color:var(--mint); font-family:'JetBrains Mono',monospace; font-size:0.85rem;">▸</span>
+							<span>{f.q}</span>
+						</summary>
+						<p style="color:var(--muted); margin:0.7rem 0 0 1.5rem; font-size:0.95rem;">{f.a}</p>
+					</details>
+				))}
+			</div>
+		</div>
+	</section>
+
+	<section>
+		<div class="wrap" style="text-align:center;">
+			<div class="section-tag" style="justify-content:center;"><span class="dot"></span> // next iteration</div>
+			<h2 class="serif-h2" style="margin:0.5rem auto 1.5rem; max-width:none;">Open the channel.</h2>
+			<a class="btn primary" href={`mailto:${contact.email}`}>↪ {contact.email}</a>
+		</div>
+	</section>
+
+	<style>
+		.ltree-grp {
+			animation: ltree-grow 5s cubic-bezier(0.16, 1, 0.3, 1) infinite;
+			transform-origin: 50% 100%; transform-box: fill-box;
+		}
+		.ltree-path {
+			stroke-dasharray: 600;
+			stroke-dashoffset: 600;
+			animation: ltree-draw 5s cubic-bezier(0.16, 1, 0.3, 1) infinite;
+		}
+		@keyframes ltree-draw {
+			0%   { stroke-dashoffset: 600; opacity: 0.2; }
+			30%  { stroke-dashoffset: 0;   opacity: 1; }
+			70%  { stroke-dashoffset: 0;   opacity: 1; }
+			100% { stroke-dashoffset: 600; opacity: 0.2; }
+		}
+		@keyframes phase-in {
+			0%   { opacity: 0; transform: translateX(-12px); }
+			100% { opacity: 1; transform: translateX(0); }
+		}
+		details[open] summary span:first-child { color: var(--amber); }
+		@media (prefers-reduced-motion: reduce) {
+			.ltree-grp, .ltree-path, .phase { animation: none; }
+			.ltree-path { stroke-dashoffset: 0; opacity: 1; }
+		}
+	</style>
+</Layout>

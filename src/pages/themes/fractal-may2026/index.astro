@@ -1,0 +1,137 @@
+---
+import Layout from "../../../layouts/FractalMay2026.astro";
+import BoxDimChip from "../../../components/BoxDimChip.astro";
+import JuliaConsole from "../../../components/JuliaConsole.astro";
+import {
+	subtagline, services, pillars, clients, cases, contact, boxLine,
+} from "../../../data/spec";
+import { sierpinskiPolygons } from "../../../data/fractals";
+---
+<Layout
+	title="fractal.box — overview · may 2026"
+	active="index"
+	iter={1}
+	pageTag="§I · OVERVIEW"
+	pageGreek="ƒ¹(△) — first iteration · root attractor"
+>
+	<section style="padding-top:4rem;">
+		<div class="wrap">
+			<div style="display:grid; gap:3rem; grid-template-columns:1fr; align-items:center;">
+				<style>
+					@media (min-width: 980px) {
+						.hero-row { grid-template-columns: 1.05fr 0.95fr !important; }
+					}
+				</style>
+				<div class="hero-row" style="display:grid; gap:3rem; grid-template-columns:1fr; align-items:center;">
+					<div>
+						<div class="eyebrow"><span class="blink"></span> SHIP with Trust</div>
+						<h1 class="serif-h1">
+							<span style="color:var(--amber);">Fractional CTO &amp; CISO</span>
+							for teams that ship secure, private, local-first software.
+						</h1>
+						<p class="serif-lede">{subtagline}</p>
+						<p class="serif-lede" style="margin-top:1rem; font-size:1rem; color:var(--math); font-style:italic;">{boxLine}</p>
+						<div style="margin-top:1.25rem; display:flex; gap:0.6rem; flex-wrap:wrap; --chip-color: var(--mint); --chip-border: var(--border-hi); --chip-bg: var(--bg-elevated); --chip-name: var(--amber); --chip-val: var(--math);">
+							<BoxDimChip for="mandelbrot" label="studio mark" />
+							<BoxDimChip for="sierpinski" label="approach" />
+						</div>
+						<div class="btn-row">
+							<a class="btn primary" href={`mailto:${contact.email}`}>↪ uplink</a>
+							<a class="btn" href="/themes/fractal-may2026/services">▸ services</a>
+							<a class="btn" href="/themes/fractal-may2026/approach">▸ approach</a>
+						</div>
+					</div>
+					<aside>
+						<JuliaConsole headLabel="J(C) · STUDIO MARK · LIVE" />
+					</aside>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<div class="wrap koch-divider" aria-hidden="true">
+		<svg viewBox="-600 -14 1200 28" preserveAspectRatio="none">
+			<path d="M-600,0 L600,0" fill="none" stroke="currentColor" stroke-width="0.6" stroke-dasharray="2 6"/>
+		</svg>
+	</div>
+
+	<section>
+		<div class="wrap">
+			<div class="section-tag"><span class="dot"></span> trusted by</div>
+			<div style="display:flex; flex-wrap:wrap; gap:0.5rem; margin-top:1.25rem;">
+				{clients.map((c) => (
+					<span style="color:var(--muted); font-family:'JetBrains Mono',monospace; font-size:0.85rem; padding:0.4rem 0.8rem; border:1px solid var(--border);">{c}</span>
+				))}
+			</div>
+		</div>
+	</section>
+
+	<section>
+		<div class="wrap">
+			<div class="section-tag"><span class="dot"></span> // 02 — three branches</div>
+			<h2 class="serif-h2">Three ways we plug in.</h2>
+			<p class="lede">A 30-day diagnostic; continues only if it earns its keep.</p>
+
+			<div class="card-grid cols-3" style="margin-top:2.5rem;">
+				{services.map((s, i) => (
+					<article class="card-cell">
+						<div class="idx">SVC.0{i + 1}</div>
+						<h3 class="serif-h3">{s.name}</h3>
+						<p style="color:var(--muted); margin:0;">{s.lead}</p>
+					</article>
+				))}
+			</div>
+			<div class="btn-row" style="margin-top:2rem;">
+				<a class="btn" href="/themes/fractal-may2026/services">▸ deeper · services →</a>
+			</div>
+		</div>
+	</section>
+
+	<section>
+		<div class="wrap">
+			<div class="section-tag"><span class="dot"></span> // 03 — same triangle, every scale</div>
+			<h2 class="serif-h2">Local-first, privacy-preserving, compliance-aware, secure-by-design.</h2>
+			<p class="serif-lede" style="margin-top:0.5rem;">Four pillars — the same shape of attention applied at progressively finer grain.</p>
+
+			<div class="card-grid cols-2" style="margin-top:2.5rem;">
+				{pillars.map((p, i) => (
+					<article class="card-cell" style="display:grid; grid-template-columns:80px 1fr; gap:1rem; align-items:start;">
+						<svg viewBox="-50 -50 100 100" aria-hidden="true" style="width:80px; height:80px; color:var(--mint);">
+							<g stroke="currentColor" fill="none" stroke-width="0.9">
+								{sierpinskiPolygons(i + 1, 88, 0, 0).map((pts) => <polygon points={pts}/>)}
+							</g>
+						</svg>
+						<div>
+							<div class="idx">PILLAR · {p.n}</div>
+							<h3 class="serif-h3">{p.name}</h3>
+							<p style="color:var(--muted); margin:0.4rem 0 0; font-size:0.92rem;">{p.body}</p>
+						</div>
+					</article>
+				))}
+			</div>
+			<div class="btn-row" style="margin-top:2rem;">
+				<a class="btn" href="/themes/fractal-may2026/approach">▸ deeper · approach →</a>
+			</div>
+		</div>
+	</section>
+
+	<section>
+		<div class="wrap">
+			<div class="section-tag"><span class="dot"></span> // 04 — three pins</div>
+			<h2 class="serif-h2">Selected engagements.</h2>
+			<div class="card-grid cols-3" style="margin-top:2.5rem;">
+				{cases.map((c) => (
+					<article class="card-cell">
+						<div style="font-family:'JetBrains Mono',monospace; color:var(--amber); font-size:1.7rem; line-height:1; text-shadow:0 0 8px rgba(210,168,87,0.3);">{c.metric}</div>
+						<div class="idx">// {c.metricLabel}</div>
+						<h3 class="serif-h3">{c.client}</h3>
+						<p style="color:var(--muted); font-size:0.92rem; margin:0;">{c.outcome}</p>
+					</article>
+				))}
+			</div>
+			<div class="btn-row" style="margin-top:2rem;">
+				<a class="btn" href="/themes/fractal-may2026/work">▸ deeper · work →</a>
+			</div>
+		</div>
+	</section>
+</Layout>

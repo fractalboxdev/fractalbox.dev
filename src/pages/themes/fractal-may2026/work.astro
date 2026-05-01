@@ -1,0 +1,132 @@
+---
+import Layout from "../../../layouts/FractalMay2026.astro";
+import BoxDimChip from "../../../components/BoxDimChip.astro";
+import { cases, clients, contact, boxLine } from "../../../data/spec";
+
+const caseExtended = [
+	{
+		stack: ["TypeScript", "Effect-TS", "Cloudflare Workers", "EVM tooling"],
+		duration: "9 weeks",
+		role: "Embedded fractional CTO + sec lead",
+	},
+	{
+		stack: ["Rust", "Postgres", "Redis", "STRIDE", "Wireshark capture"],
+		duration: "14 weeks",
+		role: "Fractional CISO · audit prep",
+	},
+	{
+		stack: ["Go", "IPFS", "libp2p", "Prometheus + SignOz"],
+		duration: "26 weeks",
+		role: "Secure-by-design eng + open-source",
+	},
+];
+---
+<Layout
+	title="fractal.box — work · may 2026"
+	active="work"
+	iter={4}
+	pageTag="§IV · WORK"
+	pageGreek="ƒ⁴(△) — outcomes recorded as δ = (after − before)"
+>
+	<section style="padding-top:4rem;">
+		<div class="wrap">
+			<div class="eyebrow"><span class="blink"></span> // §IV · what we shipped</div>
+			<h1 class="serif-h1">Outcomes recorded with the metric we tracked.</h1>
+			<p class="serif-lede">Not vanity stats. Not testimonial sliders. The number we cared about, and what it took.</p>
+			<p class="serif-lede" style="margin-top:1rem; font-size:1rem; color:var(--math); font-style:italic;">{boxLine}</p>
+			<div style="margin-top:1.25rem; --chip-color: var(--mint); --chip-border: var(--border-hi); --chip-bg: var(--bg-elevated); --chip-name: var(--amber); --chip-val: var(--math);">
+				<BoxDimChip for="mandelbrot" label="case envelope" />
+			</div>
+		</div>
+	</section>
+
+	<section>
+		<div class="wrap">
+			<div class="section-tag"><span class="dot"></span> // trust register</div>
+			<div class="bordered-grid" style="display:grid; grid-template-columns:repeat(auto-fill, minmax(140px, 1fr)); gap:0; margin-top:1.5rem; border:1px solid var(--border);">
+				{clients.map((c) => (
+					<div
+						class="logo-cell"
+						style="padding:1.4rem 1rem; text-align:center; border-right:1px solid var(--border); border-bottom:1px solid var(--border); font-family:'JetBrains Mono',monospace; font-size:0.85rem; letter-spacing:0.06em; color:var(--muted); background:var(--bg-card);"
+					>
+						{c}
+					</div>
+				))}
+			</div>
+		</div>
+	</section>
+
+	<div class="wrap koch-divider" aria-hidden="true">
+		<svg viewBox="-600 -14 1200 28" preserveAspectRatio="none">
+			<path d="M-600,0 L600,0" fill="none" stroke="currentColor" stroke-width="0.6" stroke-dasharray="2 6"/>
+		</svg>
+	</div>
+
+	<section>
+		<div class="wrap">
+			<div class="section-tag"><span class="dot"></span> // case studies · in depth</div>
+			<h2 class="serif-h2">Three monoliths.</h2>
+
+			<div class="bordered-grid" style="display:grid; gap:0; margin-top:2.5rem; border-top:1px solid var(--border);">
+				{cases.map((c, i) => (
+					<article
+						class="case-row"
+						style="display:grid; grid-template-columns:1fr; gap:1.5rem; padding:3rem 0; border-bottom:1px solid var(--border);"
+					>
+						<div style="display:grid; grid-template-columns:1fr; gap:1.25rem;">
+							<style>
+								@media (min-width: 920px) {
+									.case-row .case-grid { grid-template-columns: 240px 1fr !important; }
+								}
+							</style>
+							<div class="case-grid" style="display:grid; gap:1.25rem; grid-template-columns:1fr;">
+								<div>
+									<div style="font-family:'JetBrains Mono',monospace; color:var(--amber); font-size:3rem; letter-spacing:-0.01em; line-height:1; text-shadow:0 0 12px rgba(210,168,87,0.4);">{c.metric}</div>
+									<div style="font-family:'JetBrains Mono',monospace; color:var(--muted); font-size:0.7rem; letter-spacing:0.16em; text-transform:uppercase; margin-top:0.5rem;">{c.metricLabel}</div>
+									<div style="font-family:'JetBrains Mono',monospace; color:var(--mint); font-size:0.7rem; letter-spacing:0.16em; text-transform:uppercase; margin-top:0.8rem;">CASE.0{i + 1}</div>
+								</div>
+								<div>
+									<h3 class="serif-h3" style="font-size:1.6rem; margin:0 0 1rem;">{c.client}</h3>
+
+									<div style="display:grid; gap:0.6rem; grid-template-columns:1fr; margin-bottom:1.25rem;">
+										<div style="display:grid; grid-template-columns:5.5rem 1fr; gap:1rem; padding:0.5rem 0; border-top:1px solid var(--border);">
+											<span style="color:var(--muted); font-family:'JetBrains Mono',monospace; font-size:0.7rem; letter-spacing:0.18em; text-transform:uppercase;">role</span>
+											<span style="font-family:'JetBrains Mono',monospace; font-size:0.85rem;">{caseExtended[i].role}</span>
+										</div>
+										<div style="display:grid; grid-template-columns:5.5rem 1fr; gap:1rem; padding:0.5rem 0; border-top:1px solid var(--border);">
+											<span style="color:var(--muted); font-family:'JetBrains Mono',monospace; font-size:0.7rem; letter-spacing:0.18em; text-transform:uppercase;">duration</span>
+											<span style="font-family:'JetBrains Mono',monospace; font-size:0.85rem;">{caseExtended[i].duration}</span>
+										</div>
+										<div style="display:grid; grid-template-columns:5.5rem 1fr; gap:1rem; padding:0.5rem 0; border-top:1px solid var(--border); border-bottom:1px solid var(--border);">
+											<span style="color:var(--muted); font-family:'JetBrains Mono',monospace; font-size:0.7rem; letter-spacing:0.18em; text-transform:uppercase;">stack</span>
+											<span style="display:flex; gap:0.4rem; flex-wrap:wrap;">
+												{caseExtended[i].stack.map((s) => (
+													<span style="font-family:'JetBrains Mono',monospace; font-size:0.72rem; padding:0.15rem 0.5rem; border:1px solid var(--border); color:var(--mint);">{s}</span>
+												))}
+											</span>
+										</div>
+									</div>
+
+									<p style="margin:0 0 0.6rem; font-size:0.95rem;"><span style="color:var(--mint); font-family:'JetBrains Mono',monospace; font-size:0.7rem; letter-spacing:0.16em;">PROBLEM ▸</span> <span style="color:var(--muted);">{c.problem}</span></p>
+									<p style="margin:0; font-size:0.95rem;"><span style="color:var(--amber); font-family:'JetBrains Mono',monospace; font-size:0.7rem; letter-spacing:0.16em;">OUTCOME ▸</span> <span class="serif" style="font-style:italic;">{c.outcome}</span></p>
+								</div>
+							</div>
+						</div>
+					</article>
+				))}
+			</div>
+		</div>
+	</section>
+
+	<section>
+		<div class="wrap" style="text-align:center;">
+			<div class="section-tag" style="justify-content:center;"><span class="dot"></span> // continue iterating</div>
+			<h2 class="serif-h2" style="margin:0.5rem auto 1.5rem; max-width:none;">Who shipped it. How to reach them.</h2>
+			<div style="display:flex; gap:0.75rem; justify-content:center; flex-wrap:wrap;">
+				<a class="btn" href="/themes/fractal-may2026/team">▸ team · i = 5 →</a>
+				<a class="btn primary" href="/themes/fractal-may2026/contact">↪ contact · i = 6 →</a>
+			</div>
+		</div>
+	</section>
+
+</Layout>

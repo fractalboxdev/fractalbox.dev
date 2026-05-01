@@ -1,0 +1,635 @@
+---
+import Layout from "../../../layouts/FractalMay2026.astro";
+import {
+	sierpinskiPolygons,
+	mandelbrotCardioidPath,
+	mandelbrotBulbPath,
+	lSystemTree,
+	goldenSpiralPath,
+} from "../../../data/fractals";
+
+// Pre-compute fractal paths used across the studies
+const sierp1 = sierpinskiPolygons(1, 80, 0, 0);
+const sierp2 = sierpinskiPolygons(2, 80, 0, 0);
+const sierp3 = sierpinskiPolygons(3, 80, 0, 0);
+const sierp4 = sierpinskiPolygons(4, 80, 0, 0);
+const sierpShield = sierpinskiPolygons(4, 80, 0, -2);
+const cardioid = mandelbrotCardioidPath(64, 0, 0);
+const bulb = mandelbrotBulbPath(64, 0, 0);
+const sandboxTree = lSystemTree(6, 26, 22, 0, 0, 0, 0.7);
+const eyeSpiral = goldenSpiralPath(2.4, 0.5, 200);
+
+const studies = [
+	{ n: 1, name: "Bracket-frame wordmark",      use: "Primary header lockup" },
+	{ n: 2, name: "Recursive-F monogram",        use: "Favicon · social share" },
+	{ n: 3, name: "Box-leaking-fractal",         use: "Hero · marketing" },
+	{ n: 4, name: "Cardioid sigil",              use: "Spec docs · watermark" },
+	{ n: 5, name: "Triangle-cursor lockup",      use: "Footer · light chrome" },
+	{ n: 6, name: "Inverted Sierpinski",         use: "Sealed-doc watermark" },
+	{ n: 7, name: "z² + c badge",                use: "GitHub repo tagline" },
+	{ n: 8, name: "Iteration row",               use: "OG image · banners" },
+	{ n: 9, name: "Recursive Tesseract",         use: "AI · higher-dimension brand" },
+	{ n: 10, name: "Sierpinski Shield",          use: "Security cert · audit deck" },
+	{ n: 11, name: "Isometric Labyrinth",        use: "Threat-modelling decks" },
+	{ n: 12, name: "Shattered Perimeter",        use: "Active-defence marketing" },
+	{ n: 13, name: "Concentric Nodes",           use: "Defense-in-depth diagrams" },
+	{ n: 14, name: "Fractal Eye in the Box",     use: "Surveillance · monitoring" },
+	{ n: 15, name: "Encryption Core",            use: "Crypto / privacy product" },
+	{ n: 16, name: "Algorithmic Sandbox",        use: "Sandbox · agentic AI brand" },
+	{ n: 17, name: "Polygon Keyhole",            use: "IAM · access products" },
+	{ n: 18, name: "Code Bracket Cube",          use: "Dev-tool · API mark" },
+];
+---
+<Layout
+	title="fractal.box · logo studies"
+	active="logos"
+	iter={1}
+	pageTag="LOGO STUDIES"
+	pageGreek="eight specimens · pure CSS / SVG"
+>
+	<section style="padding-top:5rem;">
+		<div class="wrap">
+			<div class="eyebrow"><span class="blink"></span> // wordmark · sigil · monogram</div>
+			<h1 class="serif-h1">Eight logo studies, all CSS.</h1>
+			<p class="serif-lede">Each specimen reuses vocabulary already in the system — HUD brackets, the Mandelbrot cardioid, Sierpinski iteration, the wordmark sans. Pick the one that earns the click.</p>
+		</div>
+	</section>
+
+	<section>
+		<div class="wrap">
+			<div class="logo-grid">
+				{studies.map((s) => (
+					<article class="logo-card">
+						<div class="logo-stage">
+							{s.n === 1 && (
+								<div class="lg-1">
+									<span class="brc tl"></span><span class="brc tr"></span>
+									<span class="brc bl"></span><span class="brc br"></span>
+									<span class="wm-1">Fractal<span class="wm-1-box">Box</span></span>
+								</div>
+							)}
+
+							{s.n === 2 && (
+								<svg class="lg-2" viewBox="0 0 80 100" aria-hidden="true">
+									{/* Outer F outline made of 3 strokes */}
+									<g stroke="currentColor" fill="none" stroke-width="1.6">
+										<rect x="6" y="4" width="8" height="92"/>
+										<rect x="14" y="4" width="58" height="8"/>
+										<rect x="14" y="46" width="42" height="8"/>
+									</g>
+									{/* Smaller filled Fs nested inside each parent stroke (depth 1) */}
+									<g fill="currentColor">
+										{/* Inside vertical stroke — tiny F oriented same way */}
+										<g transform="translate(7 6) scale(0.06)">
+											<rect x="6" y="4" width="8" height="92"/>
+											<rect x="14" y="4" width="58" height="8"/>
+											<rect x="14" y="46" width="42" height="8"/>
+										</g>
+										<g transform="translate(7 28) scale(0.06)">
+											<rect x="6" y="4" width="8" height="92"/>
+											<rect x="14" y="4" width="58" height="8"/>
+											<rect x="14" y="46" width="42" height="8"/>
+										</g>
+										<g transform="translate(7 50) scale(0.06)">
+											<rect x="6" y="4" width="8" height="92"/>
+											<rect x="14" y="4" width="58" height="8"/>
+											<rect x="14" y="46" width="42" height="8"/>
+										</g>
+										<g transform="translate(7 72) scale(0.06)">
+											<rect x="6" y="4" width="8" height="92"/>
+											<rect x="14" y="4" width="58" height="8"/>
+											<rect x="14" y="46" width="42" height="8"/>
+										</g>
+										{/* Inside top horizontal — Fs running across */}
+										<g transform="translate(20 5) scale(0.05)">
+											<rect x="6" y="4" width="8" height="92"/>
+											<rect x="14" y="4" width="58" height="8"/>
+											<rect x="14" y="46" width="42" height="8"/>
+										</g>
+										<g transform="translate(38 5) scale(0.05)">
+											<rect x="6" y="4" width="8" height="92"/>
+											<rect x="14" y="4" width="58" height="8"/>
+											<rect x="14" y="46" width="42" height="8"/>
+										</g>
+										<g transform="translate(56 5) scale(0.05)">
+											<rect x="6" y="4" width="8" height="92"/>
+											<rect x="14" y="4" width="58" height="8"/>
+											<rect x="14" y="46" width="42" height="8"/>
+										</g>
+										{/* Inside middle horizontal */}
+										<g transform="translate(20 47) scale(0.05)">
+											<rect x="6" y="4" width="8" height="92"/>
+											<rect x="14" y="4" width="58" height="8"/>
+											<rect x="14" y="46" width="42" height="8"/>
+										</g>
+										<g transform="translate(38 47) scale(0.05)">
+											<rect x="6" y="4" width="8" height="92"/>
+											<rect x="14" y="4" width="58" height="8"/>
+											<rect x="14" y="46" width="42" height="8"/>
+										</g>
+									</g>
+								</svg>
+							)}
+
+							{s.n === 3 && (
+								<div class="lg-3">
+									<span class="lg-3-box"></span>
+									<svg class="lg-3-tri" viewBox="-50 -50 100 100" aria-hidden="true">
+										<g stroke="currentColor" fill="none" stroke-width="1.4">
+											{sierp3.map((p) => <polygon points={p}/>)}
+										</g>
+									</svg>
+								</div>
+							)}
+
+							{s.n === 4 && (
+								<svg class="lg-4" viewBox="-100 -100 200 200" aria-hidden="true">
+									<circle cx="0" cy="0" r="92" stroke="currentColor" stroke-dasharray="2 4" fill="none" stroke-width="0.5" opacity="0.45"/>
+									<g stroke="currentColor" fill="rgba(166,212,224,0.10)" stroke-width="1.6">
+										<path d={cardioid}/>
+										<path d={bulb}/>
+									</g>
+								</svg>
+							)}
+
+							{s.n === 5 && (
+								<div class="lg-5">
+									<span class="lg-5-tri">▸</span>
+									<span class="lg-5-name">Fractal<span class="wm-1-box">Box</span></span>
+									<span class="lg-5-cursor"></span>
+								</div>
+							)}
+
+							{s.n === 6 && (
+								<svg class="lg-6" viewBox="-50 -50 100 100" aria-hidden="true">
+									<g stroke="currentColor" fill="none" stroke-width="1.6">
+										<polygon points="-44,-26 44,-26 0,46"/>
+									</g>
+									<g fill="currentColor" opacity="0.85">
+										<polygon points="-22,-26 22,-26 0,10"/>
+									</g>
+								</svg>
+							)}
+
+							{s.n === 7 && (
+								<div class="lg-7">
+									<span class="lg-7-pre">M(c) ·</span>
+									<span class="lg-7-eq"><em>z</em> → <em>z</em>² + <em>c</em></span>
+								</div>
+							)}
+
+							{s.n === 8 && (
+								<div class="lg-8">
+									<svg viewBox="-50 -50 100 100" aria-hidden="true" style="opacity:0.4;">
+										<g stroke="currentColor" fill="none" stroke-width="1.4">
+											{sierp1.map((p) => <polygon points={p}/>)}
+										</g>
+									</svg>
+									<svg viewBox="-50 -50 100 100" aria-hidden="true" style="opacity:0.7;">
+										<g stroke="currentColor" fill="none" stroke-width="1.2">
+											{sierp2.map((p) => <polygon points={p}/>)}
+										</g>
+									</svg>
+									<svg viewBox="-50 -50 100 100" aria-hidden="true">
+										<g stroke="currentColor" fill="none" stroke-width="1">
+											{sierp3.map((p) => <polygon points={p}/>)}
+										</g>
+									</svg>
+								</div>
+							)}
+
+							{/* ── #9 · Recursive Tesseract ───────────────────────────── */}
+							{s.n === 9 && (
+								<svg class="lg-9" viewBox="-60 -60 120 120" aria-hidden="true">
+									<defs>
+										<linearGradient id="tess-grad" x1="0" y1="0" x2="1" y2="1">
+											<stop offset="0%"   stop-color="rgba(166,212,224,0.45)"/>
+											<stop offset="50%"  stop-color="rgba(124,228,255,0.55)"/>
+											<stop offset="100%" stop-color="rgba(166,212,224,0.30)"/>
+											<animate attributeName="x1" values="0;0.6;0" dur="6s" repeatCount="indefinite"/>
+										</linearGradient>
+									</defs>
+									{/* Connecting lines (drawn first so they sit behind the inner cube) */}
+									<g stroke="currentColor" fill="none" stroke-width="0.8" opacity="0.6">
+										<line x1="-50" y1="-50" x2="-22" y2="-22"/>
+										<line x1="50"  y1="-50" x2="22"  y2="-22"/>
+										<line x1="50"  y1="50"  x2="22"  y2="22"/>
+										<line x1="-50" y1="50"  x2="-22" y2="22"/>
+									</g>
+									{/* Outer cube — solid heavy lines */}
+									<rect x="-50" y="-50" width="100" height="100" fill="none" stroke="currentColor" stroke-width="2"/>
+									{/* Inner cube — glowing gradient fill */}
+									<rect x="-22" y="-22" width="44" height="44" fill="url(#tess-grad)" stroke="currentColor" stroke-width="1.2"/>
+								</svg>
+							)}
+
+							{/* ── #10 · Sierpinski Shield ────────────────────────────── */}
+							{s.n === 10 && (
+								<svg class="lg-10" viewBox="-50 -55 100 110" aria-hidden="true">
+									<defs>
+										<clipPath id="shield-clip">
+											<path d="M -34 -42 Q -34 -45 -30 -45 L 30 -45 Q 34 -45 34 -42 L 34 8 Q 34 32 0 48 Q -34 32 -34 8 Z"/>
+										</clipPath>
+									</defs>
+									<g clip-path="url(#shield-clip)">
+										<rect x="-50" y="-55" width="100" height="110" fill="rgba(166,212,224,0.06)"/>
+										<g stroke="currentColor" fill="none" stroke-width="0.7">
+											{sierpShield.map((p) => <polygon points={p}/>)}
+										</g>
+									</g>
+									<path d="M -34 -42 Q -34 -45 -30 -45 L 30 -45 Q 34 -45 34 -42 L 34 8 Q 34 32 0 48 Q -34 32 -34 8 Z" fill="none" stroke="currentColor" stroke-width="1.6"/>
+								</svg>
+							)}
+
+							{/* ── #11 · Isometric Labyrinth ──────────────────────────── */}
+							{s.n === 11 && (
+								<svg class="lg-11" viewBox="-50 -50 100 100" aria-hidden="true">
+									{/* Top face */}
+									<polygon points="0,-40 40,-20 0,0 -40,-20" fill="rgba(166,212,224,0.06)" stroke="currentColor" stroke-width="1.4"/>
+									{/* Left face */}
+									<polygon points="-40,-20 0,0 0,40 -40,20" fill="rgba(166,212,224,0.10)" stroke="currentColor" stroke-width="1.4"/>
+									{/* Right face */}
+									<polygon points="40,-20 0,0 0,40 40,20" fill="rgba(166,212,224,0.14)" stroke="currentColor" stroke-width="1.4"/>
+									{/* Maze patterns */}
+									<g stroke="currentColor" stroke-width="0.5" opacity="0.65" fill="none">
+										{/* Top */}
+										<path d="M -20,-30 L 0,-20 M 0,-20 L -20,-10 M -10,-25 L 10,-15 M 10,-15 L 20,-20 M 0,-10 L 20,-20"/>
+										{/* Left */}
+										<path d="M -32,-12 L -16,-4 L -16,12 M -28,-4 L -8,4 M -28,4 L -8,12 M -28,12 L -16,18"/>
+										{/* Right */}
+										<path d="M 32,-12 L 16,-4 L 16,12 M 28,-4 L 8,4 M 28,4 L 8,12 M 28,12 L 16,18"/>
+									</g>
+									{/* Centre core */}
+									<circle cx="0" cy="0" r="2" fill="currentColor"/>
+								</svg>
+							)}
+
+							{/* ── #12 · Shattered Perimeter ──────────────────────────── */}
+							{s.n === 12 && (
+								<svg class="lg-12" viewBox="-60 -60 120 120" aria-hidden="true">
+									{/* Radiating shards */}
+									<g fill="currentColor" opacity="0.85">
+										<polygon points="-44,-44 -56,-52 -42,-58"/>
+										<polygon points="-12,-44 -18,-58 -2,-56"/>
+										<polygon points="20,-44 16,-58 32,-54"/>
+										<polygon points="44,-44 56,-50 50,-58"/>
+										<polygon points="44,-10 58,-12 54,4"/>
+										<polygon points="44,20 58,18 50,32"/>
+										<polygon points="44,44 56,50 42,58"/>
+										<polygon points="14,44 18,58 0,56"/>
+										<polygon points="-20,44 -16,58 -32,54"/>
+										<polygon points="-44,44 -56,50 -50,58"/>
+										<polygon points="-44,12 -58,16 -54,0"/>
+										<polygon points="-44,-18 -58,-14 -50,-30"/>
+									</g>
+									{/* Solid core square — heavy weight */}
+									<rect x="-32" y="-32" width="64" height="64" fill="currentColor"/>
+									<rect x="-32" y="-32" width="64" height="64" fill="rgba(5,7,8,0.9)" stroke="currentColor" stroke-width="2.4"/>
+								</svg>
+							)}
+
+							{/* ── #13 · Concentric Nodes ─────────────────────────────── */}
+							{s.n === 13 && (
+								<svg class="lg-13" viewBox="-50 -50 100 100" aria-hidden="true">
+									<g stroke="currentColor" fill="none" stroke-width="0.9">
+										<rect x="-44" y="-44" width="88" height="88"/>
+										<rect x="-32" y="-32" width="64" height="64"/>
+										<rect x="-20" y="-20" width="40" height="40"/>
+										<rect x="-8"  y="-8"  width="16" height="16"/>
+									</g>
+									{/* Connecting hairlines between layers */}
+									<g stroke="currentColor" stroke-width="0.4" opacity="0.5">
+										<line x1="-44" y1="-44" x2="-8" y2="-8"/>
+										<line x1="44"  y1="-44" x2="8"  y2="-8"/>
+										<line x1="44"  y1="44"  x2="8"  y2="8"/>
+										<line x1="-44" y1="44"  x2="-8" y2="8"/>
+									</g>
+									{/* Nodes at every corner of every layer */}
+									<g fill="currentColor">
+										{[44, 32, 20, 8].flatMap((d) => [
+											<circle cx={-d} cy={-d} r="2.2"/>,
+											<circle cx={d}  cy={-d} r="2.2"/>,
+											<circle cx={d}  cy={d}  r="2.2"/>,
+											<circle cx={-d} cy={d}  r="2.2"/>,
+										])}
+									</g>
+								</svg>
+							)}
+
+							{/* ── #14 · Fractal Eye in the Box ───────────────────────── */}
+							{s.n === 14 && (
+								<svg class="lg-14" viewBox="-50 -50 100 100" aria-hidden="true">
+									{/* Origami box — square with diagonal fold lines */}
+									<polygon points="-44,-44 44,-44 44,44 -44,44" fill="rgba(166,212,224,0.04)" stroke="currentColor" stroke-width="1.4"/>
+									<g stroke="currentColor" stroke-width="0.4" opacity="0.35" fill="none">
+										<line x1="-44" y1="-44" x2="44" y2="44"/>
+										<line x1="44"  y1="-44" x2="-44" y2="44"/>
+									</g>
+									{/* Eye lens — sharp geometric */}
+									<path d="M -34 0 L -8 -16 L 8 -16 L 34 0 L 8 16 L -8 16 Z" fill="rgba(5,7,8,0.85)" stroke="currentColor" stroke-width="1.4"/>
+									{/* Spiral iris */}
+									<g stroke="currentColor" fill="none" stroke-width="0.7" opacity="0.85" transform="scale(0.36)">
+										<path d={eyeSpiral}/>
+									</g>
+									<circle cx="0" cy="0" r="2" fill="currentColor"/>
+								</svg>
+							)}
+
+							{/* ── #15 · Encryption Core ──────────────────────────────── */}
+							{s.n === 15 && (
+								<svg class="lg-15" viewBox="-60 -60 120 120" aria-hidden="true">
+									<g fill="rgba(166,212,224,0.10)" stroke="currentColor" stroke-width="0.7">
+										<rect x="-36" y="-36" width="72" height="72" transform="rotate(0)"/>
+										<rect x="-36" y="-36" width="72" height="72" transform="rotate(15)"/>
+										<rect x="-36" y="-36" width="72" height="72" transform="rotate(30)"/>
+										<rect x="-36" y="-36" width="72" height="72" transform="rotate(45)"/>
+										<rect x="-36" y="-36" width="72" height="72" transform="rotate(60)"/>
+										<rect x="-36" y="-36" width="72" height="72" transform="rotate(75)"/>
+									</g>
+									{/* Bright core — where all planes intersect */}
+									<circle cx="0" cy="0" r="9" fill="currentColor"/>
+									<circle cx="0" cy="0" r="14" fill="none" stroke="currentColor" stroke-width="0.6" opacity="0.6"/>
+								</svg>
+							)}
+
+							{/* ── #16 · Algorithmic Sandbox ──────────────────────────── */}
+							{s.n === 16 && (
+								<svg class="lg-16" viewBox="-50 -50 100 100" aria-hidden="true">
+									<defs>
+										<clipPath id="sandbox-clip">
+											<rect x="-44" y="-44" width="88" height="88"/>
+										</clipPath>
+									</defs>
+									{/* Wireframe box (dashed = isolated environment) */}
+									<rect x="-44" y="-44" width="88" height="88" fill="rgba(166,212,224,0.04)" stroke="currentColor" stroke-width="1.4" stroke-dasharray="3 2"/>
+									{/* L-tree clipped to box bounds — analyser inside the sandbox */}
+									<g clip-path="url(#sandbox-clip)" transform="translate(0 42)">
+										<path d={sandboxTree} fill="none" stroke="currentColor" stroke-width="0.9" stroke-linecap="round"/>
+									</g>
+									{/* Corner ticks */}
+									<g fill="currentColor">
+										<rect x="-46" y="-46" width="4" height="4"/>
+										<rect x="42"  y="-46" width="4" height="4"/>
+										<rect x="42"  y="42"  width="4" height="4"/>
+										<rect x="-46" y="42"  width="4" height="4"/>
+									</g>
+								</svg>
+							)}
+
+							{/* ── #17 · Polygon Keyhole ──────────────────────────────── */}
+							{s.n === 17 && (
+								<svg class="lg-17" viewBox="-50 -50 100 100" aria-hidden="true">
+									<defs>
+										<mask id="keyhole-mask">
+											<rect x="-50" y="-50" width="100" height="100" fill="white"/>
+											<circle cx="0" cy="-8" r="9" fill="black"/>
+											<path d="M -5 -3 L 5 -3 L 9 22 L -9 22 Z" fill="black"/>
+										</mask>
+									</defs>
+									{/* Cube illusion: front face + offset top + offset right */}
+									<g mask="url(#keyhole-mask)">
+										<polygon points="-40,-32 -32,-40 40,-40 32,-32" fill="rgba(166,212,224,0.10)" stroke="currentColor" stroke-width="1.2"/>
+										<polygon points="32,-32 40,-40 40,32 32,40" fill="rgba(166,212,224,0.06)" stroke="currentColor" stroke-width="1.2"/>
+										<rect x="-40" y="-32" width="72" height="72" fill="rgba(166,212,224,0.04)" stroke="currentColor" stroke-width="1.6"/>
+									</g>
+									{/* Recursive keyhole inside cutout */}
+									<g stroke="currentColor" fill="none" stroke-width="0.6" opacity="0.65">
+										<circle cx="0" cy="-8" r="6"/>
+										<circle cx="0" cy="-8" r="3.5"/>
+										<circle cx="0" cy="-8" r="1.5"/>
+									</g>
+								</svg>
+							)}
+
+							{/* ── #18 · Code Bracket Cube ────────────────────────────── */}
+							{s.n === 18 && (
+								<svg class="lg-18" viewBox="-50 -50 100 100" aria-hidden="true">
+									<g fill="currentColor" font-family="JetBrains Mono, monospace" font-weight="700" text-anchor="middle">
+										{/* Outer corner brackets — large */}
+										<text x="-32" y="-12" font-size="46">[</text>
+										<text x="32"  y="-12" font-size="46">]</text>
+										{/* Top + bottom angle brackets — medium */}
+										<text x="0" y="-26" font-size="22" opacity="0.85">&lt;&gt;</text>
+										<text x="0" y="44" font-size="22" opacity="0.85">&lt;&gt;</text>
+										{/* Inner brackets — small, recursive */}
+										<text x="-12" y="6" font-size="20" opacity="0.6">[</text>
+										<text x="12"  y="6" font-size="20" opacity="0.6">]</text>
+										{/* Innermost — tiny */}
+										<text x="-5" y="14" font-size="10" opacity="0.45">[</text>
+										<text x="5"  y="14" font-size="10" opacity="0.45">]</text>
+									</g>
+								</svg>
+							)}
+						</div>
+
+						<div class="logo-meta">
+							<div class="logo-num">№ {String(s.n).padStart(2, "0")}</div>
+							<div class="logo-name">{s.name}</div>
+							<div class="logo-use">// {s.use}</div>
+						</div>
+					</article>
+				))}
+			</div>
+		</div>
+	</section>
+
+	<style>
+		.logo-grid {
+			display: grid;
+			grid-template-columns: 1fr;
+			gap: 0;
+			margin-top: 2.5rem;
+			border-top: 1px solid var(--border);
+			border-left: 1px solid var(--border);
+		}
+		@media (min-width: 720px) { .logo-grid { grid-template-columns: 1fr 1fr; } }
+		@media (min-width: 1100px) { .logo-grid { grid-template-columns: 1fr 1fr 1fr 1fr; } }
+
+		.logo-card {
+			border-right: 1px solid var(--border);
+			border-bottom: 1px solid var(--border);
+			background: var(--bg-card);
+			display: flex;
+			flex-direction: column;
+		}
+		.logo-stage {
+			aspect-ratio: 4 / 3;
+			display: grid;
+			place-items: center;
+			padding: 1.5rem;
+			background:
+				radial-gradient(circle at 50% 50%, rgba(166,212,224,0.04), transparent 70%),
+				var(--bg-card);
+			color: var(--mint);
+		}
+		.logo-meta {
+			padding: 1rem 1.25rem;
+			border-top: 1px solid var(--border);
+			background: var(--bg-elevated);
+			display: grid; gap: 0.25rem;
+		}
+		.logo-num {
+			font-family: "JetBrains Mono", monospace;
+			font-size: 0.7rem; letter-spacing: 0.2em; text-transform: uppercase;
+			color: var(--mint);
+		}
+		.logo-name {
+			font-family: "JetBrains Mono", monospace;
+			color: var(--fg);
+			font-size: 0.95rem;
+			font-weight: 600;
+		}
+		.logo-use {
+			font-family: "JetBrains Mono", monospace;
+			font-size: 0.72rem; letter-spacing: 0.06em;
+			color: var(--muted);
+		}
+
+		/* ── #1 · Bracket-frame wordmark ───────────────────────────── */
+		.lg-1 {
+			position: relative;
+			padding: 1.4rem 2rem;
+			color: var(--fg);
+		}
+		.lg-1 .brc {
+			position: absolute; width: 14px; height: 14px;
+			border: 1.5px solid var(--mint);
+		}
+		.lg-1 .brc.tl { top: 0; left: 0; border-right: none; border-bottom: none; }
+		.lg-1 .brc.tr { top: 0; right: 0; border-left: none; border-bottom: none; }
+		.lg-1 .brc.bl { bottom: 0; left: 0; border-right: none; border-top: none; }
+		.lg-1 .brc.br { bottom: 0; right: 0; border-left: none; border-top: none; }
+		.wm-1 {
+			font-family: "Geist", "Inter Display", "Helvetica Neue", system-ui, sans-serif;
+			font-weight: 800; font-size: 1.6rem; letter-spacing: -0.04em;
+			color: var(--fg); display: inline-flex; align-items: baseline;
+		}
+		.wm-1-box {
+			color: var(--mint);
+			text-shadow: 0 0 12px rgba(166,212,224,0.4);
+		}
+
+		/* ── #2 · Recursive-F monogram ─────────────────────────────── */
+		.lg-2 {
+			width: 110px; height: 140px;
+			color: var(--mint);
+			filter: drop-shadow(0 0 8px rgba(166,212,224,0.3));
+		}
+
+		/* ── #3 · Box-leaking-fractal ──────────────────────────────── */
+		.lg-3 {
+			position: relative;
+			width: 160px; height: 130px;
+		}
+		.lg-3-box {
+			position: absolute; left: 0; top: 16px;
+			width: 110px; height: 110px;
+			border: 1.5px dashed var(--mint-dim);
+			background: rgba(166,212,224,0.03);
+		}
+		.lg-3-tri {
+			position: absolute; right: 0; top: 0;
+			width: 90px; height: 90px;
+			color: var(--mint);
+			filter: drop-shadow(0 0 8px rgba(166,212,224,0.4));
+		}
+
+		/* ── #4 · Cardioid sigil ───────────────────────────────────── */
+		.lg-4 { width: 130px; height: 130px; color: var(--mint); }
+
+		/* ── #5 · Triangle-cursor lockup ───────────────────────────── */
+		.lg-5 {
+			display: inline-flex; align-items: baseline; gap: 0.4rem;
+			color: var(--fg);
+		}
+		.lg-5-tri {
+			color: var(--mint);
+			font-family: "JetBrains Mono", monospace;
+			font-size: 1.3rem;
+			animation: lg5-blink 1.4s steps(2, end) infinite;
+		}
+		.lg-5-name {
+			font-family: "Geist", "Inter Display", "Helvetica Neue", system-ui, sans-serif;
+			font-weight: 800; font-size: 1.5rem; letter-spacing: -0.04em;
+		}
+		.lg-5-cursor {
+			display: inline-block; width: 0.55em; height: 1.05em;
+			background: var(--mint); margin-left: 0.1em;
+			animation: lg5-blink 1.1s steps(2, end) infinite;
+			align-self: center;
+		}
+		@keyframes lg5-blink { 50% { opacity: 0; } }
+
+		/* ── #6 · Inverted Sierpinski ──────────────────────────────── */
+		.lg-6 { width: 130px; height: 130px; color: var(--mint); transform: scaleY(-1); }
+
+		/* ── #7 · z² + c badge ─────────────────────────────────────── */
+		.lg-7 {
+			display: inline-flex; align-items: center; gap: 0.5rem;
+			padding: 0.5rem 1rem;
+			border: 1.5px solid var(--mint);
+			border-radius: 999px;
+			background: rgba(166,212,224,0.05);
+			box-shadow: 0 0 14px rgba(166,212,224,0.18);
+		}
+		.lg-7-pre {
+			font-family: "JetBrains Mono", monospace;
+			font-size: 0.75rem; letter-spacing: 0.16em; text-transform: uppercase;
+			color: var(--mint);
+		}
+		.lg-7-eq {
+			font-family: "STIX Two Text", "Cambria Math", "Cambria", Georgia, serif;
+			font-style: italic; font-size: 1.05rem; color: var(--fg);
+		}
+		.lg-7-eq em { font-style: italic; color: var(--math); }
+
+		/* ── #8 · Iteration row ────────────────────────────────────── */
+		.lg-8 {
+			display: flex; align-items: center; gap: 0.4rem;
+			color: var(--mint);
+		}
+		.lg-8 svg { width: 56px; height: 56px; }
+
+		/* ── #9 · Recursive Tesseract ──────────────────────────────── */
+		.lg-9 { width: 130px; height: 130px; color: var(--mint); }
+
+		/* ── #10 · Sierpinski Shield ───────────────────────────────── */
+		.lg-10 {
+			width: 110px; height: 130px; color: var(--mint);
+			filter: drop-shadow(0 0 8px rgba(166,212,224,0.30));
+		}
+
+		/* ── #11 · Isometric Labyrinth ─────────────────────────────── */
+		.lg-11 { width: 130px; height: 130px; color: var(--mint); }
+
+		/* ── #12 · Shattered Perimeter ─────────────────────────────── */
+		.lg-12 {
+			width: 140px; height: 140px; color: var(--mint);
+			filter: drop-shadow(0 0 6px rgba(166,212,224,0.25));
+		}
+
+		/* ── #13 · Concentric Nodes ────────────────────────────────── */
+		.lg-13 { width: 130px; height: 130px; color: var(--mint); }
+
+		/* ── #14 · Fractal Eye in the Box ──────────────────────────── */
+		.lg-14 {
+			width: 130px; height: 130px; color: var(--mint);
+			filter: drop-shadow(0 0 8px rgba(166,212,224,0.30));
+		}
+
+		/* ── #15 · Encryption Core ─────────────────────────────────── */
+		.lg-15 {
+			width: 140px; height: 140px; color: var(--mint);
+			filter: drop-shadow(0 0 12px rgba(166,212,224,0.40));
+		}
+
+		/* ── #16 · Algorithmic Sandbox ─────────────────────────────── */
+		.lg-16 { width: 130px; height: 130px; color: var(--mint); }
+
+		/* ── #17 · Polygon Keyhole ─────────────────────────────────── */
+		.lg-17 { width: 130px; height: 130px; color: var(--mint); }
+
+		/* ── #18 · Code Bracket Cube ───────────────────────────────── */
+		.lg-18 { width: 120px; height: 120px; color: var(--mint); }
+	</style>
+</Layout>

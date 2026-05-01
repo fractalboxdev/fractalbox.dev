@@ -1,0 +1,72 @@
+---
+// A small chip declaring a fractal's box-counting dimension.
+// The chip itself is *also* a tiny box (with corner ticks): visual self-reference.
+// Theme accents come from CSS variables set on the parent (--chip-color, etc).
+import { BOX_DIMS } from "../data/box-dimensions";
+
+interface Props {
+	/** Key into BOX_DIMS — sierpinski, koch, mandelbrot, ltree, spiral, cantor */
+	for: keyof typeof BOX_DIMS;
+	/** "compact" hides the friendly fractal name and shows just `dim_B = X` */
+	compact?: boolean;
+	/** Override the shown name (defaults to BOX_DIMS[for].what) */
+	label?: string;
+}
+const { for: key, compact = false, label } = Astro.props;
+const dim = BOX_DIMS[key];
+const name = label ?? dim.what;
+---
+<span class={`box-dim-chip ${compact ? "compact" : ""}`} aria-label={`Box-counting dimension ${dim.expr}`}>
+	<span class="tick tl" aria-hidden="true"></span>
+	<span class="tick tr" aria-hidden="true"></span>
+	<span class="tick bl" aria-hidden="true"></span>
+	<span class="tick br" aria-hidden="true"></span>
+	{!compact && <span class="frac-name">{name}</span>}
+	<span class="lab">dim<sub>B</sub></span>
+	<span class="op">=</span>
+	<span class="val">{dim.expr}</span>
+</span>
+
+<style>
+	.box-dim-chip {
+		display: inline-flex; align-items: baseline; gap: 0.45em;
+		padding: 0.32em 0.7em;
+		position: relative;
+		border: 1px solid var(--chip-border, currentColor);
+		color: var(--chip-color, currentColor);
+		font-family: "JetBrains Mono", "IBM Plex Mono", ui-monospace, monospace;
+		font-size: 0.72rem;
+		letter-spacing: 0.06em;
+		background: var(--chip-bg, transparent);
+		line-height: 1.3;
+		max-width: 100%; flex-wrap: wrap;
+	}
+	/* The chip is itself a box. Corner ticks on every chip make the box
+	   explicit — visual self-similarity with section frames. */
+	.tick {
+		position: absolute; width: 4px; height: 4px;
+		border: 1px solid var(--chip-border, currentColor);
+	}
+	.tick.tl { top: -1px; left: -1px;  border-right: none; border-bottom: none; }
+	.tick.tr { top: -1px; right: -1px; border-left: none;  border-bottom: none; }
+	.tick.bl { bottom: -1px; left: -1px;  border-right: none; border-top: none; }
+	.tick.br { bottom: -1px; right: -1px; border-left: none; border-top: none; }
+	.frac-name {
+		color: var(--chip-name, var(--chip-color, currentColor));
+		text-transform: uppercase; letter-spacing: 0.16em;
+		opacity: 0.85;
+	}
+	.lab {
+		opacity: 0.75;
+	}
+	.lab sub { font-size: 0.78em; opacity: 0.85; }
+	.op {
+		opacity: 0.55; padding: 0 0.05em;
+	}
+	.val {
+		font-family: "STIX Two Text", "Cambria Math", "Cambria", Georgia, serif;
+		font-style: italic;
+		font-size: 0.95em;
+		color: var(--chip-val, var(--chip-color, currentColor));
+	}
+</style>

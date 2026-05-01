@@ -1,0 +1,70 @@
+---
+import Layout from "../../../layouts/FractalMay2026.astro";
+import BoxDimChip from "../../../components/BoxDimChip.astro";
+import { team, writing, contact, boxLine } from "../../../data/spec";
+---
+<Layout
+	title="fractal.box — team · may 2026"
+	active="team"
+	iter={5}
+	pageTag="§V · TEAM"
+	pageGreek="ƒ⁵(△) — operators, not consultants"
+>
+	<section style="padding-top:5rem;">
+		<div class="wrap">
+			<div class="eyebrow"><span class="blink"></span> // §V · the operators</div>
+			<h1 class="serif-h1">Operators, not <span style="color:var(--mint);">consultants</span>.</h1>
+			<p class="serif-lede">Names on the field-team roster. Code commits land under our handles, on-call rotation includes us.</p>
+			<p class="serif-lede" style="margin-top:1rem; font-size:1rem; color:var(--math); font-style:italic;">{boxLine}</p>
+			<div style="margin-top:1.25rem; display:flex; gap:0.6rem; flex-wrap:wrap; --chip-color: var(--mint); --chip-border: var(--border-hi); --chip-bg: var(--bg-elevated); --chip-name: var(--amber); --chip-val: var(--math);">
+				<span class="eq-chip">i = 5</span>
+				<BoxDimChip for="sierpinski" label="depth 5" />
+			</div>
+		</div>
+	</section>
+
+	<section>
+		<div class="wrap">
+			<div class="section-tag"><span class="dot"></span> // team of record</div>
+			<p class="lede">CKA · CKAD · CISSP · ETHGlobal Finalist × 3 · ex-Animoca / PALO IT / Mon Studio.</p>
+
+			<div class="card-grid cols-3" style="margin-top:2.5rem;">
+				{team.map((m) => (
+					<article class="card-cell">
+						<div style="width:56px; height:56px; border:1px solid var(--mint); display:grid; place-items:center; color:var(--mint); font-family:'JetBrains Mono',monospace; font-size:1.1rem; background:rgba(166,212,224,0.04); box-shadow:inset 0 0 12px rgba(166,212,224,0.15);">
+							{m.name.slice(0, 2).toUpperCase()}
+						</div>
+						<h3 class="serif-h3" style="margin:0; font-size:1.15rem;">{m.name}</h3>
+						<div style="color:var(--mint); font-family:'JetBrains Mono',monospace; font-size:0.72rem; letter-spacing:0.12em; text-transform:uppercase;">{m.role}</div>
+						<div style="color:var(--muted); font-size:0.88rem;">{m.creds}</div>
+					</article>
+				))}
+			</div>
+		</div>
+	</section>
+
+	<section>
+		<div class="wrap">
+			<div class="section-tag"><span class="dot"></span> // notes from the field</div>
+			<h2 class="serif-h2">Writing &amp; public goods.</h2>
+			<div style="margin-top:2rem; border:1px solid var(--border); background:var(--bg-card);">
+				{writing.map((w, i) => (
+					<a href="#" style="display:grid; grid-template-columns:5rem 1fr auto; align-items:center; gap:1rem; padding:1.1rem 1.25rem; border-bottom:1px solid var(--border); color:var(--fg);">
+						<div style="color:var(--mint); font-family:'JetBrains Mono',monospace; font-size:0.72rem; letter-spacing:0.12em;">post / 0{i + 1}</div>
+						<div class="serif" style="font-style:italic;">{w}</div>
+						<div style="color:var(--mint); font-family:'JetBrains Mono',monospace;">↗</div>
+					</a>
+				))}
+			</div>
+			<p style="margin-top:1.5rem; color:var(--muted);">Open-source artefacts: <a href="https://github.com/fractaldotbox">github.com/fractaldotbox</a></p>
+		</div>
+	</section>
+
+	<section>
+		<div class="wrap" style="text-align:center;">
+			<div class="section-tag" style="justify-content:center;"><span class="dot"></span> // next iteration</div>
+			<h2 class="serif-h2" style="margin:0.5rem auto 1.5rem; max-width:none;">Open the channel.</h2>
+			<a class="btn primary" href="/themes/fractal-may2026/contact">↪ contact · i = 5 →</a>
+		</div>
+	</section>
+</Layout>

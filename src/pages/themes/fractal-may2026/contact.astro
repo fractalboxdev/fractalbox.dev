@@ -1,0 +1,79 @@
+---
+import Layout from "../../../layouts/FractalMay2026.astro";
+import BoxDimChip from "../../../components/BoxDimChip.astro";
+import { contact, boxLine } from "../../../data/spec";
+---
+<Layout
+	title="fractal.box — contact · may 2026"
+	active="contact"
+	iter={6}
+	pageTag="§VI · CONTACT"
+	pageGreek="ƒ⁶(△) — open the channel · 3⁶ = 729"
+>
+	<section style="padding-top:5rem;">
+		<div class="wrap">
+			<div class="eyebrow"><span class="blink"></span> // §VI · open channel</div>
+			<h1 class="serif-h1">Start a <span style="color:var(--mint);">conversation</span>.</h1>
+			<p class="serif-lede">A thirty-minute discovery call. We respond within one business day, in your timezone.</p>
+			<p class="serif-lede" style="margin-top:1rem; font-size:1rem; color:var(--math); font-style:italic;">{boxLine}</p>
+			<div style="margin-top:1.25rem; display:flex; gap:0.6rem; flex-wrap:wrap; --chip-color: var(--mint); --chip-border: var(--border-hi); --chip-bg: var(--bg-elevated); --chip-name: var(--amber); --chip-val: var(--math);">
+				<span class="eq-chip">i = 6 · deepest</span>
+				<BoxDimChip for="sierpinski" label="depth 6" />
+			</div>
+		</div>
+	</section>
+
+	<section>
+		<div class="wrap">
+			<div class="section-tag"><span class="dot"></span> // primary endpoint</div>
+			<a
+				class="serif"
+				href={`mailto:${contact.email}`}
+				style="display:inline-block; margin-top:1.5rem; font-size:clamp(2rem, 5vw, 3.6rem); color:var(--mint); font-style:italic; line-height:1.1; word-break:break-word;"
+			>
+				↪ {contact.email}
+			</a>
+			<div style="display:grid; grid-template-columns:1fr; gap:1.5rem; margin-top:2.5rem;">
+				<style>
+					@media (min-width: 720px) {
+						.contact-grid { grid-template-columns: 1fr 1fr 1fr !important; }
+					}
+				</style>
+				<div class="contact-grid card-grid cols-3" style="grid-template-columns:1fr;">
+					<div class="card-cell">
+						<div class="idx">// reply window</div>
+						<h3 class="serif-h3" style="margin:0;">One business day</h3>
+						<p style="color:var(--muted); margin:0;">In your timezone. We&rsquo;ll suggest two slots and book whichever earns the call.</p>
+					</div>
+					<div class="card-cell">
+						<div class="idx">// entity</div>
+						<h3 class="serif-h3" style="margin:0;">{contact.entity}</h3>
+						<p style="color:var(--muted); margin:0; font-size:0.92rem;">{contact.address}</p>
+					</div>
+					<div class="card-cell">
+						<div class="idx">// elsewhere</div>
+						<h3 class="serif-h3" style="margin:0;">Public goods</h3>
+						<p style="color:var(--muted); margin:0; font-family:'JetBrains Mono',monospace; font-size:0.85rem;">
+							{contact.socials.map((s, i) => (
+								<>
+									<a href={s.href}>{s.label}</a>{i < contact.socials.length - 1 ? " · " : ""}
+								</>
+							))}
+						</p>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<section>
+		<div class="wrap" style="text-align:center;">
+			<div class="section-tag" style="justify-content:center;"><span class="dot"></span> // attractor</div>
+			<p class="serif-lede" style="margin:0.5rem auto 1.5rem; max-width:34rem;">
+				The IFS attractor is invariant under the union of its contractions.
+				So is a working studio. <em style="color:var(--mint);">Same shape, every iteration.</em>
+			</p>
+			<a class="btn primary" href={`mailto:${contact.email}`}>↪ {contact.email}</a>
+		</div>
+	</section>
+</Layout>
