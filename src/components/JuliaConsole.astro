@@ -28,12 +28,12 @@ const {
 	<div class="julia-stage">
 		<canvas class="julia-canvas" width="360" height="360" aria-hidden="true"></canvas>
 		<svg class="julia-axes" viewBox="-110 -110 220 220" aria-hidden="true">
-			<line x1="-100" y1="0" x2="100" y2="0" stroke="rgba(166,212,224,0.18)" stroke-width="0.4"/>
-			<line x1="0" y1="-100" x2="0" y2="100" stroke="rgba(166,212,224,0.18)" stroke-width="0.4"/>
-			<circle cx="0" cy="0" r="78" stroke="rgba(166,212,224,0.14)" stroke-dasharray="2 4" fill="none" stroke-width="0.4"/>
-			<circle cx="0" cy="0" r="100" stroke="rgba(166,212,224,0.08)" stroke-dasharray="1 4" fill="none" stroke-width="0.35"/>
-			<text x="98" y="-3" font-family="JetBrains Mono, monospace" font-size="6" fill="rgba(166,212,224,0.45)" text-anchor="end">RE</text>
-			<text x="3" y="-94" font-family="JetBrains Mono, monospace" font-size="6" fill="rgba(166,212,224,0.45)">IM</text>
+			<line x1="-100" y1="0" x2="100" y2="0" stroke="rgba(135,206,235,0.18)" stroke-width="0.4"/>
+			<line x1="0" y1="-100" x2="0" y2="100" stroke="rgba(135,206,235,0.18)" stroke-width="0.4"/>
+			<circle cx="0" cy="0" r="78" stroke="rgba(135,206,235,0.14)" stroke-dasharray="2 4" fill="none" stroke-width="0.4"/>
+			<circle cx="0" cy="0" r="100" stroke="rgba(135,206,235,0.08)" stroke-dasharray="1 4" fill="none" stroke-width="0.35"/>
+			<text x="98" y="-3" font-family="JetBrains Mono, monospace" font-size="6" fill="rgba(135,206,235,0.45)" text-anchor="end">RE</text>
+			<text x="3" y="-94" font-family="JetBrains Mono, monospace" font-size="6" fill="rgba(135,206,235,0.45)">IM</text>
 		</svg>
 	</div>
 
@@ -159,16 +159,24 @@ const {
 		function tick() {
 			const halfW = window.innerWidth / 2;
 			const halfH = window.innerHeight / 2;
-			// Map mouse offset to c. Scale factor 1.4 means edge of viewport ~ |c|=1.4 → outside main bulb → blow-up
-			const targetR = ((state.mouseX - halfW) / halfW) * 1.4;
-			const targetI = ((state.mouseY - halfH) / halfH) * 1.4;
-			// Smooth lerp
+			// Map mouse offset to c with a logarithmic remap on the normalized
+			// offset u ∈ [-1, 1]: sign(u) * log(1 + |u|·k) / log(1+k). The
+			// derivative is steepest at 0, so cursor motion near the centre is
+			// the most sensitive; the curve flattens toward the edges and
+			// saturates at ±1 at the viewport edge → |c|≈1.0.
+			const k = 19;
+			const logK = Math.log(1 + k);
+			const remap = (u: number) => Math.sign(u) * Math.log(1 + Math.abs(u) * k) / logK;
+			const targetR = remap((state.mouseX - halfW) / halfW);
+			const targetI = remap((state.mouseY - halfH) / halfH);
+			// Gentle lerp — c eases toward target over ~25 frames so motion
+			// feels deliberate, not snappy.
 			state.cR += (targetR - state.cR) * 0.10;
 			state.cI += (targetI - state.cI) * 0.10;
 
 			const dR = Math.abs(state.cR - state.lastR);
 			const dI = Math.abs(state.cI - state.lastI);
-			if (!reduced && (dR > 0.005 || dI > 0.005)) {
+			if (!reduced && (dR > 0.002 || dI > 0.002)) {
 				const canvas = document.querySelector(".julia-canvas") as HTMLCanvasElement | null;
 				if (canvas) {
 					render(canvas, state.cR, state.cI);
