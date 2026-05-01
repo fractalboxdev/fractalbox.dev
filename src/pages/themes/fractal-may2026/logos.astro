@@ -145,7 +145,7 @@ const studies = [
 							{s.n === 4 && (
 								<svg class="lg-4" viewBox="-100 -100 200 200" aria-hidden="true">
 									<circle cx="0" cy="0" r="92" stroke="currentColor" stroke-dasharray="2 4" fill="none" stroke-width="0.5" opacity="0.45"/>
-									<g stroke="currentColor" fill="rgba(135,206,235,0.10)" stroke-width="1.6">
+									<g stroke="currentColor" fill="rgba(176,222,240,0.10)" stroke-width="1.6">
 										<path d={cardioid}/>
 										<path d={bulb}/>
 									</g>
@@ -203,9 +203,9 @@ const studies = [
 								<svg class="lg-9" viewBox="-60 -60 120 120" aria-hidden="true">
 									<defs>
 										<linearGradient id="tess-grad" x1="0" y1="0" x2="1" y2="1">
-											<stop offset="0%"   stop-color="rgba(135,206,235,0.45)"/>
+											<stop offset="0%"   stop-color="rgba(176,222,240,0.45)"/>
 											<stop offset="50%"  stop-color="rgba(124,228,255,0.55)"/>
-											<stop offset="100%" stop-color="rgba(135,206,235,0.30)"/>
+											<stop offset="100%" stop-color="rgba(176,222,240,0.30)"/>
 											<animate attributeName="x1" values="0;0.6;0" dur="6s" repeatCount="indefinite"/>
 										</linearGradient>
 									</defs>
@@ -232,7 +232,7 @@ const studies = [
 										</clipPath>
 									</defs>
 									<g clip-path="url(#shield-clip)">
-										<rect x="-50" y="-55" width="100" height="110" fill="rgba(135,206,235,0.06)"/>
+										<rect x="-50" y="-55" width="100" height="110" fill="rgba(176,222,240,0.06)"/>
 										<g stroke="currentColor" fill="none" stroke-width="0.7">
 											{sierpShield.map((p) => <polygon points={p}/>)}
 										</g>
@@ -245,11 +245,11 @@ const studies = [
 							{s.n === 11 && (
 								<svg class="lg-11" viewBox="-50 -50 100 100" aria-hidden="true">
 									{/* Top face */}
-									<polygon points="0,-40 40,-20 0,0 -40,-20" fill="rgba(135,206,235,0.06)" stroke="currentColor" stroke-width="1.4"/>
+									<polygon points="0,-40 40,-20 0,0 -40,-20" fill="rgba(176,222,240,0.06)" stroke="currentColor" stroke-width="1.4"/>
 									{/* Left face */}
-									<polygon points="-40,-20 0,0 0,40 -40,20" fill="rgba(135,206,235,0.10)" stroke="currentColor" stroke-width="1.4"/>
+									<polygon points="-40,-20 0,0 0,40 -40,20" fill="rgba(176,222,240,0.10)" stroke="currentColor" stroke-width="1.4"/>
 									{/* Right face */}
-									<polygon points="40,-20 0,0 0,40 40,20" fill="rgba(135,206,235,0.14)" stroke="currentColor" stroke-width="1.4"/>
+									<polygon points="40,-20 0,0 0,40 40,20" fill="rgba(176,222,240,0.14)" stroke="currentColor" stroke-width="1.4"/>
 									{/* Maze patterns */}
 									<g stroke="currentColor" stroke-width="0.5" opacity="0.65" fill="none">
 										{/* Top */}
@@ -320,7 +320,7 @@ const studies = [
 							{s.n === 14 && (
 								<svg class="lg-14" viewBox="-50 -50 100 100" aria-hidden="true">
 									{/* Origami box — square with diagonal fold lines */}
-									<polygon points="-44,-44 44,-44 44,44 -44,44" fill="rgba(135,206,235,0.04)" stroke="currentColor" stroke-width="1.4"/>
+									<polygon points="-44,-44 44,-44 44,44 -44,44" fill="rgba(176,222,240,0.04)" stroke="currentColor" stroke-width="1.4"/>
 									<g stroke="currentColor" stroke-width="0.4" opacity="0.35" fill="none">
 										<line x1="-44" y1="-44" x2="44" y2="44"/>
 										<line x1="44"  y1="-44" x2="-44" y2="44"/>
@@ -338,7 +338,7 @@ const studies = [
 							{/* ── #15 · Encryption Core ──────────────────────────────── */}
 							{s.n === 15 && (
 								<svg class="lg-15" viewBox="-60 -60 120 120" aria-hidden="true">
-									<g fill="rgba(135,206,235,0.10)" stroke="currentColor" stroke-width="0.7">
+									<g fill="rgba(176,222,240,0.10)" stroke="currentColor" stroke-width="0.7">
 										<rect x="-36" y="-36" width="72" height="72" transform="rotate(0)"/>
 										<rect x="-36" y="-36" width="72" height="72" transform="rotate(15)"/>
 										<rect x="-36" y="-36" width="72" height="72" transform="rotate(30)"/>
@@ -361,7 +361,7 @@ const studies = [
 										</clipPath>
 									</defs>
 									{/* Wireframe box (dashed = isolated environment) */}
-									<rect x="-44" y="-44" width="88" height="88" fill="rgba(135,206,235,0.04)" stroke="currentColor" stroke-width="1.4" stroke-dasharray="3 2"/>
+									<rect x="-44" y="-44" width="88" height="88" fill="rgba(176,222,240,0.04)" stroke="currentColor" stroke-width="1.4" stroke-dasharray="3 2"/>
 									{/* L-tree clipped to box bounds — analyser inside the sandbox */}
 									<g clip-path="url(#sandbox-clip)" transform="translate(0 42)">
 										<path d={sandboxTree} fill="none" stroke="currentColor" stroke-width="0.9" stroke-linecap="round"/>
@@ -388,9 +388,9 @@ const studies = [
 									</defs>
 									{/* Cube illusion: front face + offset top + offset right */}
 									<g mask="url(#keyhole-mask)">
-										<polygon points="-40,-32 -32,-40 40,-40 32,-32" fill="rgba(135,206,235,0.10)" stroke="currentColor" stroke-width="1.2"/>
-										<polygon points="32,-32 40,-40 40,32 32,40" fill="rgba(135,206,235,0.06)" stroke="currentColor" stroke-width="1.2"/>
-										<rect x="-40" y="-32" width="72" height="72" fill="rgba(135,206,235,0.04)" stroke="currentColor" stroke-width="1.6"/>
+										<polygon points="-40,-32 -32,-40 40,-40 32,-32" fill="rgba(176,222,240,0.10)" stroke="currentColor" stroke-width="1.2"/>
+										<polygon points="32,-32 40,-40 40,32 32,40" fill="rgba(176,222,240,0.06)" stroke="currentColor" stroke-width="1.2"/>
+										<rect x="-40" y="-32" width="72" height="72" fill="rgba(176,222,240,0.04)" stroke="currentColor" stroke-width="1.6"/>
 									</g>
 									{/* Recursive keyhole inside cutout */}
 									<g stroke="currentColor" fill="none" stroke-width="0.6" opacity="0.65">
@@ -458,7 +458,7 @@ const studies = [
 			place-items: center;
 			padding: 1.5rem;
 			background:
-				radial-gradient(circle at 50% 50%, rgba(135,206,235,0.04), transparent 70%),
+				radial-gradient(circle at 50% 50%, rgba(176,222,240,0.04), transparent 70%),
 				var(--bg-card);
 			color: var(--mint);
 		}
@@ -506,14 +506,14 @@ const studies = [
 		}
 		.wm-1-box {
 			color: var(--mint);
-			text-shadow: 0 0 12px rgba(135,206,235,0.4);
+			text-shadow: 0 0 12px rgba(176,222,240,0.4);
 		}
 
 		/* ── #2 · Recursive-F monogram ─────────────────────────────── */
 		.lg-2 {
 			width: 110px; height: 140px;
 			color: var(--mint);
-			filter: drop-shadow(0 0 8px rgba(135,206,235,0.3));
+			filter: drop-shadow(0 0 8px rgba(176,222,240,0.3));
 		}
 
 		/* ── #3 · Box-leaking-fractal ──────────────────────────────── */
@@ -525,13 +525,13 @@ const studies = [
 			position: absolute; left: 0; top: 16px;
 			width: 110px; height: 110px;
 			border: 1.5px dashed var(--mint-dim);
-			background: rgba(135,206,235,0.03);
+			background: rgba(176,222,240,0.03);
 		}
 		.lg-3-tri {
 			position: absolute; right: 0; top: 0;
 			width: 90px; height: 90px;
 			color: var(--mint);
-			filter: drop-shadow(0 0 8px rgba(135,206,235,0.4));
+			filter: drop-shadow(0 0 8px rgba(176,222,240,0.4));
 		}
 
 		/* ── #4 · Cardioid sigil ───────────────────────────────────── */
@@ -569,8 +569,8 @@ const studies = [
 			padding: 0.5rem 1rem;
 			border: 1.5px solid var(--mint);
 			border-radius: 999px;
-			background: rgba(135,206,235,0.05);
-			box-shadow: 0 0 14px rgba(135,206,235,0.18);
+			background: rgba(176,222,240,0.05);
+			box-shadow: 0 0 14px rgba(176,222,240,0.18);
 		}
 		.lg-7-pre {
 			font-family: "JetBrains Mono", monospace;
@@ -596,7 +596,7 @@ const studies = [
 		/* ── #10 · Sierpinski Shield ───────────────────────────────── */
 		.lg-10 {
 			width: 110px; height: 130px; color: var(--mint);
-			filter: drop-shadow(0 0 8px rgba(135,206,235,0.30));
+			filter: drop-shadow(0 0 8px rgba(176,222,240,0.30));
 		}
 
 		/* ── #11 · Isometric Labyrinth ─────────────────────────────── */
@@ -605,7 +605,7 @@ const studies = [
 		/* ── #12 · Shattered Perimeter ─────────────────────────────── */
 		.lg-12 {
 			width: 140px; height: 140px; color: var(--mint);
-			filter: drop-shadow(0 0 6px rgba(135,206,235,0.25));
+			filter: drop-shadow(0 0 6px rgba(176,222,240,0.25));
 		}
 
 		/* ── #13 · Concentric Nodes ────────────────────────────────── */
@@ -614,13 +614,13 @@ const studies = [
 		/* ── #14 · Fractal Eye in the Box ──────────────────────────── */
 		.lg-14 {
 			width: 130px; height: 130px; color: var(--mint);
-			filter: drop-shadow(0 0 8px rgba(135,206,235,0.30));
+			filter: drop-shadow(0 0 8px rgba(176,222,240,0.30));
 		}
 
 		/* ── #15 · Encryption Core ─────────────────────────────────── */
 		.lg-15 {
 			width: 140px; height: 140px; color: var(--mint);
-			filter: drop-shadow(0 0 12px rgba(135,206,235,0.40));
+			filter: drop-shadow(0 0 12px rgba(176,222,240,0.40));
 		}
 
 		/* ── #16 · Algorithmic Sandbox ─────────────────────────────── */

@@ -109,7 +109,7 @@ const subnav: { key: ActiveKey; label: string; path: string }[] = [
 			:root {
 				/* Terminal-mathematical palette — readability lifted to AAA where
 				   possible while keeping the phosphor/math identity. */
-				--bg: #1d1d1d;
+				--bg: #161616;
 				--bg-elevated: #242424;
 				--bg-card: #202020;
 				/* Nord-derived palette, lifted for AAA contrast on #1d1d1d.
@@ -118,8 +118,8 @@ const subnav: { key: ActiveKey; label: string; path: string }[] = [
 				--fg: #f4f6fa;             /* near-white — ~17:1 */
 				--fg-soft: #e5e9f0;         /* Nord Snow Storm 1 — ~14.5:1 */
 				--muted: #b8c0cc;           /* lifted slate — ~9.7:1 */
-				--mint: #87ceeb;            /* sky blue — primary, ~9.5:1 */
-				--mint-dim: #5fa8c8;        /* deeper sky — ~6.5:1 */
+				--mint: #b0def0;            /* lifted sky blue — primary, ~13:1 */
+				--mint-dim: #7ec4dd;        /* mid sky — ~9:1 */
 				--math: #ebcb8b;            /* Nord Aurora yellow — gold, ~12:1 */
 				--amber: #f0d68f;           /* lifted gold-yellow highlight — ~13:1 */
 				--border: #3a3a3a;          /* lifted border — visible separator */
@@ -152,7 +152,7 @@ const subnav: { key: ActiveKey; label: string; path: string }[] = [
 			/* CRT scanlines + bloom */
 			body::before {
 				content: ""; position: fixed; inset: 0; z-index: 0; pointer-events: none;
-				background: repeating-linear-gradient(0deg, rgba(135,206,235,0.025) 0 1px, transparent 1px 3px);
+				background: repeating-linear-gradient(0deg, rgba(176,222,240,0.025) 0 1px, transparent 1px 3px);
 				mix-blend-mode: screen;
 			}
 			/* Static ambient bloom only — no cursor-following glow.
@@ -161,7 +161,7 @@ const subnav: { key: ActiveKey; label: string; path: string }[] = [
 			body::after {
 				content: ""; position: fixed; inset: 0; z-index: 0; pointer-events: none;
 				background:
-					radial-gradient(700px 500px at 78% 18%, rgba(135,206,235,0.05), transparent 65%),
+					radial-gradient(700px 500px at 78% 18%, rgba(176,222,240,0.05), transparent 65%),
 					radial-gradient(600px 450px at 18% 88%, rgba(235,203,139,0.04), transparent 70%);
 			}
 
@@ -182,7 +182,7 @@ const subnav: { key: ActiveKey; label: string; path: string }[] = [
 			.hud-frame [class^="tag-"] {
 				position: absolute; font-family: "JetBrains Mono", monospace; font-size: 10px;
 				letter-spacing: 0.18em; text-transform: uppercase; color: var(--mint);
-				padding: 4px 8px; background: rgba(29,29,29,0.65); border: 1px solid var(--mint-dim);
+				padding: 4px 8px; background: rgba(22,22,22,0.65); border: 1px solid var(--mint-dim);
 			}
 			.hud-frame .tag-tl { top: 0; left: 38px; }
 			.hud-frame .tag-tr { top: 0; right: 38px; }
@@ -192,7 +192,7 @@ const subnav: { key: ActiveKey; label: string; path: string }[] = [
 			/* Sticky nav */
 			nav.top {
 				position: sticky; top: 0; z-index: 25;
-				background: rgba(29,29,29,0.82); backdrop-filter: blur(10px);
+				background: rgba(22,22,22,0.82); backdrop-filter: blur(10px);
 				border-bottom: 1px solid var(--border);
 			}
 			nav.top .row { display: flex; align-items: center; gap: 2rem; padding: 0.85rem 0; flex-wrap: wrap; }
@@ -214,7 +214,7 @@ const subnav: { key: ActiveKey; label: string; path: string }[] = [
 			}
 			nav.top .lockup .wordmark .wm-box {
 				color: var(--mint);
-				text-shadow: 0 0 12px rgba(135,206,235,0.35);
+				text-shadow: 0 0 12px rgba(176,222,240,0.35);
 			}
 			nav.top .lockup:hover .wordmark .wm-box { filter: brightness(1.1); }
 
@@ -232,16 +232,17 @@ const subnav: { key: ActiveKey; label: string; path: string }[] = [
 			nav.top .sub-link .sub-tick { color: var(--mint-dim); font-size: 0.7rem; }
 			nav.top .sub-link.active {
 				color: var(--mint); border-color: var(--mint-dim);
-				background: rgba(135,206,235,0.05);
+				background: rgba(176,222,240,0.05);
 			}
 			nav.top .sub-link.active .sub-tick { color: var(--mint); }
 
 			.cta-pill {
 				display: inline-flex; align-items: center; gap: 0.5rem;
 				padding: 0.5rem 1rem; border: 1px solid var(--mint); color: var(--mint);
-				font-family: "JetBrains Mono", monospace; font-size: 0.78rem; letter-spacing: 0.1em; text-transform: uppercase;
-				background: rgba(135,206,235,0.04);
-				box-shadow: 0 0 12px rgba(135,206,235,0.15);
+				font-family: "JetBrains Mono", monospace; font-size: 0.78rem; font-weight: 700;
+				letter-spacing: 0.1em; text-transform: uppercase;
+				background: rgba(176,222,240,0.04);
+				box-shadow: 0 0 12px rgba(176,222,240,0.15);
 				flex: 0 0 auto;
 			}
 			.cta-pill:hover { background: var(--mint); color: var(--bg); text-decoration: none; }
@@ -274,7 +275,7 @@ const subnav: { key: ActiveKey; label: string; path: string }[] = [
 				font-size: 0.85rem; letter-spacing: 0.14em; text-transform: uppercase;
 				font-weight: 500;
 			}
-			.section-tag .dot { width: 7px; height: 7px; background: var(--mint); display: inline-block; box-shadow: 0 0 6px rgba(135,206,235,0.5); }
+			.section-tag .dot { width: 7px; height: 7px; background: var(--mint); display: inline-block; box-shadow: 0 0 6px rgba(176,222,240,0.5); }
 			/* Display headings — professional cyber-terminal mono.
 			   JetBrains Mono Semi-Bold with negative tracking for headline density.
 			   Class names kept as `.serif-*` for backwards-compat with pages but
@@ -319,18 +320,19 @@ const subnav: { key: ActiveKey; label: string; path: string }[] = [
 			.btn {
 				display: inline-flex; align-items: center; gap: 0.5rem;
 				padding: 0.85rem 1.25rem; font-family: "JetBrains Mono", monospace;
-				font-size: 0.82rem; letter-spacing: 0.08em; text-transform: uppercase;
+				font-size: 0.82rem; font-weight: 700;
+				letter-spacing: 0.08em; text-transform: uppercase;
 				border: 1px solid var(--border); background: var(--bg-elevated); color: var(--fg);
 				transition: all 150ms ease;
 			}
-			.btn.primary { background: var(--mint); color: var(--bg); border-color: var(--mint); box-shadow: 0 0 18px rgba(135,206,235,0.35); }
+			.btn.primary { background: var(--mint); color: var(--bg); border-color: var(--mint); box-shadow: 0 0 18px rgba(176,222,240,0.35); }
 			.btn:hover { text-decoration: none; border-color: var(--mint); color: var(--mint); }
 			.btn.primary:hover { color: var(--bg); filter: brightness(1.05); }
 
 			/* Console (reused across pages) */
 			.console {
 				position: relative; aspect-ratio: 1 / 1;
-				border: 1px solid var(--border-hi); background: linear-gradient(180deg, rgba(135,206,235,0.05), transparent 70%);
+				border: 1px solid var(--border-hi); background: linear-gradient(180deg, rgba(176,222,240,0.05), transparent 70%);
 				padding: 1.25rem; max-width: 540px; margin: 0 auto;
 				overflow: visible;
 			}
@@ -355,7 +357,7 @@ const subnav: { key: ActiveKey; label: string; path: string }[] = [
 			.console .ring { stroke: var(--mint-dim); fill: none; }
 			.console .scan {
 				position: absolute; left: 0; right: 0; height: 36px;
-				background: linear-gradient(180deg, transparent, rgba(135,206,235,0.18), transparent);
+				background: linear-gradient(180deg, transparent, rgba(176,222,240,0.18), transparent);
 				animation: sweep 5.5s ease-in-out infinite; pointer-events: none;
 			}
 			@keyframes sweep { 0% { top: -10%; } 100% { top: 105%; } }

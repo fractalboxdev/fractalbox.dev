@@ -37,7 +37,7 @@ const strokeWidth = Math.max(0.35, 1.4 - depth * 0.18).toFixed(2);
 		z-index: 0;
 		pointer-events: none;
 		display: grid; place-items: center;
-		color: var(--ifs-color, #87ceeb);
+		color: var(--ifs-color, #b0def0);
 		opacity: var(--ifs-opacity, 0.055);
 		mix-blend-mode: screen;
 		/* Cursor reactivity — translate is dampened parallax, rotation is subtle
@@ -57,7 +57,7 @@ const strokeWidth = Math.max(0.35, 1.4 - depth * 0.18).toFixed(2);
 		width: min(140vmin, 1500px);
 		height: min(140vmin, 1500px);
 		display: block;
-		filter: drop-shadow(0 0 8px var(--ifs-glow, rgba(135,206,235,0.18)));
+		filter: drop-shadow(0 0 8px var(--ifs-glow, rgba(176,222,240,0.18)));
 		/* Entry rotation — fires on every page mount because the SVG element
 		   is freshly inserted by ClientRouter when navigating. Different SVG
 		   transform from the parent (.ifs-bg) so cursor reactivity composes
