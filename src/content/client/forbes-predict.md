@@ -1,7 +1,7 @@
 ---
 title: ForbesPredict powered by Axiom
 logoSrc: src/assets/logo_forbes_predict.png
-logoClass: larger
+logoClass: larger flip
 role: Fractional CTO/CISO
 order: 1
 featured: true
