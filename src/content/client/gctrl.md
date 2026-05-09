@@ -2,20 +2,22 @@
 title: GCtrl
 order: 5
 featured: true
-problem: "Local-first multi-agent orchestrations mission control systems"
+problem: "Local-first multi-agent orchestration mission control system"
 role: "Lead Developer"
 stack:
   - Rust
   - Electron
   - Effect-ts
+  - Cloudflare Worker
 ---
 
 ## Summary
 
-Ground Control (Gctrl) is a mission control systems built to enable local-first multi agent orchestration.
+Ground Control (Gctrl) is an open source, mission-control system for multi-agent workflows — a local-first desktop application that gives operators a single surface to drive multiple AI agents across providers, sync their state for team collaboration, and observe what each run actually did. A Cloudflare-backed sync layer turns the same vault into shared substrate for the team without giving up the local-first guarantee.
+
 
 ## Approach
 
-- **Harness engineering** — owned the architecture and built guardrails into the agentic workflow itself: spec-driven development, automated code review, and continuous gap analysis. The harness lets a lean team move on tight iteration cycles without trading off correctness.
-- **Secure & Compliance-by-design** — security and privacy built in from day one. Authentication, encryption, access control, and audit trails designed against the threat model the category demands; complex country-based regulations such as GDPR & CCPA shape data flow, retention, and consent.
-- **Operate at scale** — runtime architecture sized for the forbes.com audience: event streaming through Kafka, edge logic on Cloudflare Workers + Durable Objects + Queues, persistent backend on AWS, business logic written in Effect-TS for predictable error and concurrency semantics.
+- **Provider Agnoistic** — Support Claude Code, Codex, Hermes Agent are supported 
+- **Local-first** — File-first by design. Vault is sync with R2 for team collaborations. Run both cloud and local LLM for work.
+- **Agent-first** — Agents are first-class citizen. Kanban enable human to provide context and handle handoffs across agents. Otel-based analytics and evals are built-in for harness engineering
