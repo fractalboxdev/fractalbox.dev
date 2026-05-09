@@ -30,9 +30,8 @@ const logoPaths = import.meta.glob<{ default: ImageMetadata }>(
 		const loader = logoPaths[`/${c.data.logoSrc!}`];
 		if (!loader) return null;
 		const extra = c.data.logoClass ?? "";
-		const isLarger = extra.split(/\s+/).includes("larger");
 		return (
-			<div class:list={["logo-cell", isLarger && "logo-cell--wide"]}>
+			<div class="logo-cell">
 				<Image
 					src={loader()}
 					alt={c.data.title}
@@ -93,14 +92,10 @@ const logoPaths = import.meta.glob<{ default: ImageMetadata }>(
 	.trust-register .logo-img.gray-only {
 		filter: grayscale(1) contrast(1.05);
 	}
-	/* Per-logo size override. Cell is widened so the image — which is
-	   width-bounded inside the cell — has room to render larger; the
-	   matching .larger img bumps the height cap to match. */
-	.trust-register .logo-cell--wide {
-		flex-basis: calc(var(--cell) * 2);
-		width: calc(var(--cell) * 2);
-	}
+	/* Per-logo size override. Visually scales the logo around its centre
+	   without changing the cell's layout box, so neighbours stay aligned. */
 	.trust-register .logo-img.larger {
-		max-height: 88px;
+		transform: scale(1.6);
+		transform-origin: center;
 	}
 </style>
