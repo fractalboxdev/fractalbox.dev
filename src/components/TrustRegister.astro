@@ -82,8 +82,14 @@ const logoPaths = import.meta.glob<{ default: ImageMetadata }>(
 	}
 	/* Skip the universal invert and render the source artwork unchanged.
 	   For brand assets that should stay in their original colours
-	   (e.g. ForbesPredict's red wordmark, Filecoin's official mark). */
+	   (e.g. ForbesPredict's red wordmark). */
 	.trust-register .logo-img.no-invert {
 		filter: none;
+	}
+	/* Desaturate without inverting — preserves the source's tonal direction
+	   (light bg stays light) but strips colour. For assets like Filecoin's
+	   coloured wordmark on a white card. */
+	.trust-register .logo-img.gray-only {
+		filter: grayscale(1) contrast(1.05);
 	}
 </style>

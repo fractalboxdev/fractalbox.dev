@@ -1,12 +1,9 @@
 ---
 import { getCollection, getEntry } from "astro:content";
 import Layout from "../layouts/FractalMay2026.astro";
-import BoxDimChip from "../components/BoxDimChip.astro";
-import { lSystemTree } from "../data/fractals";
 
 const studio = (await getEntry("site", "studio"))!.data;
 const services = (await getCollection("services")).sort((a, b) => a.data.order - b.data.order);
-const phases = (await getCollection("phases")).sort((a, b) => a.data.order - b.data.order);
 const faq = (await getCollection("faq")).sort((a, b) => a.data.order - b.data.order);
 ---
 <Layout
@@ -18,35 +15,8 @@ const faq = (await getCollection("faq")).sort((a, b) => a.data.order - b.data.or
 >
 	<section style="padding-top:4rem;">
 		<div class="wrap">
-			<div class="eyebrow"><span class="blink"></span> // §II · the tree branches</div>
-			<h1 class="serif-h1">Three branches. Each opens with a thirty-day reading.</h1>
-			<p class="serif-lede">Engagement length scales with scope. We start small, the work earns its keep, the engagement grows.</p>
-
-			<aside style="margin-top:3rem; padding:1.5rem; border:1px solid var(--border); background:var(--bg-card); border-radius:0;">
-				<div style="display:flex; justify-content:space-between; align-items:center; gap:1rem; flex-wrap:wrap;">
-					<div class="idx" style="font-family:'JetBrains Mono',monospace; color:var(--mint); font-size:0.72rem; letter-spacing:0.2em; text-transform:uppercase;">// fig II — engagement decomposition · live</div>
-					<div style="--chip-color: var(--mint); --chip-border: var(--border-hi); --chip-bg: var(--bg-elevated); --chip-name: var(--amber); --chip-val: var(--math);">
-						<BoxDimChip for="ltree" compact />
-					</div>
-				</div>
-				<svg viewBox="-220 -10 440 200" aria-hidden="false" role="img" style="width:100%; height:auto; max-height:240px; margin-top:1rem;">
-					{services.map((s, i) => (
-						<g class="ltree-grp" transform={`translate(${-150 + i * 150} 180) rotate(180)`} style={`animation-delay: ${i * 0.4}s`}>
-							<path d={lSystemTree(5, 24, 22)} fill="none" stroke="#b0def0" stroke-width="0.9" stroke-linecap="round" class="ltree-path"/>
-						</g>
-					))}
-					<text x="-150" y="200" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="9" fill="#b0def0" letter-spacing="0.1em">CTO</text>
-					<text x="0" y="200" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="9" fill="#b0def0" letter-spacing="0.1em">CISO</text>
-					<text x="150" y="200" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="9" fill="#b0def0" letter-spacing="0.1em">ENG</text>
-				</svg>
-			</aside>
-		</div>
-	</section>
-
-	<section>
-		<div class="wrap">
 			<div class="section-tag"><span class="dot"></span> // detail</div>
-			<h2 class="serif-h2">By branch.</h2>
+			<h2 class="serif-h2">Approaches</h2>
 
 			<div style="display:grid; gap:1.25rem; margin-top:2.5rem;">
 				{services.map((s, i) => (
@@ -70,36 +40,6 @@ const faq = (await getCollection("faq")).sort((a, b) => a.data.order - b.data.or
 			<path d="M-600,0 L600,0" fill="none" stroke="currentColor" stroke-width="0.6" stroke-dasharray="2 6"/>
 		</svg>
 	</div>
-
-	<section>
-		<div class="wrap">
-			<div class="section-tag"><span class="dot"></span> // engagement timeline</div>
-			<h2 class="serif-h2">How an engagement unfolds.</h2>
-			<p class="lede">Read-only diagnostic first. We earn the rest.</p>
-
-			<ol style="margin-top:2.5rem; padding:0; list-style:none; display:grid; gap:0;">
-				{phases.map((p, i) => (
-					<li
-						class="phase"
-						style={`
-							display:grid; grid-template-columns:9rem 1fr; gap:1.5rem;
-							padding:1.5rem 0; border-top:1px solid var(--border);
-							animation: phase-in 600ms cubic-bezier(0.16, 1, 0.3, 1) ${0.15 * i}s both;
-						`}
-					>
-						<div>
-							<div style="font-family:'JetBrains Mono',monospace; color:var(--amber); font-size:1.3rem; letter-spacing:0.05em;">{p.data.k}</div>
-							<div style="font-family:'JetBrains Mono',monospace; color:var(--muted); font-size:0.7rem; letter-spacing:0.16em; text-transform:uppercase; margin-top:0.3rem;">phase {String(i + 1).padStart(2, "0")}</div>
-						</div>
-						<div>
-							<h3 class="serif-h3" style="margin:0 0 0.4rem;">{p.data.t}</h3>
-							<p style="color:var(--muted); margin:0;">{p.data.d}</p>
-						</div>
-					</li>
-				))}
-			</ol>
-		</div>
-	</section>
 
 	<section>
 		<div class="wrap">
@@ -128,29 +68,6 @@ const faq = (await getCollection("faq")).sort((a, b) => a.data.order - b.data.or
 	</section>
 
 	<style>
-		.ltree-grp {
-			animation: ltree-grow 5s cubic-bezier(0.16, 1, 0.3, 1) infinite;
-			transform-origin: 50% 100%; transform-box: fill-box;
-		}
-		.ltree-path {
-			stroke-dasharray: 600;
-			stroke-dashoffset: 600;
-			animation: ltree-draw 5s cubic-bezier(0.16, 1, 0.3, 1) infinite;
-		}
-		@keyframes ltree-draw {
-			0%   { stroke-dashoffset: 600; opacity: 0.2; }
-			30%  { stroke-dashoffset: 0;   opacity: 1; }
-			70%  { stroke-dashoffset: 0;   opacity: 1; }
-			100% { stroke-dashoffset: 600; opacity: 0.2; }
-		}
-		@keyframes phase-in {
-			0%   { opacity: 0; transform: translateX(-12px); }
-			100% { opacity: 1; transform: translateX(0); }
-		}
 		details[open] summary span:first-child { color: var(--amber); }
-		@media (prefers-reduced-motion: reduce) {
-			.ltree-grp, .ltree-path, .phase { animation: none; }
-			.ltree-path { stroke-dashoffset: 0; opacity: 1; }
-		}
 	</style>
 </Layout>

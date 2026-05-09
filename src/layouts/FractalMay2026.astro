@@ -36,6 +36,7 @@ const kochRule = kochLinePath(3, 1200, 0, 0);
 
 const subnav: { key: ActiveKey; label: string; path: string }[] = [
 	{ key: "index",    label: "OVERVIEW", path: "/" },
+	{ key: "services", label: "SERVICES", path: "/services" },
 	{ key: "work",     label: "WORK",     path: "/work" },
 	{ key: "team",     label: "TEAM",     path: "/team" },
 	{ key: "contact",  label: "CONTACT",  path: "/contact" },
@@ -143,7 +144,16 @@ const subnav: { key: ActiveKey; label: string; path: string }[] = [
 
 			a { color: var(--mint); text-decoration: none; }
 			a:hover { text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 4px; }
-			.wrap { max-width: 80rem; margin: 0 auto; padding: 0 1.75rem; position: relative; }
+			/* HUD corner brackets sit at inset:14px and are 28px wide, so they
+			   occupy the first 42px of every viewport edge. Content padding is
+			   set generously above that footprint so nothing collides with the
+			   HUD on any breakpoint. On small viewports the HUD itself shrinks
+			   (see .hud-frame .corner media query below) so content can
+			   reclaim some padding. */
+			.wrap { max-width: 80rem; margin: 0 auto; padding: 0 4rem; position: relative; }
+			@media (max-width: 720px) {
+				.wrap { padding: 0 3rem; }
+			}
 
 			/* Subtle CRT scanlines */
 			body::before {
@@ -170,6 +180,10 @@ const subnav: { key: ActiveKey; label: string; path: string }[] = [
 				will-change: transform;
 			}
 			.hud-frame .corner { position: absolute; width: 28px; height: 28px; border: 1px solid currentColor; }
+			@media (max-width: 720px) {
+				.hud-frame { inset: 10px; }
+				.hud-frame .corner { width: 18px; height: 18px; }
+			}
 			.hud-frame .tl { top: 0; left: 0; border-right: none; border-bottom: none; }
 			.hud-frame .tr { top: 0; right: 0; border-left: none; border-bottom: none; }
 			.hud-frame .bl { bottom: 0; left: 0; border-right: none; border-top: none; }
