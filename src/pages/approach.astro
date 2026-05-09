@@ -1,34 +1,14 @@
 ---
-import Layout from "../../../layouts/FractalMay2026.astro";
-import BoxDimChip from "../../../components/BoxDimChip.astro";
-import { pillars, contact, boxLine } from "../../../data/spec";
-import { sierpinskiPolygons, kochSnowflakePath } from "../../../data/fractals";
+import { getCollection, getEntry } from "astro:content";
+import Layout from "../layouts/FractalMay2026.astro";
+import BoxDimChip from "../components/BoxDimChip.astro";
+import { sierpinskiPolygons, kochSnowflakePath } from "../data/fractals";
 
-const pillarExtended = [
-	{
-		artifact: "specs/approach/threat-model-template.md",
-		standards: "STRIDE · LINDDUN · MITRE ATT&CK",
-		concrete: "We default to CRDTs (Yjs / Automerge), on-device encryption (libsodium), and offline-capable UX. Sync runs over WebSockets when available, queued mailbox when not.",
-	},
-	{
-		artifact: "specs/approach/data-residency.md",
-		standards: "GDPR · MAS TRM 11.1.5 · HIPAA",
-		concrete: "Minimum data collected, minimum data retained. Threat models include the operator. We deploy data classification labels at the column level, not the policy level.",
-	},
-	{
-		artifact: "specs/approach/soc2-readiness.md",
-		standards: "SOC2 Type II · ISO27001 · MAS TRM",
-		concrete: "Designed in from day one. Drata or Vanta-aligned controls, mapped policies, evidence collection automated against AWS / GCP / Cloudflare APIs.",
-	},
-	{
-		artifact: "specs/approach/sbom-workflow.md",
-		standards: "STRIDE · SLSA L3 · CycloneDX SBOM",
-		concrete: "Pinned dependencies, signed releases (Sigstore), audited transitives. Pull-request gates with semgrep + osv-scanner. Supply-chain compromises caught at PR time.",
-	},
-];
+const studio = (await getEntry("site", "studio"))!.data;
+const pillars = (await getCollection("pillars")).sort((a, b) => a.data.order - b.data.order);
 ---
 <Layout
-	title="fractal.box — approach · may 2026"
+	title="fractalbox.dev — approach"
 	active="approach"
 	iter={3}
 	pageTag="§III · APPROACH"
@@ -70,7 +50,7 @@ const pillarExtended = [
 			<div style="margin-top:1.25rem; display:flex; gap:1rem; flex-wrap:wrap; align-items:center; --chip-color: var(--mint); --chip-border: var(--border-hi); --chip-bg: var(--bg-elevated); --chip-name: var(--amber); --chip-val: var(--math);">
 				<BoxDimChip for="sierpinski" />
 				<span style="font-family:'JetBrains Mono',monospace; font-size:0.78rem; letter-spacing:0.06em; color:var(--muted);">
-					// invariant across d ∈ {1, 2, 3, 4} — that&rsquo;s the claim
+					// invariant across d ∈ {`{1, 2, 3, 4}`} — that&rsquo;s the claim
 				</span>
 			</div>
 		</div>
@@ -98,25 +78,25 @@ const pillarExtended = [
 								</g>
 							</svg>
 							<div>
-								<div style="color:var(--mint); font-family:'JetBrains Mono',monospace; font-size:0.72rem; letter-spacing:0.2em; text-transform:uppercase;">PILLAR · {p.n} · DEPTH {i + 1}</div>
-								<h3 class="serif-h3" style="font-size:1.6rem; margin:0.4rem 0;">{p.name}</h3>
-								<p class="serif-lede" style="font-size:1.05rem; margin:0;">{p.body}</p>
+								<div style="color:var(--mint); font-family:'JetBrains Mono',monospace; font-size:0.72rem; letter-spacing:0.2em; text-transform:uppercase;">PILLAR · {p.data.n} · DEPTH {i + 1}</div>
+								<h3 class="serif-h3" style="font-size:1.6rem; margin:0.4rem 0;">{p.data.name}</h3>
+								<p class="serif-lede" style="font-size:1.05rem; margin:0;">{p.data.body}</p>
 							</div>
 						</div>
 
 						<div style="display:grid; grid-template-columns:1fr; gap:1rem;">
 							<div style="padding:1rem 1.25rem; border:1px solid var(--border); background:var(--bg-card);">
 								<div style="color:var(--amber); font-family:'JetBrains Mono',monospace; font-size:0.7rem; letter-spacing:0.18em; text-transform:uppercase; margin-bottom:0.5rem;">// what we actually do</div>
-								<p style="margin:0; color:var(--fg); font-size:0.95rem;">{pillarExtended[i].concrete}</p>
+								<p style="margin:0; color:var(--fg); font-size:0.95rem;">{p.data.concrete}</p>
 							</div>
 							<div style="display:grid; gap:0.5rem; grid-template-columns:1fr 1fr; font-family:'JetBrains Mono',monospace; font-size:0.8rem;">
 								<div style="padding:0.7rem 1rem; border:1px solid var(--border); background:var(--bg-elevated);">
 									<div style="color:var(--muted); font-size:0.65rem; letter-spacing:0.18em; text-transform:uppercase;">artifact</div>
-									<div style="color:var(--mint); margin-top:0.2rem; word-break:break-all;">{pillarExtended[i].artifact}</div>
+									<div style="color:var(--mint); margin-top:0.2rem; word-break:break-all;">{p.data.artifact}</div>
 								</div>
 								<div style="padding:0.7rem 1rem; border:1px solid var(--border); background:var(--bg-elevated);">
 									<div style="color:var(--muted); font-size:0.65rem; letter-spacing:0.18em; text-transform:uppercase;">standards</div>
-									<div style="color:var(--amber); margin-top:0.2rem;">{pillarExtended[i].standards}</div>
+									<div style="color:var(--amber); margin-top:0.2rem;">{p.data.standards}</div>
 								</div>
 							</div>
 						</div>
@@ -136,7 +116,7 @@ const pillarExtended = [
 			<p class="serif-lede" style="margin:1rem auto 1.5rem; max-width:32rem;">
 				Rigour scales with engagement. The <em>shape</em> doesn&rsquo;t change.
 			</p>
-			<a class="btn primary" href={`mailto:${contact.email}`}>↪ start a discussion</a>
+			<a class="btn primary" href={`mailto:${studio.email}`}>↪ start a discussion</a>
 		</div>
 	</section>
 

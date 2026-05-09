@@ -3,7 +3,7 @@ User-agent: *
 Allow: /
 
 # Host
-Host: https://fractal.box
+Host: https://fractalbox.dev
 
 # Sitemaps
-Sitemap: https://fractal.box/sitemap.xml
+Sitemap: https://fractalbox.dev/sitemap.xml

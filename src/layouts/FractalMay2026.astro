@@ -5,8 +5,11 @@ import FractalVeil from "../components/FractalVeil.astro";
 import CursorReactor from "../components/CursorReactor.astro";
 import IFSBackground from "../components/IFSBackground.astro";
 import { kochLinePath } from "../data/fractals";
-import { contact } from "../data/spec";
+import { getEntry } from "astro:content";
 import { BOX_MOTTO } from "../data/box-dimensions";
+
+const studio = await getEntry("site", "studio");
+const contact = studio!.data;
 
 type ActiveKey = "index" | "services" | "approach" | "work" | "team" | "contact" | "logos";
 
@@ -32,12 +35,10 @@ const {
 const kochRule = kochLinePath(3, 1200, 0, 0);
 
 const subnav: { key: ActiveKey; label: string; path: string }[] = [
-	{ key: "index",    label: "OVERVIEW", path: "/themes/fractal-may2026/" },
-	{ key: "services", label: "SERVICES", path: "/themes/fractal-may2026/services" },
-	{ key: "approach", label: "APPROACH", path: "/themes/fractal-may2026/approach" },
-	{ key: "work",     label: "WORK",     path: "/themes/fractal-may2026/work" },
-	{ key: "team",     label: "TEAM",     path: "/themes/fractal-may2026/team" },
-	{ key: "contact",  label: "CONTACT",  path: "/themes/fractal-may2026/contact" },
+	{ key: "index",    label: "OVERVIEW", path: "/" },
+	{ key: "work",     label: "WORK",     path: "/work" },
+	{ key: "team",     label: "TEAM",     path: "/team" },
+	{ key: "contact",  label: "CONTACT",  path: "/contact" },
 ];
 ---
 <!DOCTYPE html>
@@ -60,7 +61,7 @@ const subnav: { key: ActiveKey; label: string; path: string }[] = [
 		<div class="shell">
 			<nav class="top">
 				<div class="wrap row">
-					<a class="lockup" href="/themes/fractal-may2026/" transition:name="studio-mark">
+					<a class="lockup" href="/" transition:name="studio-mark">
 						<span class="wordmark">
 							<span>Fractal</span><span class="wm-box">Box</span>
 						</span>
@@ -75,12 +76,7 @@ const subnav: { key: ActiveKey; label: string; path: string }[] = [
 						))}
 					</div>
 
-					<a class="cta-pill" href={`mailto:${contact.email}`}>uplink ↗</a>
-				</div>
-				<div class="wrap pagetag" transition:name="pagetag">
-					<span>{pageTag}</span>
-					<span class="eq-chip">i = {iter}</span>
-					{pageGreek && <span class="greek">— {pageGreek}</span>}
+					<a class="cta-pill" href={`mailto:${contact.email}`}>Talk to Us ↗</a>
 				</div>
 			</nav>
 
@@ -92,7 +88,7 @@ const subnav: { key: ActiveKey; label: string; path: string }[] = [
 				<div class="wrap row">
 					<span>// © {new Date().getFullYear()} {contact.entity}</span>
 					<span style="color:var(--mint);">// {BOX_MOTTO.studio}</span>
-					<span><a href="/">← /themes</a></span>
+					<span><a href={`mailto:${contact.email}`}>{contact.email} ↗</a></span>
 				</div>
 				<div class="wrap" style="margin-top:0.4rem;opacity:0.4;">
 					<svg viewBox="-600 -8 1200 16" preserveAspectRatio="none" style="width:100%;height:14px;color:var(--mint-dim);">
@@ -213,7 +209,6 @@ const subnav: { key: ActiveKey; label: string; path: string }[] = [
 			}
 			nav.top .lockup .wordmark .wm-box {
 				color: var(--mint);
-				text-shadow: 0 0 12px rgba(176,222,240,0.35);
 			}
 			nav.top .lockup:hover .wordmark .wm-box { filter: brightness(1.1); }
 
@@ -241,7 +236,6 @@ const subnav: { key: ActiveKey; label: string; path: string }[] = [
 				font-family: "JetBrains Mono", monospace; font-size: 0.78rem; font-weight: 700;
 				letter-spacing: 0.1em; text-transform: uppercase;
 				background: rgba(176,222,240,0.04);
-				box-shadow: 0 0 12px rgba(176,222,240,0.15);
 				flex: 0 0 auto;
 			}
 			.cta-pill:hover { background: var(--mint); color: var(--bg); text-decoration: none; }
@@ -324,7 +318,7 @@ const subnav: { key: ActiveKey; label: string; path: string }[] = [
 				border: 1px solid var(--border); background: var(--bg-elevated); color: var(--fg);
 				transition: all 150ms ease;
 			}
-			.btn.primary { background: var(--mint); color: var(--bg); border-color: var(--mint); box-shadow: 0 0 18px rgba(176,222,240,0.35); }
+			.btn.primary { background: var(--mint); color: var(--bg); border-color: var(--mint); }
 			.btn:hover { text-decoration: none; border-color: var(--mint); color: var(--mint); }
 			.btn.primary:hover { color: var(--bg); filter: brightness(1.05); }
 

@@ -1,25 +1,16 @@
 ---
-import Layout from "../../../layouts/FractalMay2026.astro";
-import BoxDimChip from "../../../components/BoxDimChip.astro";
-import { services, contact, boxLine } from "../../../data/spec";
-import { lSystemTree } from "../../../data/fractals";
+import { getCollection, getEntry } from "astro:content";
+import Layout from "../layouts/FractalMay2026.astro";
+import BoxDimChip from "../components/BoxDimChip.astro";
+import { lSystemTree } from "../data/fractals";
 
-const phases = [
-	{ k: "T+0d",   t: "Diagnostic",     d: "Read-only access. Codebase audit. Stakeholder interviews. We hand you what we found." },
-	{ k: "T+30d",  t: "Engagement",     d: "Embedded with the team. Decisions made in your standups, not our slides." },
-	{ k: "T+90d",  t: "First milestone", d: "Concrete artifact in production. Threat model, hire, ship — whichever the diagnostic called." },
-	{ k: "T+180d", t: "Renew or close", d: "Either we earned the next quarter or we close clean and document the runbook." },
-];
-
-const faq = [
-	{ q: "How is this different from a consultant?", a: "Consultants advise. We embed, decide, and ship. Code commits land under our handle, on-call rotation includes us." },
-	{ q: "Do you compete with full-time hires?", a: "No — we precede them. Most engagements end with us writing the JD and interviewing the hire who replaces us." },
-	{ q: "How do you bill?", a: "Monthly retainer scoped to days/week. No platforms, no markups, no resold engineers." },
-	{ q: "Can you sign our customer's security questionnaire?", a: "Yes. We bring an SOC2 / ISO27001-aligned posture statement and have responded to MAS, FINMA, and US-financial vendor reviews." },
-];
+const studio = (await getEntry("site", "studio"))!.data;
+const services = (await getCollection("services")).sort((a, b) => a.data.order - b.data.order);
+const phases = (await getCollection("phases")).sort((a, b) => a.data.order - b.data.order);
+const faq = (await getCollection("faq")).sort((a, b) => a.data.order - b.data.order);
 ---
 <Layout
-	title="fractal.box — services · may 2026"
+	title="fractalbox.dev — services"
 	active="services"
 	iter={2}
 	pageTag="§II · SERVICES"
@@ -61,12 +52,12 @@ const faq = [
 				{services.map((s, i) => (
 					<article style={`display:grid; grid-template-columns:1fr; gap:1.5rem; padding:2rem; border:1px solid var(--border); background:var(--bg-card); position:relative;`}>
 						<div style="display:grid; grid-template-columns:1fr; gap:0.5rem;">
-							<div class="idx" style="color:var(--mint); font-family:'JetBrains Mono',monospace; font-size:0.72rem; letter-spacing:0.2em; text-transform:uppercase;">SVC.0{i + 1} · {s.id}</div>
-							<h3 class="serif-h3" style="font-size:1.6rem; margin:0;">{s.name}</h3>
-							<p class="serif-lede" style="font-size:1rem; margin-top:0.4rem;">{s.lead}</p>
+							<div class="idx" style="color:var(--mint); font-family:'JetBrains Mono',monospace; font-size:0.72rem; letter-spacing:0.2em; text-transform:uppercase;">SVC.0{i + 1} · {s.data.id}</div>
+							<h3 class="serif-h3" style="font-size:1.6rem; margin:0;">{s.data.name}</h3>
+							<p class="serif-lede" style="font-size:1rem; margin-top:0.4rem;">{s.data.lead}</p>
 						</div>
 						<ul style="margin:0; padding-left:1.1rem; color:var(--fg); font-size:0.95rem;">
-							{s.bullets.map((b) => <li style="margin:0.4rem 0;">{b}</li>)}
+							{s.data.bullets.map((b) => <li style="margin:0.4rem 0;">{b}</li>)}
 						</ul>
 					</article>
 				))}
@@ -97,12 +88,12 @@ const faq = [
 						`}
 					>
 						<div>
-							<div style="font-family:'JetBrains Mono',monospace; color:var(--amber); font-size:1.3rem; letter-spacing:0.05em;">{p.k}</div>
+							<div style="font-family:'JetBrains Mono',monospace; color:var(--amber); font-size:1.3rem; letter-spacing:0.05em;">{p.data.k}</div>
 							<div style="font-family:'JetBrains Mono',monospace; color:var(--muted); font-size:0.7rem; letter-spacing:0.16em; text-transform:uppercase; margin-top:0.3rem;">phase {String(i + 1).padStart(2, "0")}</div>
 						</div>
 						<div>
-							<h3 class="serif-h3" style="margin:0 0 0.4rem;">{p.t}</h3>
-							<p style="color:var(--muted); margin:0;">{p.d}</p>
+							<h3 class="serif-h3" style="margin:0 0 0.4rem;">{p.data.t}</h3>
+							<p style="color:var(--muted); margin:0;">{p.data.d}</p>
 						</div>
 					</li>
 				))}
@@ -119,9 +110,9 @@ const faq = [
 					<details style="border-bottom:1px solid var(--border); padding:1.1rem 0;">
 						<summary style="cursor:pointer; font-family:'Iowan Old Style',Georgia,serif; font-size:1.1rem; color:var(--fg); list-style:none; display:flex; gap:0.7rem; align-items:baseline;">
 							<span style="color:var(--mint); font-family:'JetBrains Mono',monospace; font-size:0.85rem;">▸</span>
-							<span>{f.q}</span>
+							<span>{f.data.q}</span>
 						</summary>
-						<p style="color:var(--muted); margin:0.7rem 0 0 1.5rem; font-size:0.95rem;">{f.a}</p>
+						<p style="color:var(--muted); margin:0.7rem 0 0 1.5rem; font-size:0.95rem;">{f.data.a}</p>
 					</details>
 				))}
 			</div>
@@ -131,8 +122,8 @@ const faq = [
 	<section>
 		<div class="wrap" style="text-align:center;">
 			<div class="section-tag" style="justify-content:center;"><span class="dot"></span> // next iteration</div>
-			<h2 class="serif-h2" style="margin:0.5rem auto 1.5rem; max-width:none;">Open the channel.</h2>
-			<a class="btn primary" href={`mailto:${contact.email}`}>↪ {contact.email}</a>
+			<h2 class="serif-h2" style="margin:0.5rem auto 1.5rem; max-width:none;">Start Shipping.</h2>
+			<a class="btn primary" href={`mailto:${studio.email}`}>↪ {studio.email}</a>
 		</div>
 	</section>
 
