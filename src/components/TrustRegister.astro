@@ -64,7 +64,7 @@ const logoPaths = import.meta.glob<{ default: ImageMetadata }>(
 	   to pure white for crisp edges. */
 	.trust-register .logo-img {
 		max-width: 100%;
-		max-height: 36px;
+		max-height: 48px;
 		width: auto;
 		height: auto;
 		object-fit: contain;
@@ -91,5 +91,11 @@ const logoPaths = import.meta.glob<{ default: ImageMetadata }>(
 	   coloured wordmark on a white card. */
 	.trust-register .logo-img.gray-only {
 		filter: grayscale(1) contrast(1.05);
+	}
+	/* Per-logo size override. Visually scales the logo around its centre
+	   without changing the cell's layout box, so neighbours stay aligned. */
+	.trust-register .logo-img.larger {
+		transform: scale(1.6);
+		transform-origin: center;
 	}
 </style>
