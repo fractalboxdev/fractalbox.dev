@@ -1,0 +1,86 @@
+---
+// IFSBackground — renders a Sierpinski IFS at depth `iter` as a full-page
+// background image. Position: fixed, z-index 0, low opacity, no pointer events
+// — it never occupies layout space; pages render content over it.
+//
+// Reacts to cursor through CSS custom properties (set globally by CursorReactor):
+//   --mlx, --mly  — lerped mouse offset for parallax translate
+//   --mr          — rotation angle, dampened so the drift is subtle
+//   --md          — distance from centre, drives a faint scale breathe
+//
+// As you navigate from page to page, `iter` increments: the same IFS attractor
+// is drawn at progressively finer subdivision. Self-similarity made literal.
+import { sierpinskiPolygons } from "../data/fractals";
+
+interface Props {
+	/** Iteration depth to render. 1 = first IFS application (3 triangles); 6 = depth-6 Sierpinski (729 sub-triangles). */
+	iter: number;
+}
+const { iter } = Astro.props;
+const depth = Math.max(0, Math.min(6, iter));
+const polys = sierpinskiPolygons(depth, 1100, 0, 0);
+// Stroke gets thinner at deeper iterations so the background never overpowers content
+const strokeWidth = Math.max(0.35, 1.4 - depth * 0.18).toFixed(2);
+---
+
+<div class="ifs-bg" aria-hidden="true" data-iter={depth}>
+	<svg viewBox="-580 -580 1160 1160" preserveAspectRatio="xMidYMid meet">
+		<g stroke="currentColor" fill="none" stroke-width={strokeWidth}>
+			{polys.map((p) => <polygon points={p}/>)}
+		</g>
+	</svg>
+</div>
+
+<style is:global>
+	.ifs-bg {
+		position: fixed; inset: 0;
+		z-index: 0;
+		pointer-events: none;
+		display: grid; place-items: center;
+		color: var(--ifs-color, #b0def0);
+		opacity: var(--ifs-opacity, 0.050);
+		mix-blend-mode: screen;
+		/* Cursor reactivity — translate is dampened parallax, rotation is subtle
+		   drift, scale a slight breathe driven by distance-from-centre. */
+		transform:
+			translate3d(
+				calc(var(--mlx, 0) * -18px),
+				calc(var(--mly, 0) * -18px),
+				0
+			)
+			rotate(calc(var(--mr, 0deg) * 0.10))
+			scale(calc(1 + var(--md, 0) * 0.025));
+		transition: transform 700ms cubic-bezier(0.16, 1, 0.3, 1), opacity 600ms ease;
+		will-change: transform;
+	}
+	.ifs-bg svg {
+		width: min(140vmin, 1500px);
+		height: min(140vmin, 1500px);
+		display: block;
+		filter: drop-shadow(0 0 1px var(--ifs-glow, rgba(176,222,240,0.05)));
+		/* Entry rotation — fires on every page mount because the SVG element
+		   is freshly inserted by ClientRouter when navigating. Different SVG
+		   transform from the parent (.ifs-bg) so cursor reactivity composes
+		   on top instead of being overridden. */
+		animation: ifs-enter 820ms cubic-bezier(0.16, 1, 0.3, 1) both;
+		transform-origin: 50% 50%;
+	}
+	@keyframes ifs-enter {
+		0%   { opacity: 0; transform: rotate(-36deg) scale(0.84); }
+		60%  { opacity: 1; }
+		100% { opacity: 1; transform: rotate(0deg)   scale(1); }
+	}
+	/* The deeper iterations get a touch more opacity to keep the texture
+	   readable as strokes thin out. */
+	.ifs-bg[data-iter="1"] { --ifs-opacity: 0.050; }
+	.ifs-bg[data-iter="2"] { --ifs-opacity: 0.058; }
+	.ifs-bg[data-iter="3"] { --ifs-opacity: 0.065; }
+	.ifs-bg[data-iter="4"] { --ifs-opacity: 0.072; }
+	.ifs-bg[data-iter="5"] { --ifs-opacity: 0.082; }
+	.ifs-bg[data-iter="6"] { --ifs-opacity: 0.092; }
+
+	@media (prefers-reduced-motion: reduce) {
+		.ifs-bg { transform: none; transition: none; }
+		.ifs-bg svg { animation: none; }
+	}
+</style>

@@ -1,0 +1,205 @@
+---
+// JuliaConsole — live Julia set rendered to a canvas.
+//
+// Origin = centre of the viewport (regardless of scroll). The cursor's
+// (x, y) relative to that origin is mapped to the complex parameter c.
+// The canvas renders Julia(c) — for small |c|, the set is a single
+// connected blob (the studio mark "intact"); as the cursor moves further
+// from origin and |c| crosses the Mandelbrot boundary, the set
+// disconnects into Cantor dust — it "blows up."
+//
+// CPU rendering, throttled to changes in c above a threshold so it stays
+// cheap. ~220×220 canvas at maxIter=40 = ~2M ops per render, only fires
+// when the lerped c moves enough.
+interface Props {
+	headLabel?: string;
+	readoutLeft?: string;
+}
+const {
+	headLabel = "JULIA · Z → Z² + C",
+	readoutLeft = "● LIVE",
+} = Astro.props;
+---
+
+<div class="console" transition:name="hero-console">
+	<span class="corner-2"></span><span class="corner-3"></span>
+	<div class="console-head">{headLabel}</div>
+
+	<div class="julia-stage">
+		<canvas class="julia-canvas" width="360" height="360" aria-hidden="true"></canvas>
+		<svg class="julia-axes" viewBox="-110 -110 220 220" aria-hidden="true">
+			<line x1="-100" y1="0" x2="100" y2="0" stroke="rgba(176,222,240,0.18)" stroke-width="0.4"/>
+			<line x1="0" y1="-100" x2="0" y2="100" stroke="rgba(176,222,240,0.18)" stroke-width="0.4"/>
+			<circle cx="0" cy="0" r="78" stroke="rgba(176,222,240,0.14)" stroke-dasharray="2 4" fill="none" stroke-width="0.4"/>
+			<circle cx="0" cy="0" r="100" stroke="rgba(176,222,240,0.08)" stroke-dasharray="1 4" fill="none" stroke-width="0.35"/>
+			<text x="98" y="-3" font-family="JetBrains Mono, monospace" font-size="6" fill="rgba(176,222,240,0.45)" text-anchor="end">RE</text>
+			<text x="3" y="-94" font-family="JetBrains Mono, monospace" font-size="6" fill="rgba(176,222,240,0.45)">IM</text>
+		</svg>
+	</div>
+
+	<div class="scan"></div>
+	<div class="console-readout">
+		<span>{readoutLeft}</span>
+		<span id="julia-c-readout">C = 0.000 + 0.000i</span>
+	</div>
+</div>
+
+<style>
+	.julia-stage {
+		position: absolute; inset: 1.25rem;
+		width: calc(100% - 2.5rem);
+		height: calc(100% - 2.5rem);
+		overflow: visible;
+	}
+	.julia-canvas {
+		position: absolute; inset: 0;
+		width: 100%; height: 100%;
+		image-rendering: pixelated;
+		background: transparent;
+		display: block;
+	}
+	/* Axes overlay extends beyond the .console frame so the unit circle
+	   visually exceeds the box. */
+	.julia-axes {
+		position: absolute; inset: -16%;
+		width: 132%; height: 132%;
+		pointer-events: none;
+		overflow: visible;
+	}
+	@media (prefers-reduced-motion: reduce) {
+		.julia-canvas { /* still rendered, but we won't update it on cursor */ }
+	}
+</style>
+
+<script>
+	declare global {
+		interface Window {
+			__juliaInit?: boolean;
+			__juliaState?: { mouseX: number; mouseY: number; cR: number; cI: number; lastR: number; lastI: number };
+		}
+	}
+
+	if (!window.__juliaInit) {
+		window.__juliaInit = true;
+
+		const state = {
+			mouseX: window.innerWidth / 2,
+			mouseY: window.innerHeight / 2,
+			cR: 0, cI: 0,
+			lastR: 999, lastI: 999,
+		};
+		window.__juliaState = state;
+
+		// Higher-definition rendering: 360×360 canvas + 64 iterations gives a
+		// crisper Mandelbrot/Julia boundary with finer escape-velocity gradient.
+		const maxIter = 64;
+		// Pre-baked monochrome white phosphor: transparent at far exterior,
+		// ramping to bright white near the boundary. Alpha tracks brightness
+		// so the dim exterior fades into the console background.
+		const palette = new Uint8ClampedArray(maxIter * 4);
+		for (let i = 0; i < maxIter; i++) {
+			const t = i / (maxIter - 1);
+			const b = Math.pow(t, 0.45);
+			const off = i * 4;
+			palette[off]     = 255;
+			palette[off + 1] = 255;
+			palette[off + 2] = 255;
+			palette[off + 3] = Math.floor(b * 255);
+		}
+
+		const reduced = window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
+
+		window.addEventListener("mousemove", (e) => {
+			state.mouseX = e.clientX;
+			state.mouseY = e.clientY;
+		}, { passive: true });
+
+		function render(canvas: HTMLCanvasElement, cR: number, cI: number) {
+			const ctx = canvas.getContext("2d", { willReadFrequently: false });
+			if (!ctx) return;
+			const W = canvas.width, H = canvas.height;
+			const imageData = ctx.createImageData(W, H);
+			const data = imageData.data;
+
+			for (let py = 0; py < H; py++) {
+				const zI0 = (py / H) * 3.2 - 1.6;
+				for (let px = 0; px < W; px++) {
+					let zR = (px / W) * 3.2 - 1.6;
+					let zI = zI0;
+					let i = 0;
+					while (i < maxIter) {
+						const r2 = zR * zR;
+						const i2 = zI * zI;
+						if (r2 + i2 > 4) break;
+						const newR = r2 - i2 + cR;
+						zI = 2 * zR * zI + cI;
+						zR = newR;
+						i++;
+					}
+					const off = (py * W + px) * 4;
+					if (i === maxIter) {
+						// Interior of the set — solid white so the blob
+						// reads as a luminous shape against the dark canvas.
+						data[off]     = 255;
+						data[off + 1] = 255;
+						data[off + 2] = 255;
+						data[off + 3] = 255;
+					} else {
+						const poff = i * 4;
+						data[off]     = palette[poff];
+						data[off + 1] = palette[poff + 1];
+						data[off + 2] = palette[poff + 2];
+						data[off + 3] = palette[poff + 3];
+					}
+				}
+			}
+			ctx.putImageData(imageData, 0, 0);
+		}
+
+		function tick() {
+			const halfW = window.innerWidth / 2;
+			const halfH = window.innerHeight / 2;
+			// Map mouse offset to c with a logarithmic remap on the normalized
+			// offset u ∈ [-1, 1]: sign(u) * log(1 + |u|·k) / log(1+k). The
+			// derivative is steepest at 0, so cursor motion near the centre is
+			// the most sensitive; the curve flattens toward the edges and
+			// saturates at ±1 at the viewport edge → |c|≈1.0.
+			const k = 19;
+			const logK = Math.log(1 + k);
+			const remap = (u: number) => Math.sign(u) * Math.log(1 + Math.abs(u) * k) / logK;
+			const targetR = remap((state.mouseX - halfW) / halfW);
+			const targetI = remap((state.mouseY - halfH) / halfH);
+			// Gentle lerp — c eases toward target over ~25 frames so motion
+			// feels deliberate, not snappy.
+			state.cR += (targetR - state.cR) * 0.10;
+			state.cI += (targetI - state.cI) * 0.10;
+
+			const dR = Math.abs(state.cR - state.lastR);
+			const dI = Math.abs(state.cI - state.lastI);
+			if (!reduced && (dR > 0.002 || dI > 0.002)) {
+				const canvas = document.querySelector(".julia-canvas") as HTMLCanvasElement | null;
+				if (canvas) {
+					render(canvas, state.cR, state.cI);
+					state.lastR = state.cR;
+					state.lastI = state.cI;
+
+					const readout = document.getElementById("julia-c-readout");
+					if (readout) {
+						const sign = state.cI >= 0 ? "+" : "−";
+						readout.textContent = `C = ${state.cR.toFixed(3)} ${sign} ${Math.abs(state.cI).toFixed(3)}i`;
+					}
+				}
+			}
+
+			requestAnimationFrame(tick);
+		}
+
+		// Force a re-render after navigation since the canvas DOM is fresh
+		document.addEventListener("astro:page-load", () => {
+			state.lastR = 999;
+			state.lastI = 999;
+		});
+
+		requestAnimationFrame(tick);
+	}
+</script>

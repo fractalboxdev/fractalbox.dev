@@ -1,0 +1,77 @@
+---
+// CursorReactor: tracks the cursor and exposes it to CSS as custom properties
+// so any animation or decoration can "react" to the cursor in a fractal way.
+// No visible cursor element — themes drive their own decorations from these
+// custom properties (cardioid rotation, HUD parallax, bloom positions, etc).
+//
+// Exposes (set on <html>):
+//   --mx, --my   normalized mouse [-1..1] from viewport centre
+//   --mlx, --mly smoothly-lerped versions for slower elements
+//   --mr         rotation angle from centre, in degrees
+//   --md         distance from centre [0..1]
+//   --cx, --cy   raw clientX / clientY in pixels
+---
+
+<style is:global>
+	:root {
+		--mx: 0; --my: 0;
+		--mlx: 0; --mly: 0;
+		--mr: 0deg;
+		--md: 0;
+		--cx: 50vw; --cy: 50vh;
+	}
+</style>
+
+<script>
+	declare global {
+		interface Window { __fbCursorAttached?: boolean }
+	}
+
+	if (!window.__fbCursorAttached) {
+		window.__fbCursorAttached = true;
+
+		// Targets driven directly by mousemove
+		let tx = window.innerWidth / 2;
+		let ty = window.innerHeight / 2;
+		// Lerped values for smoother / slower-following parallax
+		let cx = tx, cy = ty;
+		let lmx = 0, lmy = 0;
+
+		const root = document.documentElement;
+
+		function onMove(e: MouseEvent) {
+			tx = e.clientX;
+			ty = e.clientY;
+		}
+
+		function tick() {
+			const w = window.innerWidth || 1;
+			const h = window.innerHeight || 1;
+
+			cx += (tx - cx) * 0.20;
+			cy += (ty - cy) * 0.20;
+
+			const mx = (tx / w) * 2 - 1;
+			const my = (ty / h) * 2 - 1;
+			lmx += (mx - lmx) * 0.06;
+			lmy += (my - lmy) * 0.06;
+
+			const angle = Math.atan2(my, mx) * 180 / Math.PI;
+			const dist = Math.min(1, Math.hypot(mx, my));
+
+			root.style.setProperty("--mx",  mx.toFixed(3));
+			root.style.setProperty("--my",  my.toFixed(3));
+			root.style.setProperty("--mlx", lmx.toFixed(3));
+			root.style.setProperty("--mly", lmy.toFixed(3));
+			root.style.setProperty("--mr",  angle.toFixed(1) + "deg");
+			root.style.setProperty("--md",  dist.toFixed(3));
+			root.style.setProperty("--cx",  cx.toFixed(1) + "px");
+			root.style.setProperty("--cy",  cy.toFixed(1) + "px");
+
+			requestAnimationFrame(tick);
+		}
+
+		window.addEventListener("mousemove", onMove, { passive: true });
+		requestAnimationFrame(tick);
+	}
+</script>

@@ -1,0 +1,95 @@
+---
+import type { ImageMetadata } from "astro";
+import { Image } from "astro:assets";
+import { getCollection } from "astro:content";
+
+interface Props {
+	/** Cell width in px — controls density. Defaults to 160. */
+	cell?: number;
+}
+
+const { cell = 160 } = Astro.props;
+
+// Trust register only shows clients that ship a logo asset. Case-study entries
+// without a logo (e.g. stealth NDA, internal projects) live in /work but are
+// skipped here.
+const clients = (await getCollection("client", ({ data }) => Boolean(data.logoSrc))).sort(
+	(a, b) => (a.data.order ?? 99) - (b.data.order ?? 99),
+);
+
+const logoPaths = import.meta.glob<{ default: ImageMetadata }>(
+	"/src/assets/logo_*.{jpeg,jpg,png,gif,svg,webp}",
+);
+---
+
+<div
+	class="trust-register"
+	style={`--cell:${cell}px; display:flex; flex-wrap:wrap; justify-content:center;`}
+>
+	{clients.map((c) => {
+		const loader = logoPaths[`/${c.data.logoSrc!}`];
+		if (!loader) return null;
+		const extra = c.data.logoClass ?? "";
+		return (
+			<div class="logo-cell">
+				<Image
+					src={loader()}
+					alt={c.data.title}
+					width={200}
+					height={80}
+					class:list={["logo-img", extra]}
+				/>
+			</div>
+		);
+	})}
+</div>
+
+<style>
+	.trust-register .logo-cell {
+		flex: 0 0 var(--cell);
+		width: var(--cell);
+		padding: 1.25rem 1rem;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		text-align: center;
+		min-height: 88px;
+		background: transparent;
+		box-sizing: border-box;
+	}
+	/* Universal white treatment with high contrast. invert + grayscale handles
+	   both transparent-bg dark logos (dark→white, transparent stays transparent)
+	   and solid-bg dark logos like filecoin's JPG (white bg→black to match
+	   page, dark logo→white). brightness/contrast lift any residual midtones
+	   to pure white for crisp edges. */
+	.trust-register .logo-img {
+		max-width: 100%;
+		max-height: 36px;
+		width: auto;
+		height: auto;
+		object-fit: contain;
+		display: block;
+		margin: 0 auto;
+		filter: invert(1) grayscale(1) brightness(1.6) contrast(1.4);
+		opacity: 1;
+	}
+	/* Force pure-white silhouette for transparent-bg PNGs that still carry
+	   colour the universal filter can't fully neutralise (e.g. Mozilla's red
+	   half-circle, Stockviva, Spaceship). brightness(0) collapses every
+	   opaque pixel to black; invert(1) flips to pure white. */
+	.trust-register .logo-img.pure-white {
+		filter: brightness(0) invert(1);
+	}
+	/* Skip the universal invert and render the source artwork unchanged.
+	   For brand assets that should stay in their original colours
+	   (e.g. ForbesPredict's red wordmark). */
+	.trust-register .logo-img.no-invert {
+		filter: none;
+	}
+	/* Desaturate without inverting — preserves the source's tonal direction
+	   (light bg stays light) but strips colour. For assets like Filecoin's
+	   coloured wordmark on a white card. */
+	.trust-register .logo-img.gray-only {
+		filter: grayscale(1) contrast(1.05);
+	}
+</style>

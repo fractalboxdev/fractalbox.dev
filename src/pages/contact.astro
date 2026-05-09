@@ -1,0 +1,70 @@
+---
+import { getEntry } from "astro:content";
+import Layout from "../layouts/FractalMay2026.astro";
+import BoxDimChip from "../components/BoxDimChip.astro";
+
+const studio = (await getEntry("site", "studio"))!.data;
+---
+<Layout
+	title="fractalbox.dev — contact"
+	active="contact"
+	iter={6}
+	pageTag="§VI · CONTACT"
+	pageGreek="ƒ⁶(△) — open the channel · 3⁶ = 729"
+>
+	<section style="padding-top:5rem;">
+		<div class="wrap">
+			<div class="eyebrow"><span class="blink"></span> // §VI · Talk to Us</div>
+			<h1 class="serif-h1">Become <span style="color:var(--mint);">AI-native</span>.</h1>
+			<p class="serif-lede">Explore the best AI opportunities for your organization</p>
+			<p class="serif-lede" style="margin-top:1rem; font-size:1rem; color:var(--math); font-style:italic;">{studio.boxLine}</p>
+		</div>
+	</section>
+
+	<section>
+		<div class="wrap">
+			<div class="section-tag"><span class="dot"></span> // primary endpoint</div>
+			<a
+				class="serif"
+				href={`mailto:${studio.email}`}
+				style="display:inline-block; margin-top:1.5rem; font-size:clamp(2rem, 5vw, 3.6rem); color:var(--mint); font-style:italic; line-height:1.1; word-break:break-word;"
+			>
+				↪ {studio.email}
+			</a>
+			<div style="display:grid; grid-template-columns:1fr; gap:1.5rem; margin-top:2.5rem;">
+				<style>
+					@media (min-width: 720px) {
+						.contact-grid { grid-template-columns: 1fr 1fr !important; }
+					}
+				</style>
+				<div class="contact-grid card-grid cols-2" style="grid-template-columns:1fr;">
+					<div class="card-cell">
+						<div class="idx">// entity</div>
+						<h3 class="serif-h3" style="margin:0;">{studio.entity}</h3>
+						<p style="color:var(--muted); margin:0; font-size:0.92rem;">{studio.address}</p>
+					</div>
+					<div class="card-cell">
+						<div class="idx">// elsewhere</div>
+						<p style="color:var(--muted); margin:0; font-family:'JetBrains Mono',monospace; font-size:0.85rem;">
+							{studio.socials.map((s, i) => (
+								<>
+									<a href={s.href}>{s.label}</a>{i < studio.socials.length - 1 ? " · " : ""}
+								</>
+							))}
+						</p>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<section>
+		<div class="wrap" style="text-align:center;">
+			<div class="section-tag" style="justify-content:center;"><span class="dot"></span> // chat with us</div>
+			<p class="serif-lede" style="margin:0.5rem auto 1.5rem; max-width:34rem;">
+			Architecting software, teams, companies and dreams</em>
+			</p>
+			<a class="btn primary" href={`mailto:${studio.email}`}>↪ {studio.email}</a>
+		</div>
+	</section>
+</Layout>

@@ -1,0 +1,73 @@
+---
+import { getCollection, getEntry } from "astro:content";
+import Layout from "../layouts/FractalMay2026.astro";
+
+const studio = (await getEntry("site", "studio"))!.data;
+const services = (await getCollection("services")).sort((a, b) => a.data.order - b.data.order);
+const faq = (await getCollection("faq")).sort((a, b) => a.data.order - b.data.order);
+---
+<Layout
+	title="fractalbox.dev — services"
+	active="services"
+	iter={2}
+	pageTag="§II · SERVICES"
+	pageGreek="ƒ²(△) — three contractions, one attractor"
+>
+	<section style="padding-top:4rem;">
+		<div class="wrap">
+			<div class="section-tag"><span class="dot"></span> // detail</div>
+			<h2 class="serif-h2">Approaches</h2>
+
+			<div style="display:grid; gap:1.25rem; margin-top:2.5rem;">
+				{services.map((s, i) => (
+					<article style={`display:grid; grid-template-columns:1fr; gap:1.5rem; padding:2rem; border:1px solid var(--border); background:var(--bg-card); position:relative;`}>
+						<div style="display:grid; grid-template-columns:1fr; gap:0.5rem;">
+							<div class="idx" style="color:var(--mint); font-family:'JetBrains Mono',monospace; font-size:0.72rem; letter-spacing:0.2em; text-transform:uppercase;">SVC.0{i + 1} · {s.data.id}</div>
+							<h3 class="serif-h3" style="font-size:1.6rem; margin:0;">{s.data.name}</h3>
+							<p class="serif-lede" style="font-size:1rem; margin-top:0.4rem;">{s.data.lead}</p>
+						</div>
+						<ul style="margin:0; padding-left:1.1rem; color:var(--fg); font-size:0.95rem;">
+							{s.data.bullets.map((b) => <li style="margin:0.4rem 0;">{b}</li>)}
+						</ul>
+					</article>
+				))}
+			</div>
+		</div>
+	</section>
+
+	<div class="wrap koch-divider" aria-hidden="true">
+		<svg viewBox="-600 -14 1200 28" preserveAspectRatio="none">
+			<path d="M-600,0 L600,0" fill="none" stroke="currentColor" stroke-width="0.6" stroke-dasharray="2 6"/>
+		</svg>
+	</div>
+
+	<section>
+		<div class="wrap">
+			<div class="section-tag"><span class="dot"></span> // FAQ</div>
+			<h2 class="serif-h2">Common questions, briefly.</h2>
+			<div style="margin-top:2.5rem; border-top:1px solid var(--border);">
+				{faq.map((f) => (
+					<details style="border-bottom:1px solid var(--border); padding:1.1rem 0;">
+						<summary style="cursor:pointer; font-family:'Iowan Old Style',Georgia,serif; font-size:1.1rem; color:var(--fg); list-style:none; display:flex; gap:0.7rem; align-items:baseline;">
+							<span style="color:var(--mint); font-family:'JetBrains Mono',monospace; font-size:0.85rem;">▸</span>
+							<span>{f.data.q}</span>
+						</summary>
+						<p style="color:var(--muted); margin:0.7rem 0 0 1.5rem; font-size:0.95rem;">{f.data.a}</p>
+					</details>
+				))}
+			</div>
+		</div>
+	</section>
+
+	<section>
+		<div class="wrap" style="text-align:center;">
+			<div class="section-tag" style="justify-content:center;"><span class="dot"></span> // next iteration</div>
+			<h2 class="serif-h2" style="margin:0.5rem auto 1.5rem; max-width:none;">Start Shipping.</h2>
+			<a class="btn primary" href={`mailto:${studio.email}`}>↪ {studio.email}</a>
+		</div>
+	</section>
+
+	<style>
+		details[open] summary span:first-child { color: var(--amber); }
+	</style>
+</Layout>

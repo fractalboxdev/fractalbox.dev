@@ -1,0 +1,519 @@
+---
+import "../styles/base.css";
+import { ClientRouter } from "astro:transitions";
+import FractalVeil from "../components/FractalVeil.astro";
+import CursorReactor from "../components/CursorReactor.astro";
+import IFSBackground from "../components/IFSBackground.astro";
+import { kochLinePath } from "../data/fractals";
+import { getEntry } from "astro:content";
+import { BOX_MOTTO } from "../data/box-dimensions";
+
+const studio = await getEntry("site", "studio");
+const contact = studio!.data;
+
+type ActiveKey = "index" | "services" | "approach" | "work" | "team" | "contact" | "logos";
+
+interface Props {
+	title: string;
+	active: ActiveKey;
+	/** Iteration depth i ∈ {0..5} — drives the IFS background subdivision and is shown in the page tag */
+	iter: number;
+	pageTag: string;       // mono uppercase prefix, e.g. "§I · OVERVIEW"
+	pageGreek?: string;    // italic greek/math equation suffix, e.g. "z₀ = 0  ·  z → z² + c"
+	hudBottomRight?: string;
+}
+
+const {
+	title,
+	active,
+	iter,
+	pageTag,
+	pageGreek,
+	hudBottomRight = "∂(SECURE-BY-DESIGN) ≡ 0",
+} = Astro.props;
+
+const kochRule = kochLinePath(3, 1200, 0, 0);
+
+const subnav: { key: ActiveKey; label: string; path: string }[] = [
+	{ key: "index",    label: "OVERVIEW", path: "/" },
+	{ key: "services", label: "SERVICES", path: "/services" },
+	{ key: "work",     label: "WORK",     path: "/work" },
+	{ key: "team",     label: "TEAM",     path: "/team" },
+	{ key: "contact",  label: "CONTACT",  path: "/contact" },
+];
+---
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<meta name="description" content="FractalBox — fractional CTO & CISO studio. Secure, private, local-first software." />
+		<title>{title}</title>
+		<ClientRouter />
+	</head>
+	<body>
+		<IFSBackground iter={iter} />
+		<div class="hud-frame" aria-hidden="true">
+			<div class="corner tl"></div><div class="corner tr"></div>
+			<div class="corner bl"></div><div class="corner br"></div>
+			<div class="tag-br">{hudBottomRight}</div>
+		</div>
+
+		<div class="shell">
+			<nav class="top">
+				<div class="wrap row">
+					<a class="lockup" href="/" transition:name="studio-mark">
+						<span class="wordmark">
+							<span>Fractal</span><span class="wm-box">Box</span>
+						</span>
+					</a>
+
+					<div class="subnav" role="navigation" aria-label="Theme pages">
+						{subnav.map((n) => (
+							<a class={`sub-link${active === n.key ? " active" : ""}`} href={n.path}>
+								<span class="sub-tick">▸</span>
+								<span class="sub-label">{n.label}</span>
+							</a>
+						))}
+					</div>
+
+					<a class="cta-pill" href={`mailto:${contact.email}`}>Talk to Us ↗</a>
+				</div>
+			</nav>
+
+			<main class="page-body">
+				<slot />
+			</main>
+
+			<footer class="f">
+				<div class="wrap row">
+					<span>// © {new Date().getFullYear()} {contact.entity}</span>
+					<span style="color:var(--mint);">// {BOX_MOTTO.studio}</span>
+					<span><a href={`mailto:${contact.email}`}>{contact.email} ↗</a></span>
+				</div>
+				<div class="wrap" style="margin-top:0.4rem;opacity:0.4;">
+					<svg viewBox="-600 -8 1200 16" preserveAspectRatio="none" style="width:100%;height:14px;color:var(--mint-dim);">
+						<path d={kochRule} fill="none" stroke="currentColor" stroke-width="0.5"/>
+					</svg>
+				</div>
+			</footer>
+		</div>
+
+		<FractalVeil />
+		<CursorReactor />
+
+		<style is:global>
+			:root {
+				/* Terminal-mathematical palette — readability lifted to AAA where
+				   possible while keeping the phosphor/math identity. */
+				--bg: #0a0a0a;
+				--bg-elevated: #242424;
+				--bg-card: #202020;
+				/* Nord-derived palette, lifted for AAA contrast on #1d1d1d.
+				   All text-bearing tokens target ≥9:1 (WCAG AAA for normal text
+				   needs 7:1; we sit comfortably above). */
+				--fg: #f4f6fa;             /* near-white — ~17:1 */
+				--fg-soft: #e5e9f0;         /* Nord Snow Storm 1 — ~14.5:1 */
+				--muted: #b8c0cc;           /* lifted slate — ~9.7:1 */
+				--mint: #b0def0;            /* lifted sky blue — primary, ~13:1 */
+				--mint-dim: #7ec4dd;        /* mid sky — ~9:1 */
+				--math: #ebcb8b;            /* Nord Aurora yellow — gold, ~12:1 */
+				--amber: #f0d68f;           /* lifted gold-yellow highlight — ~13:1 */
+				--border: #3a3a3a;          /* lifted border — visible separator */
+				--border-hi: #5e6677;       /* lifted Polar Night */
+			}
+			html, body { margin: 0; background: var(--bg); color: var(--fg); }
+			body {
+				/* Professional cyber-terminal mono throughout. JetBrains Mono is
+				   the workhorse, with IBM Plex Mono / SF Mono / Berkeley Mono as
+				   high-quality fallbacks. 15px / 1.7 for sustained reading. */
+				font-family: "JetBrains Mono", "IBM Plex Mono", "SF Mono", "Berkeley Mono", "Cascadia Code", ui-monospace, "Menlo", monospace;
+				font-size: 15px; line-height: 1.7;
+				-webkit-font-smoothing: antialiased; min-height: 100vh; position: relative;
+				overflow-x: hidden;
+				font-feature-settings: "ss01", "cv02", "cv11";
+			}
+			/* Inline math italic — preserved only for actual equations */
+			.serif {
+				font-family: "STIX Two Text", "Latin Modern Roman", "Cambria Math", "Cambria", Georgia, serif;
+				font-style: italic;
+			}
+			.mono { font-family: "JetBrains Mono", monospace; }
+			.var  { color: var(--math); font-style: italic;
+			        font-family: "STIX Two Text", "Cambria Math", "Cambria", Georgia, serif; }
+
+			a { color: var(--mint); text-decoration: none; }
+			a:hover { text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 4px; }
+			/* HUD corner brackets sit at inset:14px and are 28px wide, so they
+			   occupy the first 42px of every viewport edge. Content padding is
+			   set generously above that footprint so nothing collides with the
+			   HUD on any breakpoint. On small viewports the HUD itself shrinks
+			   (see .hud-frame .corner media query below) so content can
+			   reclaim some padding. */
+			.wrap { max-width: 80rem; margin: 0 auto; padding: 0 4rem; position: relative; }
+			@media (max-width: 720px) {
+				.wrap { padding: 0 3rem; }
+			}
+
+			/* Subtle CRT scanlines */
+			body::before {
+				content: ""; position: fixed; inset: 0; z-index: 0; pointer-events: none;
+				background: repeating-linear-gradient(0deg, rgba(176,222,240,0.012) 0 1px, transparent 1px 3px);
+				mix-blend-mode: screen;
+			}
+			/* Quiet ambient bloom — corner gradients dialed down so the bg
+			   reads flatter and the content carries the colour. */
+			body::after {
+				content: ""; position: fixed; inset: 0; z-index: 0; pointer-events: none;
+				background:
+					radial-gradient(700px 500px at 78% 18%, rgba(176,222,240,0.018), transparent 65%),
+					radial-gradient(600px 450px at 18% 88%, rgba(235,203,139,0.012), transparent 70%);
+			}
+
+			.shell { position: relative; z-index: 1; }
+
+			/* HUD frame — drifts opposite the cursor (parallax depth, "depth-0" outermost) */
+			.hud-frame {
+				position: fixed; inset: 14px; pointer-events: none; z-index: 30;
+				color: var(--mint-dim);
+				transform: translate3d(calc(var(--mlx, 0) * -3px), calc(var(--mly, 0) * -3px), 0);
+				will-change: transform;
+			}
+			.hud-frame .corner { position: absolute; width: 28px; height: 28px; border: 1px solid currentColor; }
+			@media (max-width: 900px) {
+				.hud-frame { inset: 8px; }
+				.hud-frame .corner { width: 14px; height: 14px; }
+			}
+			/* On phones the HUD is decorative and the tight margins compete
+			   with the lockup and CTA. Hide it entirely below 600px so no
+			   bracket can clip the FractalBox wordmark or the Talk-to-Us pill. */
+			@media (max-width: 600px) {
+				.hud-frame { display: none; }
+			}
+			.hud-frame .tl { top: 0; left: 0; border-right: none; border-bottom: none; }
+			.hud-frame .tr { top: 0; right: 0; border-left: none; border-bottom: none; }
+			.hud-frame .bl { bottom: 0; left: 0; border-right: none; border-top: none; }
+			.hud-frame .br { bottom: 0; right: 0; border-left: none; border-top: none; }
+			.hud-frame [class^="tag-"] {
+				position: absolute; font-family: "JetBrains Mono", monospace; font-size: 10px;
+				letter-spacing: 0.18em; text-transform: uppercase; color: var(--mint);
+				padding: 4px 8px; background: rgba(10,10,10,0.65); border: 1px solid var(--mint-dim);
+			}
+			.hud-frame .tag-tl { top: 0; left: 38px; }
+			.hud-frame .tag-tr { top: 0; right: 38px; }
+			.hud-frame .tag-bl { bottom: 0; left: 38px; }
+			.hud-frame .tag-br { bottom: 0; right: 38px; }
+
+			/* Sticky nav */
+			nav.top {
+				position: sticky; top: 0; z-index: 25;
+				background: rgba(10,10,10,0.82); backdrop-filter: blur(10px);
+				border-bottom: 1px solid var(--border);
+			}
+			nav.top .row { display: flex; align-items: center; gap: 2rem; padding: 0.85rem 0; flex-wrap: wrap; }
+			nav.top .lockup {
+				display: flex; align-items: center; color: var(--fg); flex: 0 0 auto;
+				text-decoration: none;
+			}
+			/* Wordmark — geometric display sans, distinct from the body monospace.
+			   System fallback chain prefers modern tech sans (Geist, Inter Display)
+			   then falls back through Helvetica Neue / SF Pro / Segoe UI. */
+			nav.top .lockup .wordmark {
+				font-family: "Geist", "Inter Display", "Inter", "Helvetica Neue", "SF Pro Display", "Segoe UI", system-ui, sans-serif;
+				font-size: 1.2rem;
+				font-weight: 800;
+				letter-spacing: -0.04em;
+				display: inline-flex; align-items: baseline;
+				color: var(--fg);
+				text-transform: none;
+			}
+			nav.top .lockup .wordmark .wm-box {
+				color: var(--mint);
+			}
+			nav.top .lockup:hover .wordmark .wm-box { filter: brightness(1.1); }
+
+			nav.top .subnav { display: flex; gap: 0; flex: 1 1 auto; flex-wrap: wrap; justify-content: center; }
+			nav.top .sub-link {
+				display: inline-flex; align-items: center; gap: 0.45rem;
+				color: var(--muted);
+				font-family: "JetBrains Mono", monospace; font-size: 0.78rem;
+				letter-spacing: 0.16em; text-transform: uppercase;
+				padding: 0.35rem 0.8rem;
+				border: 1px solid transparent;
+				transition: color 150ms ease, border-color 150ms ease;
+			}
+			nav.top .sub-link:hover { color: var(--mint); text-decoration: none; }
+			nav.top .sub-link .sub-tick { color: var(--mint-dim); font-size: 0.7rem; }
+			nav.top .sub-link.active {
+				color: var(--mint); border-color: var(--mint-dim);
+				background: rgba(176,222,240,0.05);
+			}
+			nav.top .sub-link.active .sub-tick { color: var(--mint); }
+
+			.cta-pill {
+				display: inline-flex; align-items: center; gap: 0.5rem;
+				padding: 0.5rem 1rem; border: 1px solid var(--mint); color: var(--mint);
+				font-family: "JetBrains Mono", monospace; font-size: 0.78rem; font-weight: 700;
+				letter-spacing: 0.1em; text-transform: uppercase;
+				background: rgba(176,222,240,0.04);
+				flex: 0 0 auto;
+			}
+			.cta-pill:hover { background: var(--mint); color: var(--bg); text-decoration: none; }
+
+			.pagetag {
+				font-family: "JetBrains Mono", monospace;
+				font-size: 0.72rem; letter-spacing: 0.22em; text-transform: uppercase;
+				color: var(--amber);
+				padding-bottom: 0.6rem;
+				display: flex; gap: 0.7rem; align-items: baseline; flex-wrap: wrap;
+			}
+			.pagetag .greek {
+				font-family: "STIX Two Text", "Cambria Math", "Cambria", Georgia, serif;
+				font-style: italic; color: var(--math); text-transform: none;
+				font-size: 0.95rem; letter-spacing: 0;
+			}
+			.pagetag .eq-chip {
+				color: var(--math); border: 1px solid var(--border-hi); padding: 0.1rem 0.5rem;
+				font-family: "STIX Two Text", "Cambria Math", Cambria, Georgia, serif;
+				font-style: italic; text-transform: none; font-size: 0.85rem; letter-spacing: 0;
+			}
+
+			/* Sections */
+			.page-body { padding-bottom: 4rem; }
+			section { padding: 5rem 0; position: relative; border-top: 1px solid var(--border); }
+			section:first-child { border-top: none; }
+			.section-tag {
+				display: inline-flex; align-items: center; gap: 0.55rem;
+				font-family: "JetBrains Mono", monospace; color: var(--mint);
+				font-size: 0.85rem; letter-spacing: 0.14em; text-transform: uppercase;
+				font-weight: 500;
+			}
+			.section-tag .dot { width: 7px; height: 7px; background: var(--mint); display: inline-block; box-shadow: 0 0 6px rgba(176,222,240,0.5); }
+			/* Display headings — professional cyber-terminal mono.
+			   JetBrains Mono Semi-Bold with negative tracking for headline density.
+			   Class names kept as `.serif-*` for backwards-compat with pages but
+			   the typeface is now mono. */
+			h1.serif-h1, h2.serif-h2, h3.serif-h3 {
+				font-family: "JetBrains Mono", "IBM Plex Mono", "SF Mono", "Berkeley Mono", ui-monospace, monospace;
+				font-style: normal; font-weight: 600;
+				color: var(--fg); letter-spacing: -0.025em;
+			}
+			h1.serif-h1 {
+				font-size: clamp(2.2rem, 5vw, 3.8rem); line-height: 1.06;
+				margin: 1.25rem 0 1.5rem; max-width: 30ch;
+			}
+			h2.serif-h2 {
+				font-size: clamp(1.6rem, 3.2vw, 2.4rem); line-height: 1.12;
+				margin: 0.5rem 0 0.5rem; max-width: 36rem;
+				letter-spacing: -0.02em;
+			}
+			h3.serif-h3 {
+				font-size: 1.15rem; margin: 0.4rem 0 0.4rem; font-weight: 600;
+				letter-spacing: -0.015em;
+			}
+			p.lede { color: var(--fg-soft); max-width: 42rem; margin: 0; font-size: 0.98rem; line-height: 1.65; }
+			/* Long-form lede — also mono for terminal consistency, slightly larger
+			   and with relaxed tracking so it reads as a quote/console-output. */
+			p.serif-lede {
+				font-family: "JetBrains Mono", "IBM Plex Mono", "SF Mono", ui-monospace, monospace;
+				font-style: normal; font-weight: 400;
+				color: var(--fg-soft); font-size: 1.05rem; max-width: 44rem; margin: 0;
+				line-height: 1.65; letter-spacing: 0.005em;
+			}
+			p.serif-lede em { color: var(--math); font-style: normal; border-bottom: 1px dashed var(--mint-dim); padding-bottom: 0.05em; }
+			/* equation-style numbers / metrics — italic mono with figure styling */
+			.eq {
+				font-family: "STIX Two Text", "Cambria Math", "Cambria", Georgia, serif;
+				font-style: italic;
+				font-feature-settings: "lnum", "tnum";
+			}
+
+			/* Buttons */
+			.btn-row { display: flex; gap: 0.75rem; flex-wrap: wrap; margin-top: 2rem; }
+			.btn {
+				display: inline-flex; align-items: center; gap: 0.5rem;
+				padding: 0.85rem 1.25rem; font-family: "JetBrains Mono", monospace;
+				font-size: 0.82rem; font-weight: 700;
+				letter-spacing: 0.08em; text-transform: uppercase;
+				border: 1px solid var(--border); background: var(--bg-elevated); color: var(--fg);
+				transition: all 150ms ease;
+			}
+			.btn.primary { background: var(--mint); color: var(--bg); border-color: var(--mint); }
+			.btn:hover { text-decoration: none; border-color: var(--mint); color: var(--mint); }
+			.btn.primary:hover { color: var(--bg); filter: brightness(1.05); }
+
+			/* Console (reused across pages) */
+			.console {
+				position: relative; aspect-ratio: 1 / 1;
+				border: 1px solid var(--border-hi); background: linear-gradient(180deg, rgba(176,222,240,0.05), transparent 70%);
+				padding: 1.25rem; max-width: 540px; margin: 0 auto;
+				overflow: visible;
+			}
+			.console::before, .console::after,
+			.console .corner-2, .console .corner-3 {
+				content: ""; position: absolute; width: 18px; height: 18px;
+				border: 1px solid var(--mint);
+			}
+			.console::before { top: -1px; left: -1px; border-right: none; border-bottom: none; }
+			.console::after  { bottom: -1px; right: -1px; border-left: none; border-top: none; }
+			.console .corner-2 { top: -1px; right: -1px; border-left: none; border-bottom: none; }
+			.console .corner-3 { bottom: -1px; left: -1px; border-right: none; border-top: none; }
+			.console .console-head, .console .console-foot {
+				position: absolute; left: 50%; transform: translate(-50%, -50%);
+				background: var(--bg); padding: 0 0.6rem; color: var(--mint);
+				font-family: "JetBrains Mono", monospace; font-size: 0.7rem; letter-spacing: 0.2em; text-transform: uppercase;
+			}
+			.console .console-head { top: -1px; }
+			.console .console-foot { top: auto; bottom: -1px; transform: translate(-50%, 50%); color: var(--muted); }
+			.console svg.fractal-stage { width: 100%; height: 100%; display: block; }
+			.console .reticule { stroke: var(--mint-dim); }
+			.console .ring { stroke: var(--mint-dim); fill: none; }
+			.console .scan {
+				position: absolute; left: 0; right: 0; height: 36px;
+				background: linear-gradient(180deg, transparent, rgba(176,222,240,0.18), transparent);
+				animation: sweep 5.5s ease-in-out infinite; pointer-events: none;
+			}
+			@keyframes sweep { 0% { top: -10%; } 100% { top: 105%; } }
+			.console-readout {
+				position: absolute; bottom: 0.6rem; left: 0.6rem; right: 0.6rem;
+				display: flex; justify-content: space-between;
+				font-family: "JetBrains Mono", monospace; font-size: 0.65rem; color: var(--muted); letter-spacing: 0.1em;
+			}
+			.console-readout span:first-child { color: var(--mint); }
+			/* Cardioid rotates to face the cursor — fractal reacts in realtime.
+			   The previous constant 80s spin is replaced by cursor-driven rotation
+			   so the brand mark "looks at" wherever you are. */
+			.cardioid-grp {
+				transform-origin: 50% 50%; transform-box: fill-box;
+				transform: rotate(var(--mr, 0deg));
+				transition: transform 320ms cubic-bezier(0.16, 1, 0.3, 1);
+				will-change: transform;
+			}
+			.console {
+				/* Console itself drifts subtly with the cursor — depth-1 parallax. */
+				transform: translate3d(calc(var(--mx, 0) * 6px), calc(var(--my, 0) * 6px), 0);
+				transition: transform 240ms cubic-bezier(0.16, 1, 0.3, 1);
+			}
+			.console::before, .console::after,
+			.console .corner-2, .console .corner-3 {
+				/* Corner brackets drift outward from cursor — depth-2 amplification. */
+				transition: transform 200ms ease-out;
+			}
+			.console:hover .corner-2 { transform: translate(2px, -2px); }
+			.console:hover .corner-3 { transform: translate(-2px, 2px); }
+			.console:hover::before   { transform: translate(-2px, -2px); }
+			.console:hover::after    { transform: translate(2px, 2px); }
+
+			/* Eyebrow with blink */
+			.eyebrow {
+				font-family: "JetBrains Mono", monospace;
+				font-size: 0.75rem; letter-spacing: 0.22em; text-transform: uppercase;
+				color: var(--mint); display: inline-flex; align-items: center; gap: 0.5rem;
+			}
+			.eyebrow .blink { width: 8px; height: 8px; background: var(--mint); display: inline-block; box-shadow: 0 0 10px var(--mint); animation: blink 1.4s ease-in-out infinite; }
+			@keyframes blink { 0%, 60% { opacity: 1; } 70%, 100% { opacity: 0.2; } }
+
+			/* Cards */
+			.card-grid { display: grid; gap: 0; grid-template-columns: 1fr; border: 1px solid var(--border); }
+			@media (min-width: 880px) { .card-grid.cols-3 { grid-template-columns: repeat(3, 1fr); } }
+			@media (min-width: 720px) { .card-grid.cols-2 { grid-template-columns: 1fr 1fr; } }
+			.card-cell {
+				background: var(--bg-card); padding: 1.75rem;
+				display: flex; flex-direction: column; gap: 0.85rem;
+				border-right: 1px solid var(--border); border-bottom: 1px solid var(--border);
+			}
+			.card-cell:last-child { border-right: none; }
+			.card-cell h3 { margin: 0; }
+			.card-cell .idx { color: var(--mint); font-family: "JetBrains Mono", monospace; font-size: 0.72rem; letter-spacing: 0.2em; text-transform: uppercase; }
+			.card-cell ul { margin: 0; padding-left: 1.1rem; color: var(--fg); font-size: 0.92rem; }
+			.card-cell ul li { margin: 0.3rem 0; color: var(--muted); }
+			.card-cell ul li::marker { color: var(--mint); content: "▸ "; }
+
+			/* Koch divider — silent, no labels */
+			.koch-divider { padding: 2.5rem 0; }
+			.koch-divider svg { width: 100%; height: 22px; color: var(--mint-dim); display: block; opacity: 0.55; }
+
+			/* Footer */
+			footer.f {
+				padding: 2rem 0 3rem; border-top: 1px solid var(--border); color: var(--muted);
+				font-family: "JetBrains Mono", monospace; font-size: 0.72rem;
+				letter-spacing: 0.12em;
+			}
+			footer.f .row { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem; align-items: center; }
+
+			/* ---------- Unified arrival cascade ----------
+			   Every page assembles itself the same way after the view-transition
+			   resolves: top-level blocks (sections, dividers) fade up in order,
+			   then bordered grid cells pop in cell-by-cell so the borders "draw"
+			   themselves. Pages with grids (Work) and pages without (Services)
+			   share the same cadence — the cascade itself is the unifier. */
+			.page-body { opacity: 1; }
+
+			.page-body > section,
+			.page-body > .koch-divider {
+				animation: arrive-row 620ms cubic-bezier(0.16, 1, 0.3, 1) both;
+			}
+			.page-body > *:nth-of-type(1) { animation-delay:  40ms; }
+			.page-body > *:nth-of-type(2) { animation-delay: 110ms; }
+			.page-body > *:nth-of-type(3) { animation-delay: 180ms; }
+			.page-body > *:nth-of-type(4) { animation-delay: 250ms; }
+			.page-body > *:nth-of-type(5) { animation-delay: 320ms; }
+			.page-body > *:nth-of-type(6) { animation-delay: 390ms; }
+			.page-body > *:nth-of-type(7) { animation-delay: 460ms; }
+			.page-body > *:nth-of-type(8) { animation-delay: 530ms; }
+			.page-body > *:nth-of-type(9) { animation-delay: 600ms; }
+			.page-body > *:nth-of-type(10) { animation-delay: 670ms; }
+
+			@keyframes arrive-row {
+				0%   { opacity: 0; transform: translateY(10px); }
+				100% { opacity: 1; transform: translateY(0); }
+			}
+
+			/* Bordered grid cells — borders combine to form the grid as cells pop in.
+			   Targets .card-grid (services / overview) plus .logo-cell (work trust
+			   register) plus any descendant of .bordered-grid for ad-hoc grids. */
+			.page-body .card-grid > *,
+			.page-body .logo-cell,
+			.page-body .bordered-grid > * {
+				animation: cell-arrive 480ms cubic-bezier(0.16, 1, 0.3, 1) both;
+			}
+			.page-body .card-grid > *:nth-child(1),
+			.page-body .bordered-grid > *:nth-child(1),
+			.page-body .logo-cell:nth-child(1)  { animation-delay: 0.32s; }
+			.page-body .card-grid > *:nth-child(2),
+			.page-body .bordered-grid > *:nth-child(2),
+			.page-body .logo-cell:nth-child(2)  { animation-delay: 0.39s; }
+			.page-body .card-grid > *:nth-child(3),
+			.page-body .bordered-grid > *:nth-child(3),
+			.page-body .logo-cell:nth-child(3)  { animation-delay: 0.46s; }
+			.page-body .card-grid > *:nth-child(4),
+			.page-body .bordered-grid > *:nth-child(4),
+			.page-body .logo-cell:nth-child(4)  { animation-delay: 0.53s; }
+			.page-body .card-grid > *:nth-child(5),
+			.page-body .bordered-grid > *:nth-child(5),
+			.page-body .logo-cell:nth-child(5)  { animation-delay: 0.60s; }
+			.page-body .card-grid > *:nth-child(6),
+			.page-body .bordered-grid > *:nth-child(6),
+			.page-body .logo-cell:nth-child(6)  { animation-delay: 0.67s; }
+			.page-body .card-grid > *:nth-child(7),
+			.page-body .bordered-grid > *:nth-child(7),
+			.page-body .logo-cell:nth-child(7)  { animation-delay: 0.74s; }
+			.page-body .card-grid > *:nth-child(8),
+			.page-body .bordered-grid > *:nth-child(8),
+			.page-body .logo-cell:nth-child(8)  { animation-delay: 0.81s; }
+
+			@keyframes cell-arrive {
+				0%   { opacity: 0; transform: scale(0.92); }
+				100% { opacity: 1; transform: scale(1); }
+			}
+
+			@media (prefers-reduced-motion: reduce) {
+				.cardioid-grp, .console .scan, .eyebrow .blink,
+				.page-body, .page-body > *, .page-body .card-grid > *,
+				.page-body .logo-cell, .page-body .bordered-grid > * {
+					animation: none !important;
+				}
+			}
+		</style>
+	</body>
+</html>

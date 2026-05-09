@@ -1,28 +1,122 @@
 ---
-import Boxes from "../components/Boxes.astro";
-import GoldenSpiral from "../components/GoldenSpiral.astro";
-import JuliaBackground from "../components/JuliaBackground.astro";
-import LandingBoxes from "../components/LandingBoxes.astro";
-import Welcome from "../components/Welcome.astro";
-import Layout from "../layouts/Layout.astro";
+import { getCollection, getEntry } from "astro:content";
+import Layout from "../layouts/FractalMay2026.astro";
+import BoxDimChip from "../components/BoxDimChip.astro";
+import JuliaConsole from "../components/JuliaConsole.astro";
+import TrustRegister from "../components/TrustRegister.astro";
+import { sierpinskiPolygons } from "../data/fractals";
 
-// Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
-// Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
+const studio = (await getEntry("site", "studio"))!.data;
+const services = (await getCollection("services")).sort((a, b) => a.data.order - b.data.order);
+const pillars = (await getCollection("pillars")).sort((a, b) => a.data.order - b.data.order);
+
+// Highlight the "Fractional CTO/CISO" (or "CTO & CISO") prefix in amber if
+// present at the start of the tagline; otherwise render the tagline plain.
+const taglineMatch = studio.tagline.match(/^(Fractional\s+CTO\s*[/&]\s*CISO)(.*)$/i);
+const taglinePrefix = taglineMatch?.[1] ?? "";
+const taglineRest = taglineMatch?.[2] ?? studio.tagline;
 ---
+<Layout
+	title="fractalbox.dev — overview"
+	active="index"
+	iter={1}
+	pageTag="§I · OVERVIEW"
+	pageGreek="ƒ¹(△) — first iteration · root attractor"
+>
+	<section style="padding-top:4rem;">
+		<div class="wrap">
+			<div style="display:grid; gap:3rem; grid-template-columns:1fr; align-items:center;">
+				<style>
+					@media (min-width: 980px) {
+						.hero-row { grid-template-columns: 1.05fr 0.95fr !important; }
+					}
+				</style>
+				<div class="hero-row" style="display:grid; gap:3rem; grid-template-columns:1fr; align-items:center;">
+					<div>
+						<div class="eyebrow"><span class="blink"></span> SHIP with Trust</div>
+						<h1 class="serif-h1">
+							{taglinePrefix && <span style="color:var(--amber);">{taglinePrefix}</span>}
+							{taglineRest}
+						</h1>
+						<p class="serif-lede">{studio.subtagline}</p>
+						<p class="serif-lede" style="margin-top:1rem; font-size:1rem; color:var(--math); font-style:italic;">{studio.boxLine}</p>
 
-<Layout>
-	<Welcome />
-  <LandingBoxes />
-  <div class="p-6 bg-slate-100 text-black" slot="footer" >
+						<div class="btn-row">
+							<a class="btn primary" href={`mailto:${studio.email}`}>↪ Talk to Us</a>
+							<a class="btn" href="/services">▸ services</a>
+							<a class="btn" href="/approach">▸ approach</a>
+						</div>
+					</div>
+					<aside>
+						<JuliaConsole headLabel="FractalBox" />
+					</aside>
+				</div>
+			</div>
+		</div>
+	</section>
 
-    <p>
-  Fractal Box  © All Rights Reserved.
-  </p>
-<p>
-Singapore Office: 7 TEMASEK BOULEVARD, #12-07, SUNTEC TOWER ONE, Singapore 038987
-<p>
-  Singapore Company Entity, PeraPera Private Limited
-</p>
- </p>
+	<div class="wrap koch-divider" aria-hidden="true">
+		<svg viewBox="-600 -14 1200 28" preserveAspectRatio="none">
+			<path d="M-600,0 L600,0" fill="none" stroke="currentColor" stroke-width="0.6" stroke-dasharray="2 6"/>
+		</svg>
+	</div>
+
+	<section>
+		<div class="wrap">
+			<div class="section-tag"><span class="dot"></span> trusted by</div>
+			<div style="margin-top:1.25rem;">
+				<TrustRegister />
+			</div>
+		</div>
+	</section>
+
+	<section>
+		<div class="wrap">
+			<div class="section-tag"><span class="dot"></span> // 02 — Ways we work</div>
+			<h2 class="serif-h2">Don't hire a dev house. Pick someone who can command agents</h2>
+			<p class="lede">10x with hands on, experienced Tech Lead who know his stuff</p>
+
+			<div class="card-grid cols-3" style="margin-top:2.5rem;">
+				{services.map((s, i) => (
+					<article class="card-cell">
+						<div class="idx">SVC.0{i + 1}</div>
+						<h3 class="serif-h3">{s.data.name}</h3>
+						<p style="color:var(--muted); margin:0;">{s.data.lead}</p>
+					</article>
+				))}
+			</div>
+			<div class="btn-row" style="margin-top:2rem;">
+				<a class="btn" href="/services">▸ deeper · services →</a>
+			</div>
+		</div>
+	</section>
+
+	<section>
+		<div class="wrap">
+			<div class="section-tag"><span class="dot"></span> // 03 — same triangle, every scale</div>
+			<h2 class="serif-h2">Local-first, privacy-preserving, compliance-aware, secure-by-design.</h2>
+			<p class="serif-lede" style="margin-top:0.5rem;">Four pillars — the same shape of attention applied at progressively finer grain.</p>
+
+			<div class="card-grid cols-2" style="margin-top:2.5rem;">
+				{pillars.map((p, i) => (
+					<article class="card-cell" style="display:grid; grid-template-columns:80px 1fr; gap:1rem; align-items:start;">
+						<svg viewBox="-50 -50 100 100" aria-hidden="true" style="width:80px; height:80px; color:var(--mint);">
+							<g stroke="currentColor" fill="none" stroke-width="0.9">
+								{sierpinskiPolygons(i + 1, 88, 0, 0).map((pts) => <polygon points={pts}/>)}
+							</g>
+						</svg>
+						<div>
+							<div class="idx">PILLAR · {p.data.n}</div>
+							<h3 class="serif-h3">{p.data.name}</h3>
+							<p style="color:var(--muted); margin:0.4rem 0 0; font-size:0.92rem;">{p.data.body}</p>
+						</div>
+					</article>
+				))}
+			</div>
+			<div class="btn-row" style="margin-top:2rem;">
+				<a class="btn" href="/approach">▸ deeper · approach →</a>
+			</div>
+		</div>
+	</section>
+
 </Layout>
-
