@@ -180,9 +180,15 @@ const subnav: { key: ActiveKey; label: string; path: string }[] = [
 				will-change: transform;
 			}
 			.hud-frame .corner { position: absolute; width: 28px; height: 28px; border: 1px solid currentColor; }
-			@media (max-width: 720px) {
-				.hud-frame { inset: 10px; }
-				.hud-frame .corner { width: 18px; height: 18px; }
+			@media (max-width: 900px) {
+				.hud-frame { inset: 8px; }
+				.hud-frame .corner { width: 14px; height: 14px; }
+			}
+			/* On phones the HUD is decorative and the tight margins compete
+			   with the lockup and CTA. Hide it entirely below 600px so no
+			   bracket can clip the FractalBox wordmark or the Talk-to-Us pill. */
+			@media (max-width: 600px) {
+				.hud-frame { display: none; }
 			}
 			.hud-frame .tl { top: 0; left: 0; border-right: none; border-bottom: none; }
 			.hud-frame .tr { top: 0; right: 0; border-left: none; border-bottom: none; }
