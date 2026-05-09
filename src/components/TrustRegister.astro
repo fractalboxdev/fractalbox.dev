@@ -92,14 +92,6 @@ const logoPaths = import.meta.glob<{ default: ImageMetadata }>(
 	.trust-register .logo-img.gray-only {
 		filter: grayscale(1) contrast(1.05);
 	}
-	/* Pure colour inversion — keeps the artwork's structure but flips the
-	   palette (e.g. red wordmark on white → cyan wordmark on black).
-	   Named `flip` (not `invert`) to avoid colliding with legacy
-	   `logoClass: invert` entries that currently fall through to the
-	   default universal-white treatment. */
-	.trust-register .logo-img.flip {
-		filter: invert(1);
-	}
 	/* Per-logo size override. Visually scales the logo around its centre
 	   without changing the cell's layout box, so neighbours stay aligned. */
 	.trust-register .logo-img.larger {
