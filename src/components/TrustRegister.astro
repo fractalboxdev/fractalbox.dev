@@ -92,4 +92,9 @@ const logoPaths = import.meta.glob<{ default: ImageMetadata }>(
 	.trust-register .logo-img.gray-only {
 		filter: grayscale(1) contrast(1.05);
 	}
+	/* Per-logo size override: bump max-height for assets whose natural
+	   dimensions read smaller than peers at the default cap. */
+	.trust-register .logo-img.larger {
+		max-height: 64px;
+	}
 </style>
