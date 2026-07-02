@@ -163,11 +163,67 @@ declare module 'astro:content' {
   rendered?: RenderedContent;
   filePath?: string;
 }>;
+"faq": Record<string, {
+  id: string;
+  body?: string;
+  collection: "faq";
+  data: InferEntrySchema<"faq">;
+  rendered?: RenderedContent;
+  filePath?: string;
+}>;
+"people": Record<string, {
+  id: string;
+  body?: string;
+  collection: "people";
+  data: InferEntrySchema<"people">;
+  rendered?: RenderedContent;
+  filePath?: string;
+}>;
+"phases": Record<string, {
+  id: string;
+  body?: string;
+  collection: "phases";
+  data: InferEntrySchema<"phases">;
+  rendered?: RenderedContent;
+  filePath?: string;
+}>;
+"pillars": Record<string, {
+  id: string;
+  body?: string;
+  collection: "pillars";
+  data: InferEntrySchema<"pillars">;
+  rendered?: RenderedContent;
+  filePath?: string;
+}>;
+"services": Record<string, {
+  id: string;
+  body?: string;
+  collection: "services";
+  data: InferEntrySchema<"services">;
+  rendered?: RenderedContent;
+  filePath?: string;
+}>;
+"site": Record<string, {
+  id: string;
+  body?: string;
+  collection: "site";
+  data: InferEntrySchema<"site">;
+  rendered?: RenderedContent;
+  filePath?: string;
+}>;
 "teamCompany": Record<string, {
   id: string;
   body?: string;
   collection: "teamCompany";
   data: InferEntrySchema<"teamCompany">;
+  rendered?: RenderedContent;
+  filePath?: string;
+}>;
+"writing": Record<string, {
+  id: string;
+  body?: string;
+  collection: "writing";
+  data: InferEntrySchema<"writing">;
   rendered?: RenderedContent;
   filePath?: string;
 }>;

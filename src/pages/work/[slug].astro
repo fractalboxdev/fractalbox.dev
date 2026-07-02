@@ -30,6 +30,12 @@ const c = entry.data;
 					<span style="color:var(--muted); font-family:'JetBrains Mono',monospace; font-size:0.7rem; letter-spacing:0.18em; text-transform:uppercase;">role</span>
 					<span style="font-family:'JetBrains Mono',monospace; font-size:0.85rem;">{c.role}</span>
 				</div>
+				{c.duration && (
+					<div style="display:grid; grid-template-columns:7rem 1fr; gap:1rem; padding:0.5rem 0; border-top:1px solid var(--border);">
+						<span style="color:var(--muted); font-family:'JetBrains Mono',monospace; font-size:0.7rem; letter-spacing:0.18em; text-transform:uppercase;">duration</span>
+						<span style="font-family:'JetBrains Mono',monospace; font-size:0.85rem;">{c.duration}</span>
+					</div>
+				)}
 				<div style="display:grid; grid-template-columns:7rem 1fr; gap:1rem; padding:0.5rem 0; border-top:1px solid var(--border); border-bottom:1px solid var(--border);">
 					<span style="color:var(--muted); font-family:'JetBrains Mono',monospace; font-size:0.7rem; letter-spacing:0.18em; text-transform:uppercase;">stack</span>
 					<span style="display:flex; gap:0.4rem; flex-wrap:wrap;">

@@ -5,6 +5,8 @@ logoClass: larger
 role: Fractional CTO/CISO
 order: 1
 featured: true
+metric: "140M+"
+metricLabel: "monthly active users"
 problem: "Led the development and launch of ForbesPredict with harness engineering, fully agentic and rapid iteration cycles, ensuring strict regulatory compliance at scale for forbes.com's 140M+ monthly active users."
 stack:
   - Effect-ts

@@ -46,7 +46,7 @@ const featured = (await getCollection("client", ({ data }) => data.featured)).so
 	<section>
 		<div class="wrap">
 			<div class="section-tag"><span class="dot"></span> // case studies · in depth</div>
-			<h2 class="serif-h2">Three monoliths.</h2>
+			<h2 class="serif-h2">Monoliths.</h2>
 
 			<div class="bordered-grid" style="display:grid; gap:0; margin-top:2.5rem; border-top:1px solid var(--border);">
 				{featured.map((c, i) => (
@@ -59,12 +59,15 @@ const featured = (await getCollection("client", ({ data }) => data.featured)).so
 							<style>
 								@media (min-width: 920px) {
 									.case-row .case-grid { grid-template-columns: 240px 1fr !important; }
+									.case-row .case-metric { min-height: 4.5rem; }
 								}
 							</style>
 							<div class="case-grid" style="display:grid; gap:1.25rem; grid-template-columns:1fr;">
 								<div>
-									<div style="font-family:'JetBrains Mono',monospace; color:var(--amber); font-size:3rem; letter-spacing:-0.01em; line-height:1; text-shadow:0 0 12px rgba(210,168,87,0.4);">{c.data.metric}</div>
-									<div style="font-family:'JetBrains Mono',monospace; color:var(--muted); font-size:0.7rem; letter-spacing:0.16em; text-transform:uppercase; margin-top:0.5rem;">{c.data.metricLabel}</div>
+									<div class="case-metric">
+										<div style="font-family:'JetBrains Mono',monospace; color:var(--amber); font-size:3rem; letter-spacing:-0.01em; line-height:1; text-shadow:0 0 12px rgba(210,168,87,0.4);">{c.data.metric}</div>
+										<div style="font-family:'JetBrains Mono',monospace; color:var(--muted); font-size:0.7rem; letter-spacing:0.16em; text-transform:uppercase; margin-top:0.5rem;">{c.data.metricLabel}</div>
+									</div>
 									<div style="font-family:'JetBrains Mono',monospace; color:var(--mint); font-size:0.7rem; letter-spacing:0.16em; text-transform:uppercase; margin-top:0.8rem;">CASE.0{i + 1}</div>
 								</div>
 								<div>
@@ -86,7 +89,9 @@ const featured = (await getCollection("client", ({ data }) => data.featured)).so
 									</div>
 
 									<p style="margin:0 0 0.6rem; font-size:0.95rem;"><span style="color:var(--mint); font-family:'JetBrains Mono',monospace; font-size:0.7rem; letter-spacing:0.16em;">PROBLEM ▸</span> <span style="color:var(--muted);">{c.data.problem}</span></p>
-									<p style="margin:0; font-size:0.95rem;"><span style="color:var(--amber); font-family:'JetBrains Mono',monospace; font-size:0.7rem; letter-spacing:0.16em;">OUTCOME ▸</span> <span class="serif" style="font-style:italic;">{c.data.outcome}</span></p>
+									{c.data.outcome && (
+										<p style="margin:0; font-size:0.95rem;"><span style="color:var(--amber); font-family:'JetBrains Mono',monospace; font-size:0.7rem; letter-spacing:0.16em;">OUTCOME ▸</span> <span class="serif" style="font-style:italic;">{c.data.outcome}</span></p>
+									)}
 									<p style="margin:1rem 0 0; font-family:'JetBrains Mono',monospace; font-size:0.78rem; color:var(--mint);">read case study →</p>
 								</div>
 							</div>
