@@ -5,6 +5,8 @@ role: Fractional CTO
 order: 8
 logoClass: grayscale
 featured: true
+metric: "300+"
+metricLabel: "subsidiaries & JVs advised"
 problem: " Lead Development for Mocaverse, a web3 digital identity project with $200M+ market cap, managing requirements, vendors, infrastructure and security"
 stack:
   - Ethereum
