@@ -31,18 +31,56 @@ document.addEventListener("DOMContentLoaded", () => {
   window.addEventListener("resize", resize);
   resize();
 
-  // Default constants for the Julia set.
-  // We'll update these based on the mouse position.
-  let c_real = -0.7;
-  let c_imag = 0.27015;
+  const INTERESTING_COORDS = [
+    [-0.7, 0.27015],
+    [-0.8, 0.156],
+    [0.285, 0.01],
+    [-0.4, 0.6],
+    [0.355, 0.355],
+    [-0.54, 0.54],
+    [0.34, -0.05],
+    [-0.12, -0.77],
+  ];
 
-  // Update the constant c based on the cursor position.
+  const isMobile = window.innerWidth < 768;
+
+  let c_real, c_imag;
+
+  if (isMobile) {
+    const pick = INTERESTING_COORDS[Math.floor(Math.random() * INTERESTING_COORDS.length)];
+    c_real = pick[0];
+    c_imag = pick[1];
+  } else {
+    c_real = -0.7;
+    c_imag = 0.27015;
+  }
+
   window.addEventListener("mousemove", (e) => {
-    // Map the x-coordinate to a range of [-1, 1]
     c_real = (e.clientX / width) * 2 - 1;
-    // Map the y-coordinate to a range of [-1, 1]
     c_imag = (e.clientY / height) * 2 - 1;
   });
+
+  if (isMobile) {
+    const scrollStart = INTERESTING_COORDS.indexOf(
+      INTERESTING_COORDS.find(c => c[0] === c_real && c[1] === c_imag)
+    );
+
+    window.addEventListener("scroll", () => {
+      const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+      if (docHeight <= 0) return;
+      const progress = Math.min(window.scrollY / docHeight, 1);
+      const totalSegments = INTERESTING_COORDS.length;
+      const scaled = progress * totalSegments;
+      const segIndex = Math.min(Math.floor(scaled), totalSegments - 1);
+      const segProgress = scaled - segIndex;
+      const fromIdx = (scrollStart + segIndex) % INTERESTING_COORDS.length;
+      const toIdx = (scrollStart + segIndex + 1) % INTERESTING_COORDS.length;
+      const from = INTERESTING_COORDS[fromIdx];
+      const to = INTERESTING_COORDS[toIdx];
+      c_real = from[0] + (to[0] - from[0]) * segProgress;
+      c_imag = from[1] + (to[1] - from[1]) * segProgress;
+    }, { passive: true });
+  }
 
   let zoom = INITIAL_ZOOM;
 
