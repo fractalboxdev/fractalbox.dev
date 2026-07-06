@@ -3,11 +3,13 @@ import type { ImageMetadata } from "astro";
 import { Image } from "astro:assets";
 import { getCollection, getEntry } from "astro:content";
 import Layout from "../layouts/FractalMay2026.astro";
-import BoxDimChip from "../components/BoxDimChip.astro";
 
 const studio = (await getEntry("site", "studio"))!.data;
-const team = (await getCollection("people")).sort((a, b) => a.data.order - b.data.order);
-const writing = (await getCollection("writing")).sort((a, b) => a.data.order - b.data.order);
+const team = (await getCollection("people", (p) => !p.data.hidden)).sort(
+	(a, b) => a.data.order - b.data.order,
+);
+// hidden for now — restore with the "notes from the field" section below
+// const writing = (await getCollection("writing")).sort((a, b) => a.data.order - b.data.order);
 
 const avatarPaths = import.meta.glob<{ default: ImageMetadata }>(
 	"/src/assets/avatar*.{jpeg,jpg,png,gif,svg}",
@@ -26,17 +28,13 @@ const avatarPaths = import.meta.glob<{ default: ImageMetadata }>(
 			<h1 class="serif-h1">Operators, not <span style="color:var(--mint);">consultants</span>.</h1>
 			<p class="serif-lede">Names on the field-team roster. Code commits land under our handles, on-call rotation includes us.</p>
 			<p class="serif-lede" style="margin-top:1rem; font-size:1rem; color:var(--math); font-style:italic;">{studio.boxLine}</p>
-			<div style="margin-top:1.25rem; display:flex; gap:0.6rem; flex-wrap:wrap; --chip-color: var(--mint); --chip-border: var(--border-hi); --chip-bg: var(--bg-elevated); --chip-name: var(--amber); --chip-val: var(--math);">
-				<span class="eq-chip">i = 5</span>
-				<BoxDimChip for="sierpinski" label="depth 5" />
-			</div>
 		</div>
 	</section>
 
 	<section>
 		<div class="wrap">
 			<div class="section-tag"><span class="dot"></span> // team of record</div>
-			<p class="lede">ETHGlobal Finalist × 3 · ex-Animoca / PALO IT / Mon Studio.</p>
+			<p class="lede">ex-Animoca / PALO IT / Mon Studio.</p>
 
 			<div class="card-grid cols-2" style="margin-top:2.5rem;">
 				{team.map((m) => {
@@ -68,6 +66,7 @@ const avatarPaths = import.meta.glob<{ default: ImageMetadata }>(
 		</div>
 	</section>
 
+	{/* hidden for now — // notes from the field
 	<section>
 		<div class="wrap">
 			<div class="section-tag"><span class="dot"></span> // notes from the field</div>
@@ -84,6 +83,7 @@ const avatarPaths = import.meta.glob<{ default: ImageMetadata }>(
 			<p style="margin-top:1.5rem; color:var(--muted);">Open-source artefacts: <a href="https://github.com/fractaldotbox">github.com/fractaldotbox</a></p>
 		</div>
 	</section>
+	*/}
 
 	<section>
 		<div class="wrap" style="text-align:center;">

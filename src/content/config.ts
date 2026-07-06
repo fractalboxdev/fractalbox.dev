@@ -68,6 +68,7 @@ const people = defineCollection({
 		creds: z.string(),
 		order: z.number(),
 		avatar: z.string().optional(),
+		hidden: z.boolean().optional(),
 	}),
 });
 
