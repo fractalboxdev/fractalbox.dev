@@ -3,6 +3,7 @@ import type { ImageMetadata } from "astro";
 import { Image } from "astro:assets";
 import { getCollection, getEntry } from "astro:content";
 import Layout from "../layouts/FractalMay2026.astro";
+import TrustRegister from "../components/TrustRegister.astro";
 
 const studio = (await getEntry("site", "studio"))!.data;
 const team = (await getCollection("people", (p) => !p.data.hidden)).sort(
@@ -62,6 +63,16 @@ const avatarPaths = import.meta.glob<{ default: ImageMetadata }>(
 						</article>
 					);
 				})}
+			</div>
+
+			<div style="margin-top:3.5rem;">
+				<div class="section-tag"><span class="dot"></span> // where the team is from</div>
+				<div style="margin-top:1rem;">
+					<TrustRegister
+						exclude={["filecoin", "btse"]}
+						extras={[{ src: "src/assets/logo_jpmc.png", alt: "J.P. Morgan", logoClass: "pure-white" }]}
+					/>
+				</div>
 			</div>
 		</div>
 	</section>

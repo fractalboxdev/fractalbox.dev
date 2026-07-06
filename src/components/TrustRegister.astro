@@ -6,16 +6,24 @@ import { getCollection } from "astro:content";
 interface Props {
 	/** Cell width in px — controls density. Defaults to 160. */
 	cell?: number;
+	/** Client entry ids to skip (e.g. ["filecoin", "btse"]). */
+	exclude?: string[];
+	/** Extra non-client logos appended after the register. `src` is a
+	 *  src/assets path; `logoClass` picks a treatment (pure-white, no-invert…). */
+	extras?: { src: string; alt: string; logoClass?: string }[];
 }
 
-const { cell = 160 } = Astro.props;
+const { cell = 160, exclude = [], extras = [] } = Astro.props;
 
 // Trust register only shows clients that ship a logo asset. Case-study entries
 // without a logo (e.g. stealth NDA, internal projects) live in /work but are
 // skipped here.
-const clients = (await getCollection("client", ({ data }) => Boolean(data.logoSrc))).sort(
-	(a, b) => (a.data.order ?? 99) - (b.data.order ?? 99),
-);
+const clients = (
+	await getCollection(
+		"client",
+		({ id, data }) => Boolean(data.logoSrc) && !exclude.includes(id),
+	)
+).sort((a, b) => (a.data.order ?? 99) - (b.data.order ?? 99));
 
 const logoPaths = import.meta.glob<{ default: ImageMetadata }>(
 	"/src/assets/logo_*.{jpeg,jpg,png,gif,svg,webp}",
@@ -38,6 +46,21 @@ const logoPaths = import.meta.glob<{ default: ImageMetadata }>(
 					width={200}
 					height={80}
 					class:list={["logo-img", extra]}
+				/>
+			</div>
+		);
+	})}
+	{extras.map((e) => {
+		const loader = logoPaths[`/${e.src}`];
+		if (!loader) return null;
+		return (
+			<div class="logo-cell">
+				<Image
+					src={loader()}
+					alt={e.alt}
+					width={200}
+					height={80}
+					class:list={["logo-img", e.logoClass ?? ""]}
 				/>
 			</div>
 		);
