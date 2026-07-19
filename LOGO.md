@@ -14,12 +14,14 @@ z₀, z₀², z₀⁴, z₀⁸ of the seed **z₀ = 0.362 + 0.953i** under repea
 - **First 4 line strokes only** (z₀ → z₀¹⁶): the F itself, without the fly-off tail.
 - **Without the circle** — no lock ring, no F glyph, no coordinate label, no axes.
 - **Lines only — no points.** The export draws no orbit points; the page keeps its.
-- **Line width follows the page exactly**: 2.6px strokes, alphas box 0.4 / polyline 0.55,
-  at the page's reference plane scale `min(1440/3.6, 900/2.35) ≈ 382.98 px/unit`
-  → **766×766** canvas. The page draws its strokes and points *proportional to
-  its plane scale* (2.6px / 4px at the reference scale), so the stroke-to-box
-  ratio matches the logo at every viewport, and backs its canvas at
-  `devicePixelRatio` so lines render as crisp as the PNG.
+- **Line boldness matches the page as seen**: 5.2px strokes — 2× the page's
+  stroke-to-box ratio, because a PNG is typically viewed scaled down, which
+  visually halves its strokes next to the live canvas. Alphas box 0.4 /
+  polyline 0.55, at the page's reference plane scale
+  `min(1440/3.6, 900/2.35) ≈ 382.98 px/unit` → **766×766** canvas.
+  (The page itself draws strokes and points *proportional to its plane scale* —
+  2.6px / 4px at the reference scale — and backs its canvas at
+  `devicePixelRatio`, so its look is viewport-invariant and crisp.)
 - **Mint ink** (`rgba(176, 222, 240)` — the same mint phosphor as the live
   visualization), on `#0a0a0a` plus a transparent-background variant.
 

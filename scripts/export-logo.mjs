@@ -71,8 +71,10 @@ function draw(size, withBg, m) {
 	ctx.stroke();
 }
 
-// Page-exact metrics: 2.6px strokes, page alphas.
-const LOGO_METRICS = { line: 2.6, alphaBox: 0.4, alphaLine: 0.55 };
+// Page-matched boldness: 2x the page stroke-to-box ratio (5.2px at the
+// 766 box) — a PNG is typically viewed scaled down, which visually
+// halves its strokes next to the live canvas.
+const LOGO_METRICS = { line: 5.2, alphaBox: 0.4, alphaLine: 0.55 };
 // Favicon metrics: strokes scale with size, alphas boosted.
 const faviconMetrics = (size) => ({
 	line: Math.max(2, size * 0.035),
