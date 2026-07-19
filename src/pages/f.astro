@@ -10,7 +10,7 @@
 // by the unit box. Inside |z₀| = 1 the powers spiral to 0; outside they
 // blow up.
 //
-// One seed is special: z₀ ≈ 0.38 + 0.85i — at 3:41 in the video its
+// One seed is special: z₀ = 0.320 + 0.861i — at 3:41 in the video its
 // polyline strokes the character F. A dashed ring marks it; whenever the
 // cursor reaches it the whole drawing shifts from mint phosphor to amber.
 ---
@@ -52,7 +52,7 @@
 				the angle keeps doubling forever — the seed of chaos.
 			</p>
 			<p>
-				At <span class="fn-math">z₀ = 0.38 + 0.85i</span> the polyline strokes an F
+				At <span class="fn-math">z₀ = 0.320 + 0.861i</span> the polyline strokes an F
 				— the 3:41 moment of Numberphile's Mandelbrot video. Reach the ring
 				(radius 0.075) and the drawing turns amber.
 			</p>
@@ -124,9 +124,9 @@
 <script>
 	// The ƒ-seed — z₀ whose squaring polyline strokes an F (Numberphile
 	// FFftmWSzgmk @ 3:41). Reaching it within LOCK_RADIUS re-colors the drawing.
-	const F_RE = 0.38;
-	const F_IM = 0.85;
-	const LOCK_RADIUS = 0.075;
+	const F_RE = 0.32;
+	const F_IM = 0.861;
+	const LOCK_RADIUS = 0.05;
 
 	const MAX_STEPS = 32;
 	const MINT = "176,222,240";
@@ -216,14 +216,14 @@
 		ctx.stroke();
 		ctx.setLineDash([]);
 		ctx.fillStyle = `rgba(${ink},${0.9 * pulse})`;
-		ctx.font = `italic 600 ${Math.max(16, Math.round(s * 0.08))}px "STIX Two Text", "Cambria Math", Cambria, Georgia, serif`;
+		ctx.font = `italic 600 ${Math.max(15, Math.round(s * 0.07))}px "STIX Two Text", "Cambria Math", Cambria, Georgia, serif`;
 		ctx.textBaseline = "bottom";
-		ctx.fillText("ƒ", fx + ringR + 5, fy - ringR - 2);
+		ctx.fillText("F", fx + ringR + 5, fy - ringR - 2);
 		if (state.locked) {
 			ctx.font = '10px "JetBrains Mono", monospace';
 			ctx.textBaseline = "top";
 			ctx.fillStyle = `rgba(${ink},0.85)`;
-			ctx.fillText("0.380 + 0.850i", fx + ringR + 5, fy + ringR + 4);
+			ctx.fillText("0.320 + 0.861i", fx + ringR + 5, fy + ringR + 4);
 		}
 
 		// Powers of z₀ by repeated squaring — connected points. Inside the
@@ -252,8 +252,8 @@
 		});
 		ctx.stroke();
 		ctx.fillStyle = `rgba(${ink},0.95)`;
-		pts.forEach(([re, im], i) => {
-			const d = i === 0 ? 6 : 4;
+		const d = 4;
+		pts.forEach(([re, im]) => {
 			ctx.fillRect(cx + re * s - d / 2, cy - im * s - d / 2, d, d);
 		});
 		return { converged, escaped };
@@ -281,7 +281,7 @@
 			readC.textContent = `Z₀ = ${state.zR.toFixed(3)} ${sign} ${Math.abs(state.zI).toFixed(3)}i`;
 		}
 		const status = locked
-			? "ƒ · LOCKED"
+			? "F · LOCKED"
 			: converged
 				? "● |Z₀| < 1 · SPIRALS TO 0"
 				: escaped !== undefined && escaped > 0
