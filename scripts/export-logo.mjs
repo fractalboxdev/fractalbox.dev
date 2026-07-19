@@ -37,8 +37,9 @@ const pts = [[F_RE, F_IM]];
 	}
 }
 
-// m: { line, dot, alphaBox, alphaLine, alphaDot } — logo uses the page's
-// exact metrics; favicons scale them up for tab-size legibility.
+// m: { line, alphaBox, alphaLine } — logo uses the page's exact stroke
+// metrics; favicons scale them up for tab-size legibility. Lines only —
+// the export draws no orbit points.
 function draw(size, withBg, m) {
 	const canvas = document.getElementById("logo");
 	canvas.width = size;
@@ -68,20 +69,14 @@ function draw(size, withBg, m) {
 		else ctx.lineTo(x, y);
 	});
 	ctx.stroke();
-
-	ctx.fillStyle = "rgba(" + AMBER + "," + m.alphaDot + ")";
-	pts.forEach(([re, im]) => {
-		ctx.fillRect(cx + re * s - m.dot / 2, cy - im * s - m.dot / 2, m.dot, m.dot);
-	});
 }
 
-// Page-exact metrics: 2.6px strokes, 4px points, page alphas.
-const LOGO_METRICS = { line: 2.6, dot: 4, alphaBox: 0.4, alphaLine: 0.55, alphaDot: 0.95 };
-// Favicon metrics: strokes/points scale with size, alphas boosted.
+// Page-exact metrics: 2.6px strokes, page alphas.
+const LOGO_METRICS = { line: 2.6, alphaBox: 0.4, alphaLine: 0.55 };
+// Favicon metrics: strokes scale with size, alphas boosted.
 const faviconMetrics = (size) => ({
 	line: Math.max(2, size * 0.035),
-	dot: Math.max(3, size * 0.06),
-	alphaBox: 0.7, alphaLine: 0.85, alphaDot: 1,
+	alphaBox: 0.7, alphaLine: 0.85,
 });
 
 window.drawLogo = (withBg) => draw(${SIZE}, withBg, LOGO_METRICS);
