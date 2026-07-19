@@ -20,8 +20,8 @@ z₀, z₀², z₀⁴, z₀⁸ of the seed **z₀ = 0.362 + 0.953i** under repea
   its plane scale* (2.6px / 4px at the reference scale), so the stroke-to-box
   ratio matches the logo at every viewport, and backs its canvas at
   `devicePixelRatio` so lines render as crisp as the PNG.
-- **Amber ink** (`rgba(240, 214, 143)` — the page's found-the-F state), on
-  `#0a0a0a` plus a transparent-background variant.
+- **Mint ink** (`rgba(176, 222, 240)` — the same mint phosphor as the live
+  visualization), on `#0a0a0a` plus a transparent-background variant.
 
 ## Favicon
 

@@ -21,7 +21,7 @@ const html = `<!doctype html><html><body style="margin:0">
 <canvas id="logo" width="${SIZE}" height="${SIZE}"></canvas>
 <script>
 const F_RE = 0.362, F_IM = 0.953;
-const AMBER = "240,214,143";
+const MINT = "176,222,240";
 const SPAN = ${SPAN};
 
 // Powers of the seed by repeated squaring — first 4 strokes only
@@ -55,12 +55,12 @@ function draw(size, withBg, m) {
 
 	// 0-margin box: inset by half the stroke so the full line width stays
 	// visible while the box hugs the image edge.
-	ctx.strokeStyle = "rgba(" + AMBER + "," + m.alphaBox + ")";
+	ctx.strokeStyle = "rgba(" + MINT + "," + m.alphaBox + ")";
 	ctx.lineWidth = m.line;
 	const inset = m.line / 2;
 	ctx.strokeRect(cx - s + inset, cy - s + inset, 2 * (s - inset), 2 * (s - inset));
 
-	ctx.strokeStyle = "rgba(" + AMBER + "," + m.alphaLine + ")";
+	ctx.strokeStyle = "rgba(" + MINT + "," + m.alphaLine + ")";
 	ctx.lineWidth = m.line;
 	ctx.beginPath();
 	pts.forEach(([re, im], i) => {
