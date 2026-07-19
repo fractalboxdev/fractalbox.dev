@@ -11,9 +11,9 @@
 // boosted alphas so the mark stays legible at tab size) into public/.
 import { chromium } from "playwright";
 
-const SPAN = 1.25;                                 // half-extent shown — box (±1) = 80% of the image
+const SPAN = 1.0;                                  // half-extent shown — box (±1) is 0-margin, edge to edge
 const PAGE_SCALE = Math.min(1440 / 3.6, 900 / 2.35); // page px per unit
-const SIZE = Math.round(2 * SPAN * PAGE_SCALE);      // → 957
+const SIZE = Math.round(2 * SPAN * PAGE_SCALE);      // → 766
 const outDir = process.env.OUT ?? "src/assets";
 const faviconDir = process.env.FAVICON_OUT ?? "public";
 
@@ -52,9 +52,12 @@ function draw(size, withBg, m) {
 	const s = size / (2 * SPAN);
 	const cx = size / 2, cy = size / 2;
 
+	// 0-margin box: inset by half the stroke so the full line width stays
+	// visible while the box hugs the image edge.
 	ctx.strokeStyle = "rgba(" + AMBER + "," + m.alphaBox + ")";
 	ctx.lineWidth = m.line;
-	ctx.strokeRect(cx - s, cy - s, 2 * s, 2 * s);
+	const inset = m.line / 2;
+	ctx.strokeRect(cx - s + inset, cy - s + inset, 2 * (s - inset), 2 * (s - inset));
 
 	ctx.strokeStyle = "rgba(" + AMBER + "," + m.alphaLine + ")";
 	ctx.lineWidth = m.line;

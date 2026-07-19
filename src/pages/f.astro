@@ -151,7 +151,7 @@
 	const readStatus = document.getElementById("f-status");
 
 	const state = {
-		w: 0, h: 0, scale: 1,
+		w: 0, h: 0, scale: 1, dpr: 1,
 		// Rest on the ƒ-seed until the first pointer event — the page opens
 		// on the F, moving loses it, and you have to find it again.
 		zR: F_RE, zI: F_IM,
@@ -197,8 +197,11 @@
 		// The unit box dominates the stage and the ƒ-seed stays on-screen
 		// at every aspect ratio.
 		state.scale = Math.min(state.w / 3.6, state.h / 2.35);
-		canvas.width = state.w;
-		canvas.height = state.h;
+		// Back the canvas at device resolution so strokes render as crisp
+		// as the exported PNG on high-DPI screens.
+		state.dpr = Math.min(window.devicePixelRatio || 1, 2);
+		canvas.width = Math.round(state.w * state.dpr);
+		canvas.height = Math.round(state.h * state.dpr);
 	}
 	window.addEventListener("resize", layout);
 	layout();
@@ -209,11 +212,17 @@
 		const W = state.w, H = state.h, s = state.scale;
 		const cx = W / 2, cy = H / 2;
 		const ink = state.locked ? AMBER : MINT;
+		// Strokes and points scale with the plane so proportions match the
+		// exported logo at every viewport: 2.6px lines / 4px points at the
+		// reference scale (≈383 px per unit).
+		const stroke = Math.max(1, s * (2.6 / 383));
+		const dot = Math.max(2.5, s * (4 / 383));
+		ctx.setTransform(state.dpr, 0, 0, state.dpr, 0, 0);
 		ctx.clearRect(0, 0, W, H);
 
 		// Axes through the origin + the unit box.
 		ctx.strokeStyle = `rgba(${ink},0.16)`;
-		ctx.lineWidth = 2.6;
+		ctx.lineWidth = stroke;
 		ctx.beginPath();
 		ctx.moveTo(0, cy); ctx.lineTo(W, cy);
 		ctx.moveTo(cx, 0); ctx.lineTo(cx, H);
@@ -228,7 +237,7 @@
 		const pulse = reduced || state.locked ? 1 : 0.65 + 0.35 * Math.sin(now / 480);
 		ctx.setLineDash(state.locked ? [] : [3, 4]);
 		ctx.strokeStyle = `rgba(${ink},${0.75 * pulse})`;
-		ctx.lineWidth = state.locked ? 3.9 : 2.6;
+		ctx.lineWidth = state.locked ? stroke * 1.5 : stroke;
 		ctx.beginPath();
 		ctx.arc(fx, fy, ringR, 0, Math.PI * 2);
 		ctx.stroke();
@@ -260,7 +269,7 @@
 			if (m2 > 900) { escaped = i + 1; break; }
 		}
 		ctx.strokeStyle = `rgba(${ink},0.55)`;
-		ctx.lineWidth = 2.6;
+		ctx.lineWidth = stroke;
 		ctx.beginPath();
 		pts.forEach(([re, im], i) => {
 			const x = cx + re * s;
@@ -270,9 +279,8 @@
 		});
 		ctx.stroke();
 		ctx.fillStyle = `rgba(${ink},0.95)`;
-		const d = 4;
 		pts.forEach(([re, im]) => {
-			ctx.fillRect(cx + re * s - d / 2, cy - im * s - d / 2, d, d);
+			ctx.fillRect(cx + re * s - dot / 2, cy - im * s - dot / 2, dot, dot);
 		});
 		return { converged, escaped };
 	}
