@@ -11,12 +11,25 @@ z₀, z₀², z₀⁴, z₀⁸ of the seed **z₀ = 0.362 + 0.953i** under repea
 - **The box occupies 80% of the image** — plane half-extent 1.25, box spans ±1.
 - **First 4 line strokes only** (z₀ → z₀¹⁶): the F itself, without the fly-off tail.
 - **Without the circle** — no lock ring, no F glyph, no coordinate label, no axes.
-- **Point size and line width follow the page exactly**: 1.3px strokes, 4×4px points
-  (all points equal size, strokes 30% bolder than a hairline), stroke alphas box 0.4 / polyline 0.55 / points 0.95,
+- **Point size and line width follow the page exactly**: 2.6px strokes, 4×4px points
+  (all points equal size), stroke alphas box 0.4 / polyline 0.55 / points 0.95,
   at the page's reference plane scale `min(1440/3.6, 900/2.35) ≈ 382.98 px/unit`
   → **957×957** canvas.
 - **Amber ink** (`rgba(240, 214, 143)` — the page's found-the-F state), on
   `#0a0a0a` plus a transparent-background variant.
+
+## Favicon
+
+The logo is also the site favicon. Same composition, but strokes and
+points scale with the icon size (alphas boosted to box 0.7 / polyline
+0.85 / points 1) so the mark stays legible at tab size; always on the
+dark background.
+
+- [public/favicon.png](public/favicon.png) — 64×64, linked as `rel="icon"`
+- [public/apple-touch-icon.png](public/apple-touch-icon.png) — 180×180, linked as `rel="apple-touch-icon"`
+
+Both are referenced from the site layout ([src/layouts/FractalMay2026.astro](src/layouts/FractalMay2026.astro))
+and the standalone `/f` head.
 
 ## Files
 
