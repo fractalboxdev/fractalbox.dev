@@ -64,7 +64,7 @@
 			<p>
 				At <span class="fn-math">z₀ = 0.362 + 0.953i</span> the polyline strokes an F
 				— the 3:41 moment of Numberphile's Mandelbrot video. Reach the ring
-				(radius 0.05) and the drawing turns amber.
+				(radius 0.035) and the drawing turns amber.
 			</p>
 		</aside>
 	</body>
@@ -136,7 +136,7 @@
 	// FFftmWSzgmk @ 3:41). Reaching it within LOCK_RADIUS re-colors the drawing.
 	const F_RE = 0.362;
 	const F_IM = 0.953;
-	const LOCK_RADIUS = 0.05;
+	const LOCK_RADIUS = 0.035;
 
 	const MAX_STEPS = 32;
 	const MINT = "176,222,240";
@@ -164,7 +164,13 @@
 		if (e.target instanceof Element && e.target.closest(".f-ui")) return;
 		pointer.x = e.clientX;
 		pointer.y = e.clientY;
-		pointer.active = true;
+		// The page rests on the F until the cursor enters the unit box —
+		// only then does the cursor take over the seed.
+		if (!pointer.active) {
+			const re = (e.clientX - state.w / 2) / state.scale;
+			const im = (state.h / 2 - e.clientY) / state.scale;
+			if (Math.abs(re) <= 1 && Math.abs(im) <= 1) pointer.active = true;
+		}
 	};
 	window.addEventListener("pointermove", onPointer, { passive: true });
 	window.addEventListener("pointerdown", onPointer, { passive: true });
