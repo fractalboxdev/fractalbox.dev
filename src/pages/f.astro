@@ -10,7 +10,7 @@
 // by the unit box. Inside |z₀| = 1 the powers spiral to 0; outside they
 // blow up.
 //
-// One seed is special: z₀ = 0.320 + 0.861i — at 3:41 in the video its
+// One seed is special: z₀ = 0.362 + 0.953i — at 3:41 in the video its
 // polyline strokes the character F. A dashed ring marks it; whenever the
 // cursor reaches it the whole drawing shifts from mint phosphor to amber.
 ---
@@ -52,9 +52,19 @@
 				the angle keeps doubling forever — the seed of chaos.
 			</p>
 			<p>
-				At <span class="fn-math">z₀ = 0.320 + 0.861i</span> the polyline strokes an F
+				This map is the <span class="fn-math">c = 0</span> member of the quadratic
+				family <span class="fn-math">zₙ₊₁ = zₙ² + c</span>, and the unit circle is
+				its Julia set — the boundary between the seeds that fall in and the seeds
+				that escape. Turn <span class="fn-math">c</span> on and that boundary
+				crumples into fractal Julia sets; collecting every
+				<span class="fn-math">c</span> whose orbit of 0 stays bounded draws the
+				Mandelbrot set <span class="fn-math">M = &#123; c ∈ ℂ : zₙ ↛ ∞ &#125;</span>.
+				The angle doubling here is the germ of all that chaos.
+			</p>
+			<p>
+				At <span class="fn-math">z₀ = 0.362 + 0.953i</span> the polyline strokes an F
 				— the 3:41 moment of Numberphile's Mandelbrot video. Reach the ring
-				(radius 0.075) and the drawing turns amber.
+				(radius 0.05) and the drawing turns amber.
 			</p>
 		</aside>
 	</body>
@@ -124,8 +134,8 @@
 <script>
 	// The ƒ-seed — z₀ whose squaring polyline strokes an F (Numberphile
 	// FFftmWSzgmk @ 3:41). Reaching it within LOCK_RADIUS re-colors the drawing.
-	const F_RE = 0.32;
-	const F_IM = 0.861;
+	const F_RE = 0.362;
+	const F_IM = 0.953;
 	const LOCK_RADIUS = 0.05;
 
 	const MAX_STEPS = 32;
@@ -223,7 +233,7 @@
 			ctx.font = '10px "JetBrains Mono", monospace';
 			ctx.textBaseline = "top";
 			ctx.fillStyle = `rgba(${ink},0.85)`;
-			ctx.fillText("0.320 + 0.861i", fx + ringR + 5, fy + ringR + 4);
+			ctx.fillText("0.362 + 0.953i", fx + ringR + 5, fy + ringR + 4);
 		}
 
 		// Powers of z₀ by repeated squaring — connected points. Inside the
