@@ -16,21 +16,25 @@ z₀, z₀², z₀⁴, z₀⁸ of the seed **z₀ = 0.362 + 0.953i** under repea
 - **Lines only — no points.** The export draws no orbit points; the page keeps its.
 - **Line boldness matches the page as seen**: 5.2px strokes — 2× the page's
   stroke-to-box ratio, because a PNG is typically viewed scaled down, which
-  visually halves its strokes next to the live canvas. Alphas box 0.4 /
-  polyline 0.55, at the page's reference plane scale
+  visually halves its strokes next to the live canvas. Reference plane scale
   `min(1440/3.6, 900/2.35) ≈ 382.98 px/unit` → **766×766** canvas.
   (The page itself draws strokes and points *proportional to its plane scale* —
   2.6px / 4px at the reference scale — and backs its canvas at
   `devicePixelRatio`, so its look is viewport-invariant and crisp.)
+- **Single mint tone, no overlap darkening** — unlike the page, which layers a
+  dimmer box (α 0.4) under a brighter polyline (α 0.55), the export draws the
+  box and the F as **one stroked path in a single alpha (0.55)**. A lone
+  `stroke()` unions its own coverage, so where the polyline crosses the box the
+  overlap stays that flat color instead of compositing two translucent strokes
+  into a denser square. Holds for both the dark-bg and transparent variants.
 - **Mint ink** (`rgba(176, 222, 240)` — the same mint phosphor as the live
   visualization), on `#0a0a0a` plus a transparent-background variant.
 
 ## Favicon
 
-The logo is also the site favicon. Same composition, but strokes and
-points scale with the icon size (alphas boosted to box 0.7 / polyline
-0.85 / points 1) so the mark stays legible at tab size; always on the
-dark background.
+The logo is also the site favicon. Same composition and single-tone
+treatment, but strokes scale with the icon size and the alpha is boosted
+to 0.85 so the mark stays legible at tab size; always on the dark background.
 
 - [public/favicon.png](public/favicon.png) — 64×64, linked as `rel="icon"`
 - [public/apple-touch-icon.png](public/apple-touch-icon.png) — 180×180, linked as `rel="apple-touch-icon"`
