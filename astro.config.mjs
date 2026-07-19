@@ -8,5 +8,10 @@ export default defineConfig({
 	output: "static",
 	vite: {
 		plugins: [tailwindcss()],
+		server: {
+			// Allow access via Tailscale MagicDNS hosts when the dev server is
+			// exposed with `tailscale serve`.
+			allowedHosts: [".ts.net"],
+		},
 	},
 });

@@ -1,0 +1,325 @@
+---
+// /f — repeated squaring on the complex plane, cursor as the seed z₀.
+// Standalone fullscreen page — deliberately outside the site layout.
+//
+// Origin = centre of the viewport. The cursor's offset from it maps
+// LINEARLY to the complex plane, so the cursor tip *is* z₀. One canvas
+// draws the powers z₀, z₀², z₀⁴, z₀⁸ … as connected points — the
+// angle-doubling visualization from Numberphile's "What's so special
+// about the Mandelbrot Set?" (youtube.com/watch?v=FFftmWSzgmk) — framed
+// by the unit box. Inside |z₀| = 1 the powers spiral to 0; outside they
+// blow up.
+//
+// One seed is special: z₀ = 0.362 + 0.953i — at 3:41 in the video its
+// polyline strokes the character F. A dashed ring marks it; whenever the
+// cursor reaches it the whole drawing shifts from mint phosphor to amber.
+---
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<meta name="description" content="ƒ — repeated squaring on the complex plane. Your cursor is z₀; the powers z₀, z₀², z₀⁴ … are drawn live." />
+		<link rel="icon" type="image/png" href="/favicon.png" />
+		<link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+		<title>fractalbox.dev — ƒ · z → z²</title>
+	</head>
+	<body>
+		<a class="f-home f-ui" href="/">◂ fractal.box</a>
+		<canvas id="f-orbit" aria-hidden="true"></canvas>
+		<div class="f-readout">
+			<span id="f-status">● TRACE</span>
+			<span id="f-c-readout">Z₀ = 0.000 + 0.000i</span>
+		</div>
+		<button class="f-formula-toggle f-ui" id="f-formula-toggle" aria-expanded="false" aria-controls="f-formula-note">FORMULA</button>
+		<aside class="f-formula-note f-ui" id="f-formula-note" hidden>
+			<div class="fn-head">
+				<span>// formula</span>
+				<button class="fn-close" id="f-formula-close" aria-label="Close">✕</button>
+			</div>
+			<p>
+				<span class="fn-math">zₙ₊₁ = zₙ²,&ensp;so&ensp;zₙ = z₀^(2ⁿ)</span><br />
+				Repeated squaring. Your cursor is <span class="fn-math">z₀</span> — its
+				offset from the page centre, read as a point of the complex plane.
+			</p>
+			<p>
+				Squaring squares the modulus and doubles the argument:
+				<span class="fn-math">|zₙ₊₁| = |zₙ|²,&ensp;arg zₙ₊₁ = 2 arg zₙ</span>.
+				The polyline connects the powers as they spiral.
+			</p>
+			<p>
+				The dichotomy lives on the circle <span class="fn-math">|z₀| = 1</span>,
+				inscribed in the box (<span class="fn-math">|Re z| ≤ 1, |Im z| ≤ 1</span>):
+				inside, the powers spiral to 0; outside, they blow up; exactly on it,
+				the angle keeps doubling forever — the seed of chaos.
+			</p>
+			<p>
+				This map is the <span class="fn-math">c = 0</span> member of the quadratic
+				family <span class="fn-math">zₙ₊₁ = zₙ² + c</span>, and the unit circle is
+				its Julia set — the boundary between the seeds that fall in and the seeds
+				that escape. Turn <span class="fn-math">c</span> on and that boundary
+				crumples into fractal Julia sets; collecting every
+				<span class="fn-math">c</span> whose orbit of 0 stays bounded draws the
+				Mandelbrot set <span class="fn-math">M = &#123; c ∈ ℂ : zₙ ↛ ∞ &#125;</span>.
+				The angle doubling here is the germ of all that chaos.
+			</p>
+			<p>
+				At <span class="fn-math">z₀ = 0.362 + 0.953i</span> the polyline strokes an F
+				— the 3:41 moment of Numberphile's Mandelbrot video. Reach the ring
+				(radius 0.035) and the drawing turns amber.
+			</p>
+		</aside>
+	</body>
+</html>
+
+<style>
+	:root {
+		--bg: #0a0a0a;
+		--mint: #b0def0;
+		--amber: #f0d68f;
+		--muted: #b8c0cc;
+	}
+	html, body {
+		margin: 0; height: 100%; overflow: hidden;
+		background: var(--bg); color: var(--mint);
+		font-family: "JetBrains Mono", "IBM Plex Mono", "SF Mono", ui-monospace, "Menlo", monospace;
+	}
+	canvas#f-orbit {
+		position: fixed; inset: 0; width: 100vw; height: 100vh; display: block;
+	}
+	.f-home {
+		position: fixed; top: 0.85rem; left: 1rem; z-index: 2;
+		color: var(--muted); opacity: 0.7; text-decoration: none;
+		font-size: 0.7rem; letter-spacing: 0.16em; text-transform: uppercase;
+	}
+	.f-home:hover { color: var(--mint); opacity: 1; }
+	.f-readout {
+		position: fixed; bottom: 0.85rem; left: 1rem; right: 1rem; z-index: 2;
+		display: flex; justify-content: flex-start; gap: 1.75rem; pointer-events: none;
+		font-size: 0.65rem; color: var(--muted); letter-spacing: 0.1em;
+	}
+	.f-readout span:first-child { color: var(--mint); }
+	body.f-locked .f-readout span:first-child { color: var(--amber); }
+	.f-formula-toggle {
+		position: fixed; bottom: 0.85rem; right: 1rem; z-index: 2;
+		background: none; border: none; padding: 0; cursor: pointer;
+		color: var(--muted); opacity: 0.8; font: inherit;
+		font-size: 0.7rem; letter-spacing: 0.16em; text-transform: uppercase;
+	}
+	.f-formula-toggle:hover,
+	.f-formula-toggle[aria-expanded="true"] { color: var(--mint); opacity: 1; }
+	.f-formula-note {
+		position: fixed; bottom: 2.6rem; right: 1rem; z-index: 3;
+		width: min(360px, calc(100vw - 2rem));
+		border: 1px solid rgba(176, 222, 240, 0.45);
+		background: rgba(10, 10, 10, 0.92);
+		padding: 0.9rem 1rem; font-size: 0.72rem; line-height: 1.65;
+		color: var(--muted); letter-spacing: 0.02em;
+	}
+	.f-formula-note p { margin: 0.6rem 0 0; }
+	.f-formula-note .fn-head {
+		display: flex; justify-content: space-between; align-items: baseline;
+		color: var(--mint); font-size: 0.7rem;
+		letter-spacing: 0.16em; text-transform: uppercase;
+	}
+	.f-formula-note .fn-close {
+		background: none; border: none; padding: 0; cursor: pointer;
+		color: var(--muted); font: inherit; font-size: 0.75rem;
+	}
+	.f-formula-note .fn-close:hover { color: var(--mint); }
+	.f-formula-note .fn-math {
+		font-family: "STIX Two Text", "Cambria Math", Cambria, Georgia, serif;
+		font-style: italic; color: var(--mint);
+	}
+</style>
+
+<script>
+	// The ƒ-seed — z₀ whose squaring polyline strokes an F (Numberphile
+	// FFftmWSzgmk @ 3:41). Reaching it within LOCK_RADIUS re-colors the drawing.
+	const F_RE = 0.362;
+	const F_IM = 0.953;
+	const LOCK_RADIUS = 0.035;
+
+	const MAX_STEPS = 32;
+	const MINT = "176,222,240";
+	const AMBER = "240,214,143";
+
+	const reduced = window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
+
+	const canvas = document.getElementById("f-orbit") as HTMLCanvasElement;
+	const readC = document.getElementById("f-c-readout");
+	const readStatus = document.getElementById("f-status");
+
+	const state = {
+		w: 0, h: 0, scale: 1, dpr: 1,
+		// Rest on the ƒ-seed until the first pointer event — the page opens
+		// on the F, moving loses it, and you have to find it again.
+		zR: F_RE, zI: F_IM,
+		locked: false,
+		status: "",
+	};
+
+	const pointer = { x: 0, y: 0, active: false };
+	const onPointer = (e: PointerEvent) => {
+		// Interacting with UI chrome (home link, formula note) must not
+		// steer z₀.
+		if (e.target instanceof Element && e.target.closest(".f-ui")) return;
+		pointer.x = e.clientX;
+		pointer.y = e.clientY;
+		// The page rests on the F until the cursor enters the unit box —
+		// only then does the cursor take over the seed.
+		if (!pointer.active) {
+			const re = (e.clientX - state.w / 2) / state.scale;
+			const im = (state.h / 2 - e.clientY) / state.scale;
+			if (Math.abs(re) <= 1 && Math.abs(im) <= 1) pointer.active = true;
+		}
+	};
+	window.addEventListener("pointermove", onPointer, { passive: true });
+	window.addEventListener("pointerdown", onPointer, { passive: true });
+
+	const formulaToggle = document.getElementById("f-formula-toggle");
+	const formulaNote = document.getElementById("f-formula-note");
+	const formulaClose = document.getElementById("f-formula-close");
+	const setFormulaOpen = (open: boolean) => {
+		if (!formulaToggle || !formulaNote) return;
+		formulaNote.hidden = !open;
+		formulaToggle.setAttribute("aria-expanded", String(open));
+	};
+	formulaToggle?.addEventListener("click", () => setFormulaOpen(formulaNote?.hidden ?? false));
+	formulaClose?.addEventListener("click", () => setFormulaOpen(false));
+	window.addEventListener("keydown", (e) => {
+		if (e.key === "Escape") setFormulaOpen(false);
+	});
+
+	function layout() {
+		state.w = window.innerWidth;
+		state.h = window.innerHeight;
+		// The unit box dominates the stage and the ƒ-seed stays on-screen
+		// at every aspect ratio.
+		state.scale = Math.min(state.w / 3.6, state.h / 2.35);
+		// Back the canvas at device resolution so strokes render as crisp
+		// as the exported PNG on high-DPI screens.
+		state.dpr = Math.min(window.devicePixelRatio || 1, 2);
+		canvas.width = Math.round(state.w * state.dpr);
+		canvas.height = Math.round(state.h * state.dpr);
+	}
+	window.addEventListener("resize", layout);
+	layout();
+
+	function draw(now: number) {
+		const ctx = canvas.getContext("2d");
+		if (!ctx) return {};
+		const W = state.w, H = state.h, s = state.scale;
+		const cx = W / 2, cy = H / 2;
+		const ink = state.locked ? AMBER : MINT;
+		// Strokes and points scale with the plane so proportions match the
+		// exported logo at every viewport: 2.6px lines / 4px points at the
+		// reference scale (≈383 px per unit).
+		const stroke = Math.max(1, s * (2.6 / 383));
+		const dot = Math.max(2.5, s * (4 / 383));
+		ctx.setTransform(state.dpr, 0, 0, state.dpr, 0, 0);
+		ctx.clearRect(0, 0, W, H);
+
+		// Axes through the origin + the unit box.
+		ctx.strokeStyle = `rgba(${ink},0.16)`;
+		ctx.lineWidth = stroke;
+		ctx.beginPath();
+		ctx.moveTo(0, cy); ctx.lineTo(W, cy);
+		ctx.moveTo(cx, 0); ctx.lineTo(cx, H);
+		ctx.stroke();
+		ctx.strokeStyle = `rgba(${ink},0.4)`;
+		ctx.strokeRect(cx - s, cy - s, 2 * s, 2 * s);
+
+		// ƒ-seed marker — dashed ring showing the exact lock zone.
+		const fx = cx + F_RE * s;
+		const fy = cy - F_IM * s;
+		const ringR = LOCK_RADIUS * s;
+		const pulse = reduced || state.locked ? 1 : 0.65 + 0.35 * Math.sin(now / 480);
+		ctx.setLineDash(state.locked ? [] : [3, 4]);
+		ctx.strokeStyle = `rgba(${ink},${0.75 * pulse})`;
+		ctx.lineWidth = state.locked ? stroke * 1.5 : stroke;
+		ctx.beginPath();
+		ctx.arc(fx, fy, ringR, 0, Math.PI * 2);
+		ctx.stroke();
+		ctx.setLineDash([]);
+		ctx.fillStyle = `rgba(${ink},${0.9 * pulse})`;
+		ctx.font = `italic 600 ${Math.max(15, Math.round(s * 0.07))}px "STIX Two Text", "Cambria Math", Cambria, Georgia, serif`;
+		ctx.textBaseline = "bottom";
+		ctx.fillText("F", fx + ringR + 5, fy - ringR - 2);
+		if (state.locked) {
+			ctx.font = '10px "JetBrains Mono", monospace';
+			ctx.textBaseline = "top";
+			ctx.fillStyle = `rgba(${ink},0.85)`;
+			ctx.fillText("0.362 + 0.953i", fx + ringR + 5, fy + ringR + 4);
+		}
+
+		// Powers of z₀ by repeated squaring — connected points. Inside the
+		// unit circle they spiral to 0; outside they fly off.
+		const pts: [number, number][] = [[state.zR, state.zI]];
+		let zR = state.zR, zI = state.zI;
+		let converged = false;
+		let escaped = -1;
+		for (let i = 0; i < MAX_STEPS; i++) {
+			const nR = zR * zR - zI * zI;
+			zI = 2 * zR * zI;
+			zR = nR;
+			pts.push([zR, zI]);
+			const m2 = zR * zR + zI * zI;
+			if (m2 < 0.00002) { converged = true; break; }
+			if (m2 > 900) { escaped = i + 1; break; }
+		}
+		ctx.strokeStyle = `rgba(${ink},0.55)`;
+		ctx.lineWidth = stroke;
+		ctx.beginPath();
+		pts.forEach(([re, im], i) => {
+			const x = cx + re * s;
+			const y = cy - im * s;
+			if (i === 0) ctx.moveTo(x, y);
+			else ctx.lineTo(x, y);
+		});
+		ctx.stroke();
+		ctx.fillStyle = `rgba(${ink},0.95)`;
+		pts.forEach(([re, im]) => {
+			ctx.fillRect(cx + re * s - dot / 2, cy - im * s - dot / 2, dot, dot);
+		});
+		return { converged, escaped };
+	}
+
+	function tick(now: number) {
+		const targetR = pointer.active ? (pointer.x - state.w / 2) / state.scale : F_RE;
+		const targetI = pointer.active ? (state.h / 2 - pointer.y) / state.scale : F_IM;
+		const k = reduced ? 1 : 0.12;
+		state.zR += (targetR - state.zR) * k;
+		state.zI += (targetI - state.zI) * k;
+
+		// Lock on the raw cursor z₀ — the tip must actually reach ƒ.
+		const locked = pointer.active
+			&& Math.hypot(targetR - F_RE, targetI - F_IM) < LOCK_RADIUS;
+		if (locked !== state.locked) {
+			state.locked = locked;
+			document.body.classList.toggle("f-locked", locked);
+		}
+
+		const { converged, escaped } = draw(now);
+
+		if (readC) {
+			const sign = state.zI >= 0 ? "+" : "−";
+			readC.textContent = `Z₀ = ${state.zR.toFixed(3)} ${sign} ${Math.abs(state.zI).toFixed(3)}i`;
+		}
+		const status = locked
+			? "F · LOCKED"
+			: converged
+				? "● |Z₀| < 1 · SPIRALS TO 0"
+				: escaped !== undefined && escaped > 0
+					? `● |Z₀| > 1 · BLOWS UP @ N=${escaped}`
+					: "● ON THE CIRCLE · ANGLE DOUBLING";
+		if (readStatus && status !== state.status) {
+			state.status = status;
+			readStatus.textContent = status;
+		}
+
+		requestAnimationFrame(tick);
+	}
+
+	requestAnimationFrame(tick);
+</script>
