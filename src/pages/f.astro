@@ -1,35 +1,33 @@
 ---
-// /f — the Mandelbrot orbit, cursor as the parameter c. Standalone
-// fullscreen page — deliberately outside the site layout.
+// /f — repeated squaring on the complex plane, cursor as the seed z₀.
+// Standalone fullscreen page — deliberately outside the site layout.
 //
 // Origin = centre of the viewport. The cursor's offset from it maps
-// LINEARLY to the complex plane, so the cursor tip *is* c. One canvas
-// draws the orbit of 0 under z → z² + c as connected points — the
-// visualization from Numberphile's "What's so special about the
-// Mandelbrot Set?" (youtube.com/watch?v=FFftmWSzgmk) — framed by the
-// unit box instead of a circle.
+// LINEARLY to the complex plane, so the cursor tip *is* z₀. One canvas
+// draws the powers z₀, z₀², z₀⁴, z₀⁸ … as connected points — the
+// angle-doubling visualization from Numberphile's "What's so special
+// about the Mandelbrot Set?" (youtube.com/watch?v=FFftmWSzgmk) — framed
+// by the unit box. Inside |z₀| = 1 the powers spiral to 0; outside they
+// blow up.
 //
-// One parameter is special: c ≈ 0.456 + 0.202i, found by grid-searching
-// the plane and chamfer-scoring each orbit polyline against an F-glyph
-// template. Its orbit writes an F in a single stroke: middle arm out of
-// the origin, up the right side, top bar leftward, stem down — and the
-// escape segment flies off parallel to the stem. A dashed ring marks it;
-// whenever the cursor reaches it the drawing shifts from mint to amber.
+// One seed is special: z₀ ≈ 0.38 + 0.85i — at 3:41 in the video its
+// polyline strokes the character F. A dashed ring marks it; whenever the
+// cursor reaches it the whole drawing shifts from mint phosphor to amber.
 ---
 <!DOCTYPE html>
 <html lang="en">
 	<head>
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
-		<meta name="description" content="ƒ — the Mandelbrot orbit. Your cursor is c; the orbit of 0 under z → z² + c is drawn live." />
-		<title>fractalbox.dev — ƒ · z → z² + c</title>
+		<meta name="description" content="ƒ — repeated squaring on the complex plane. Your cursor is z₀; the powers z₀, z₀², z₀⁴ … are drawn live." />
+		<title>fractalbox.dev — ƒ · z → z²</title>
 	</head>
 	<body>
 		<a class="f-home f-ui" href="/">◂ fractal.box</a>
 		<canvas id="f-orbit" aria-hidden="true"></canvas>
 		<div class="f-readout">
 			<span id="f-status">● TRACE</span>
-			<span id="f-c-readout">C = 0.000 + 0.000i</span>
+			<span id="f-c-readout">Z₀ = 0.000 + 0.000i</span>
 		</div>
 		<button class="f-formula-toggle f-ui" id="f-formula-toggle" aria-expanded="false" aria-controls="f-formula-note">FORMULA</button>
 		<aside class="f-formula-note f-ui" id="f-formula-note" hidden>
@@ -38,24 +36,25 @@
 				<button class="fn-close" id="f-formula-close" aria-label="Close">✕</button>
 			</div>
 			<p>
-				<span class="fn-math">z₀ = 0,&ensp;zₙ₊₁ = zₙ² + c</span><br />
-				The quadratic map. Your cursor is <span class="fn-math">c</span> — its offset
-				from the page centre, read as a point of the complex plane.
+				<span class="fn-math">zₙ₊₁ = zₙ²,&ensp;so&ensp;zₙ = z₀^(2ⁿ)</span><br />
+				Repeated squaring. Your cursor is <span class="fn-math">z₀</span> — its
+				offset from the page centre, read as a point of the complex plane.
 			</p>
 			<p>
-				The polyline connects the orbit <span class="fn-math">z₀, z₁, z₂, …</span>
-				It draws solid while <span class="fn-math">|zₙ| ≤ 2.5</span>; once a point
-				leaves, the last segment fades — the orbit has escaped.
+				Squaring squares the modulus and doubles the argument:
+				<span class="fn-math">|zₙ₊₁| = |zₙ|²,&ensp;arg zₙ₊₁ = 2 arg zₙ</span>.
+				The polyline connects the powers as they spiral.
 			</p>
 			<p>
-				<span class="fn-math">M = &#123; c ∈ ℂ : the orbit of 0 stays bounded &#125;</span><br />
-				Bounded orbit means <span class="fn-math">c</span> belongs to the Mandelbrot
-				set; escape means it does not. The box marks
-				<span class="fn-math">|Re z| ≤ 1, |Im z| ≤ 1</span> — a scale reference.
+				The dichotomy lives on the circle <span class="fn-math">|z₀| = 1</span>,
+				inscribed in the box (<span class="fn-math">|Re z| ≤ 1, |Im z| ≤ 1</span>):
+				inside, the powers spiral to 0; outside, they blow up; exactly on it,
+				the angle keeps doubling forever — the seed of chaos.
 			</p>
 			<p>
-				At <span class="fn-math">c = 0.456 + 0.202i</span> the orbit writes an F in
-				one stroke. Reach the ring (radius 0.075) and the drawing turns amber.
+				At <span class="fn-math">z₀ = 0.38 + 0.85i</span> the polyline strokes an F
+				— the 3:41 moment of Numberphile's Mandelbrot video. Reach the ring
+				(radius 0.075) and the drawing turns amber.
 			</p>
 		</aside>
 	</body>
@@ -123,17 +122,13 @@
 </style>
 
 <script>
-	// The ƒ-parameter — c whose orbit writes an F (found by chamfer-scoring
-	// orbit polylines against an F template). Reaching it within
-	// LOCK_RADIUS re-colors the drawing.
-	const F_RE = 0.456;
-	const F_IM = 0.202;
+	// The ƒ-seed — z₀ whose squaring polyline strokes an F (Numberphile
+	// FFftmWSzgmk @ 3:41). Reaching it within LOCK_RADIUS re-colors the drawing.
+	const F_RE = 0.38;
+	const F_IM = 0.85;
 	const LOCK_RADIUS = 0.075;
 
-	const MAX_STEPS = 48;
-	// |z| > 2.5 counts as escaped; the first outside point is drawn as a
-	// faded fly-off segment so the bounded strokes stay readable.
-	const ESCAPE_M2 = 6.25;
+	const MAX_STEPS = 32;
 	const MINT = "176,222,240";
 	const AMBER = "240,214,143";
 
@@ -145,9 +140,9 @@
 
 	const state = {
 		w: 0, h: 0, scale: 1,
-		// Rest on the ƒ-parameter until the first pointer event — the page
-		// opens on the F, moving loses it, and you have to find it again.
-		cR: F_RE, cI: F_IM,
+		// Rest on the ƒ-seed until the first pointer event — the page opens
+		// on the F, moving loses it, and you have to find it again.
+		zR: F_RE, zI: F_IM,
 		locked: false,
 		status: "",
 	};
@@ -155,7 +150,7 @@
 	const pointer = { x: 0, y: 0, active: false };
 	const onPointer = (e: PointerEvent) => {
 		// Interacting with UI chrome (home link, formula note) must not
-		// steer c.
+		// steer z₀.
 		if (e.target instanceof Element && e.target.closest(".f-ui")) return;
 		pointer.x = e.clientX;
 		pointer.y = e.clientY;
@@ -181,9 +176,9 @@
 	function layout() {
 		state.w = window.innerWidth;
 		state.h = window.innerHeight;
-		// The unit box and the full F polyline (stem reaches im ≈ −1.5)
-		// stay on-screen at every aspect ratio.
-		state.scale = Math.min(state.w / 4.4, state.h / 3.2);
+		// The unit box dominates the stage and the ƒ-seed stays on-screen
+		// at every aspect ratio.
+		state.scale = Math.min(state.w / 3.6, state.h / 2.35);
 		canvas.width = state.w;
 		canvas.height = state.h;
 	}
@@ -208,7 +203,7 @@
 		ctx.strokeStyle = `rgba(${ink},0.4)`;
 		ctx.strokeRect(cx - s, cy - s, 2 * s, 2 * s);
 
-		// ƒ marker — dashed ring showing the exact lock zone.
+		// ƒ-seed marker — dashed ring showing the exact lock zone.
 		const fx = cx + F_RE * s;
 		const fy = cy - F_IM * s;
 		const ringR = LOCK_RADIUS * s;
@@ -221,64 +216,57 @@
 		ctx.stroke();
 		ctx.setLineDash([]);
 		ctx.fillStyle = `rgba(${ink},${0.9 * pulse})`;
-		ctx.font = `italic 600 ${Math.max(16, Math.round(s * 0.09))}px "STIX Two Text", "Cambria Math", Cambria, Georgia, serif`;
+		ctx.font = `italic 600 ${Math.max(16, Math.round(s * 0.08))}px "STIX Two Text", "Cambria Math", Cambria, Georgia, serif`;
 		ctx.textBaseline = "bottom";
 		ctx.fillText("ƒ", fx + ringR + 5, fy - ringR - 2);
 		if (state.locked) {
 			ctx.font = '10px "JetBrains Mono", monospace';
 			ctx.textBaseline = "top";
 			ctx.fillStyle = `rgba(${ink},0.85)`;
-			ctx.fillText("0.456 + 0.202i", fx + ringR + 5, fy + ringR + 4);
+			ctx.fillText("0.380 + 0.850i", fx + ringR + 5, fy + ringR + 4);
 		}
 
-		// Orbit of 0 under z → z² + c — connected points. The bounded
-		// prefix draws solid; the first escaping point fades out.
-		const pts: [number, number][] = [[0, 0]];
-		let zR = 0, zI = 0;
+		// Powers of z₀ by repeated squaring — connected points. Inside the
+		// unit circle they spiral to 0; outside they fly off.
+		const pts: [number, number][] = [[state.zR, state.zI]];
+		let zR = state.zR, zI = state.zI;
+		let converged = false;
 		let escaped = -1;
 		for (let i = 0; i < MAX_STEPS; i++) {
-			const nR = zR * zR - zI * zI + state.cR;
-			zI = 2 * zR * zI + state.cI;
+			const nR = zR * zR - zI * zI;
+			zI = 2 * zR * zI;
 			zR = nR;
 			pts.push([zR, zI]);
-			if (zR * zR + zI * zI > ESCAPE_M2) { escaped = i + 1; break; }
+			const m2 = zR * zR + zI * zI;
+			if (m2 < 0.00002) { converged = true; break; }
+			if (m2 > 900) { escaped = i + 1; break; }
 		}
-		const toX = (re: number) => cx + re * s;
-		const toY = (im: number) => cy - im * s;
-		const solidEnd = escaped > 0 ? pts.length - 1 : pts.length;
 		ctx.strokeStyle = `rgba(${ink},0.55)`;
 		ctx.lineWidth = 1;
 		ctx.beginPath();
-		for (let i = 0; i < solidEnd; i++) {
-			if (i === 0) ctx.moveTo(toX(pts[i][0]), toY(pts[i][1]));
-			else ctx.lineTo(toX(pts[i][0]), toY(pts[i][1]));
-		}
+		pts.forEach(([re, im], i) => {
+			const x = cx + re * s;
+			const y = cy - im * s;
+			if (i === 0) ctx.moveTo(x, y);
+			else ctx.lineTo(x, y);
+		});
 		ctx.stroke();
-		if (escaped > 0) {
-			const a = pts[pts.length - 2];
-			const b = pts[pts.length - 1];
-			ctx.strokeStyle = `rgba(${ink},0.22)`;
-			ctx.beginPath();
-			ctx.moveTo(toX(a[0]), toY(a[1]));
-			ctx.lineTo(toX(b[0]), toY(b[1]));
-			ctx.stroke();
-		}
 		ctx.fillStyle = `rgba(${ink},0.95)`;
-		for (let i = 0; i < solidEnd; i++) {
+		pts.forEach(([re, im], i) => {
 			const d = i === 0 ? 6 : 4;
-			ctx.fillRect(toX(pts[i][0]) - d / 2, toY(pts[i][1]) - d / 2, d, d);
-		}
-		return { escaped };
+			ctx.fillRect(cx + re * s - d / 2, cy - im * s - d / 2, d, d);
+		});
+		return { converged, escaped };
 	}
 
 	function tick(now: number) {
 		const targetR = pointer.active ? (pointer.x - state.w / 2) / state.scale : F_RE;
 		const targetI = pointer.active ? (state.h / 2 - pointer.y) / state.scale : F_IM;
 		const k = reduced ? 1 : 0.12;
-		state.cR += (targetR - state.cR) * k;
-		state.cI += (targetI - state.cI) * k;
+		state.zR += (targetR - state.zR) * k;
+		state.zI += (targetI - state.zI) * k;
 
-		// Lock on the raw cursor c — the tip must actually reach ƒ.
+		// Lock on the raw cursor z₀ — the tip must actually reach ƒ.
 		const locked = pointer.active
 			&& Math.hypot(targetR - F_RE, targetI - F_IM) < LOCK_RADIUS;
 		if (locked !== state.locked) {
@@ -286,17 +274,19 @@
 			document.body.classList.toggle("f-locked", locked);
 		}
 
-		const { escaped } = draw(now);
+		const { converged, escaped } = draw(now);
 
 		if (readC) {
-			const sign = state.cI >= 0 ? "+" : "−";
-			readC.textContent = `C = ${state.cR.toFixed(3)} ${sign} ${Math.abs(state.cI).toFixed(3)}i`;
+			const sign = state.zI >= 0 ? "+" : "−";
+			readC.textContent = `Z₀ = ${state.zR.toFixed(3)} ${sign} ${Math.abs(state.zI).toFixed(3)}i`;
 		}
 		const status = locked
 			? "ƒ · LOCKED"
-			: escaped !== undefined && escaped > 0
-				? `● ESCAPES @ N=${escaped} · C ∉ M`
-				: "● BOUNDED · C ∈ M";
+			: converged
+				? "● |Z₀| < 1 · SPIRALS TO 0"
+				: escaped !== undefined && escaped > 0
+					? `● |Z₀| > 1 · BLOWS UP @ N=${escaped}`
+					: "● ON THE CIRCLE · ANGLE DOUBLING";
 		if (readStatus && status !== state.status) {
 			state.status = status;
 			readStatus.textContent = status;
