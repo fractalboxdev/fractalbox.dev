@@ -2,7 +2,7 @@
 
 The logo is an export of the `/f` visualization ([src/pages/f.astro](src/pages/f.astro)):
 the unit box plus the polyline that strokes an **F** — the powers
-z₀, z₀², z₀⁴, z₀⁸ of the seed **z₀ = 0.375 + 0.975i** under repeated squaring
+z₀, z₀², z₀⁴, z₀⁸ of the seed **z₀ = 0.363 + 0.968i** under repeated squaring
 (a nudge off the 3:41 moment of Numberphile's [Mandelbrot video](https://www.youtube.com/watch?v=FFftmWSzgmk),
 z₀ ≈ 0.362 + 0.953i — the exported mark tunes the seed for shape).
 
@@ -16,8 +16,8 @@ z₀ ≈ 0.362 + 0.953i — the exported mark tunes the seed for shape).
 - **Without the circle** — no lock ring, no F glyph, no coordinate label, no axes.
 - **Lines only — no points.** The export draws no orbit points; the page keeps its.
 - **One stroke weight across every export**: a single stroke-to-image ratio,
-  anchored on the 180px apple-touch icon at **5px** (`STROKE_RATIO = 5/180` →
-  **≈21px** on the 766 logo, floored at 2px), so the mark reads at the same
+  anchored on the 180px apple-touch icon at **4.2px** (`STROKE_RATIO = 4.2/180` →
+  **≈18px** on the 766 logo, floored at 2px), so the mark reads at the same
   boldness whether it's the full logo or a 64px favicon.
   This is heavier than the page's own strokes and intentionally does not track
   them — the reference plane scale `min(1440/3.6, 900/2.35) ≈ 382.98 px/unit`
