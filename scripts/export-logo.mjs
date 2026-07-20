@@ -74,17 +74,18 @@ function draw(size, withBg, m) {
 }
 
 // Unified stroke weight: ONE stroke-to-image ratio for every export, anchored
-// on the 180px apple-touch icon at 4px, so the mark reads at the same boldness
+// on the 180px apple-touch icon at 5px, so the mark reads at the same boldness
 // at any size. Floored at 2px so the 64px favicon stays visible where the
-// proportional stroke drops sub-2px. One alpha per mark keeps box + F a single
-// flat color.
-const STROKE_RATIO = 4 / 180;                // apple-touch 180px → 4px; ≈17px on the 766 logo
+// proportional stroke drops sub-2px.
+const STROKE_RATIO = 5 / 180;                // apple-touch 180px → 5px; ≈21px on the 766 logo
 const strokeFor = (size) => Math.max(2, size * STROKE_RATIO);
-const LOGO_METRICS = { line: strokeFor(${SIZE}), alpha: 0.55 };
-// Favicons share the ratio; alpha boosted so the thinner small marks stay legible.
+// One ink for every export: mint at 0.85 over #0a0a0a — the favicon/apple-touch
+// brightness. A single alpha per mark also keeps box + F a flat, un-stacked color.
+const INK_ALPHA = 0.85;
+const LOGO_METRICS = { line: strokeFor(${SIZE}), alpha: INK_ALPHA };
 const faviconMetrics = (size) => ({
 	line: strokeFor(size),
-	alpha: 0.85,
+	alpha: INK_ALPHA,
 });
 
 window.drawLogo = (withBg) => draw(${SIZE}, withBg, LOGO_METRICS);

@@ -16,8 +16,8 @@ z₀ ≈ 0.362 + 0.953i — the exported mark tunes the seed for shape).
 - **Without the circle** — no lock ring, no F glyph, no coordinate label, no axes.
 - **Lines only — no points.** The export draws no orbit points; the page keeps its.
 - **One stroke weight across every export**: a single stroke-to-image ratio,
-  anchored on the 180px apple-touch icon at **4px** (`STROKE_RATIO = 4/180` →
-  **≈17px** on the 766 logo, floored at 2px), so the mark reads at the same
+  anchored on the 180px apple-touch icon at **5px** (`STROKE_RATIO = 5/180` →
+  **≈21px** on the 766 logo, floored at 2px), so the mark reads at the same
   boldness whether it's the full logo or a 64px favicon.
   This is heavier than the page's own strokes and intentionally does not track
   them — the reference plane scale `min(1440/3.6, 900/2.35) ≈ 382.98 px/unit`
@@ -27,19 +27,21 @@ z₀ ≈ 0.362 + 0.953i — the exported mark tunes the seed for shape).
   `devicePixelRatio`, so its look is viewport-invariant and crisp.)
 - **Single mint tone, no overlap darkening** — unlike the page, which layers a
   dimmer box (α 0.4) under a brighter polyline (α 0.55), the export draws the
-  box and the F as **one stroked path in a single alpha (0.55)**. A lone
-  `stroke()` unions its own coverage, so where the polyline crosses the box the
-  overlap stays that flat color instead of compositing two translucent strokes
-  into a denser square. Holds for both the dark-bg and transparent variants.
-- **Mint ink** (`rgba(176, 222, 240)` — the same mint phosphor as the live
-  visualization), on `#0a0a0a` plus a transparent-background variant.
+  box and the F as **one stroked path in a single alpha (0.85)** — the
+  favicon/apple-touch brightness, applied to the full logo too so it doesn't
+  read dim. A lone `stroke()` unions its own coverage, so where the polyline
+  crosses the box the overlap stays that flat color instead of compositing two
+  translucent strokes into a denser square. Holds for the dark-bg and
+  transparent variants alike.
+- **Mint ink** (`rgba(176, 222, 240)` at α 0.85 — the same mint phosphor as the
+  live visualization), on `#0a0a0a` plus a transparent-background variant.
 
 ## Favicon
 
 The logo is also the site favicon. Same composition, single-tone treatment,
-and stroke ratio; strokes therefore scale with the icon size (floored at 2px),
-and the alpha is boosted to 0.85 so the thinner small marks stay legible at
-tab size; always on the dark background.
+stroke ratio, and ink alpha (0.85); strokes therefore scale with the icon size
+(floored at 2px) so the mark stays legible at tab size; always on the dark
+background.
 
 - [public/favicon.png](public/favicon.png) — 64×64, linked as `rel="icon"`
 - [public/apple-touch-icon.png](public/apple-touch-icon.png) — 180×180, linked as `rel="apple-touch-icon"`
