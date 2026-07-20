@@ -2,8 +2,9 @@
 
 The logo is an export of the `/f` visualization ([src/pages/f.astro](src/pages/f.astro)):
 the unit box plus the polyline that strokes an **F** — the powers
-z₀, z₀², z₀⁴, z₀⁸ of the seed **z₀ = 0.362 + 0.953i** under repeated squaring
-(the 3:41 moment of Numberphile's [Mandelbrot video](https://www.youtube.com/watch?v=FFftmWSzgmk)).
+z₀, z₀², z₀⁴, z₀⁸ of the seed **z₀ = 0.375 + 0.975i** under repeated squaring
+(a nudge off the 3:41 moment of Numberphile's [Mandelbrot video](https://www.youtube.com/watch?v=FFftmWSzgmk),
+z₀ ≈ 0.362 + 0.953i — the exported mark tunes the seed for shape).
 
 ## Requirements
 

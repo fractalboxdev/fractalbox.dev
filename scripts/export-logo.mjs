@@ -1,5 +1,5 @@
 // Export the /f visualization as a square PNG logo: unit box + the F
-// polyline (seed 0.362 + 0.953i) — no ring, no glyph, no axes.
+// polyline (seed 0.375 + 0.975i) — no ring, no glyph, no axes.
 //
 // Geometry matches the page: the plane scale is the page's min(w/3.6, h/2.35)
 // at the 1440×900 reference viewport, and the canvas is sized from it so the
@@ -24,7 +24,7 @@ const faviconDir = process.env.FAVICON_OUT ?? "public";
 const html = `<!doctype html><html><body style="margin:0">
 <canvas id="logo" width="${SIZE}" height="${SIZE}"></canvas>
 <script>
-const F_RE = 0.362, F_IM = 0.953;
+const F_RE = 0.375, F_IM = 0.975;
 const MINT = "176,222,240";
 const SPAN = ${SPAN};
 
