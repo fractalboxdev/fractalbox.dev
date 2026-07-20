@@ -1,16 +1,18 @@
 // Export the /f visualization as a square PNG logo: unit box + the F
 // polyline (seed 0.362 + 0.953i) — no ring, no glyph, no axes.
 //
-// Metrics match the page: the plane scale is the page's min(w/3.6, h/2.35)
-// at the 1440×900 reference viewport, lines are 2.6px. The canvas is sized
-// from the scale so the drawing lines up with the live page. Unlike the
-// page — which layers a dimmer box under a brighter polyline — the export
-// draws the whole mark in ONE mint tone via a single stroked path, so where
-// the polyline crosses the box the coverage is unioned, not alpha-stacked:
-// overlaps stay that flat color instead of darkening into a denser square.
+// Geometry matches the page: the plane scale is the page's min(w/3.6, h/2.35)
+// at the 1440×900 reference viewport, and the canvas is sized from it so the
+// drawing lines up with the live page. Stroke weight does not — the export
+// uses ONE stroke-to-image ratio across every size (logo + favicons) so the
+// mark reads at the same boldness everywhere. And unlike the page — which
+// layers a dimmer box under a brighter polyline — the export draws the whole
+// mark in ONE mint tone via a single stroked path, so where the polyline
+// crosses the box the coverage is unioned, not alpha-stacked: overlaps stay
+// that flat color instead of darkening into a denser square.
 //
-// Also emits favicons (same composition, size-relative strokes and
-// boosted alphas so the mark stays legible at tab size) into public/.
+// Also emits favicons (same composition and stroke ratio, alpha boosted so
+// the thinner small marks stay legible at tab size) into public/.
 import { chromium } from "playwright";
 
 const SPAN = 1.0;                                  // half-extent shown — box (±1) is 0-margin, edge to edge
@@ -71,14 +73,17 @@ function draw(size, withBg, m) {
 	ctx.stroke();
 }
 
-// Page-matched boldness: 2x the page stroke-to-box ratio (5.2px at the
-// 766 box) — a PNG is typically viewed scaled down, which visually
-// halves its strokes next to the live canvas. One alpha for the whole mark
-// (the page's polyline value) so box and F read as a single flat color.
-const LOGO_METRICS = { line: 5.2, alpha: 0.55 };
-// Favicon metrics: strokes scale with size, alpha boosted for tab-size legibility.
+// Unified stroke weight: ONE stroke-to-image ratio for every export, anchored
+// on the 180px apple-touch icon at 4px, so the mark reads at the same boldness
+// at any size. Floored at 2px so the 64px favicon stays visible where the
+// proportional stroke drops sub-2px. One alpha per mark keeps box + F a single
+// flat color.
+const STROKE_RATIO = 4 / 180;                // apple-touch 180px → 4px; ≈17px on the 766 logo
+const strokeFor = (size) => Math.max(2, size * STROKE_RATIO);
+const LOGO_METRICS = { line: strokeFor(${SIZE}), alpha: 0.55 };
+// Favicons share the ratio; alpha boosted so the thinner small marks stay legible.
 const faviconMetrics = (size) => ({
-	line: Math.max(2, size * 0.035),
+	line: strokeFor(size),
 	alpha: 0.85,
 });
 

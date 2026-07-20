@@ -14,10 +14,13 @@ z₀, z₀², z₀⁴, z₀⁸ of the seed **z₀ = 0.362 + 0.953i** under repea
 - **First 4 line strokes only** (z₀ → z₀¹⁶): the F itself, without the fly-off tail.
 - **Without the circle** — no lock ring, no F glyph, no coordinate label, no axes.
 - **Lines only — no points.** The export draws no orbit points; the page keeps its.
-- **Line boldness matches the page as seen**: 5.2px strokes — 2× the page's
-  stroke-to-box ratio, because a PNG is typically viewed scaled down, which
-  visually halves its strokes next to the live canvas. Reference plane scale
-  `min(1440/3.6, 900/2.35) ≈ 382.98 px/unit` → **766×766** canvas.
+- **One stroke weight across every export**: a single stroke-to-image ratio,
+  anchored on the 180px apple-touch icon at **4px** (`STROKE_RATIO = 4/180` →
+  **≈17px** on the 766 logo, floored at 2px), so the mark reads at the same
+  boldness whether it's the full logo or a 64px favicon.
+  This is heavier than the page's own strokes and intentionally does not track
+  them — the reference plane scale `min(1440/3.6, 900/2.35) ≈ 382.98 px/unit`
+  sets the **766×766** canvas geometry, but stroke weight is the export's own.
   (The page itself draws strokes and points *proportional to its plane scale* —
   2.6px / 4px at the reference scale — and backs its canvas at
   `devicePixelRatio`, so its look is viewport-invariant and crisp.)
@@ -32,9 +35,10 @@ z₀, z₀², z₀⁴, z₀⁸ of the seed **z₀ = 0.362 + 0.953i** under repea
 
 ## Favicon
 
-The logo is also the site favicon. Same composition and single-tone
-treatment, but strokes scale with the icon size and the alpha is boosted
-to 0.85 so the mark stays legible at tab size; always on the dark background.
+The logo is also the site favicon. Same composition, single-tone treatment,
+and stroke ratio; strokes therefore scale with the icon size (floored at 2px),
+and the alpha is boosted to 0.85 so the thinner small marks stay legible at
+tab size; always on the dark background.
 
 - [public/favicon.png](public/favicon.png) — 64×64, linked as `rel="icon"`
 - [public/apple-touch-icon.png](public/apple-touch-icon.png) — 180×180, linked as `rel="apple-touch-icon"`
