@@ -1,5 +1,5 @@
 // Export the /f visualization as a square PNG logo: unit box + the F
-// polyline (seed 0.363 + 0.968i) — no ring, no glyph, no axes.
+// polyline (seed 0.363 + 0.965i) — no ring, no glyph, no axes.
 //
 // Geometry matches the page: the plane scale is the page's min(w/3.6, h/2.35)
 // at the 1440×900 reference viewport, and the canvas is sized from it so the
@@ -24,7 +24,7 @@ const faviconDir = process.env.FAVICON_OUT ?? "public";
 const html = `<!doctype html><html><body style="margin:0">
 <canvas id="logo" width="${SIZE}" height="${SIZE}"></canvas>
 <script>
-const F_RE = 0.363, F_IM = 0.968;
+const F_RE = 0.363, F_IM = 0.965;
 const MINT = "176,222,240";
 const SPAN = ${SPAN};
 
@@ -74,10 +74,10 @@ function draw(size, withBg, m) {
 }
 
 // Unified stroke weight: ONE stroke-to-image ratio for every export, anchored
-// on the 180px apple-touch icon at 4.2px, so the mark reads at the same boldness
+// on the 180px apple-touch icon at 4.5px, so the mark reads at the same boldness
 // at any size. Floored at 2px so the 64px favicon stays visible where the
 // proportional stroke drops sub-2px.
-const STROKE_RATIO = 4.2 / 180;              // apple-touch 180px → 4.2px; ≈18px on the 766 logo
+const STROKE_RATIO = 4.5 / 180;              // apple-touch 180px → 4.5px; ≈19px on the 766 logo
 const strokeFor = (size) => Math.max(2, size * STROKE_RATIO);
 // One ink for every export: mint at 0.85 over #0a0a0a — the favicon/apple-touch
 // brightness. A single alpha per mark also keeps box + F a flat, un-stacked color.
