@@ -1,14 +1,19 @@
 // Export the /f visualization as a square PNG logo: unit box + the F
-// polyline (seed 0.362 + 0.953i) — no ring, no glyph, no axes.
+// polyline (seed 0.363 + 0.965i) — no ring, no glyph, no axes.
 //
-// Metrics match the page exactly: the plane scale is the page's
-// min(w/3.6, h/2.35) at the 1440×900 reference viewport, lines are 2.6px,
-// points 4px, with the page's stroke alphas (box 0.4, line 0.55,
-// points 0.95). The canvas is sized from the scale so the drawing is
-// pixel-identical to the live page.
+// Geometry matches the page: the plane scale is the page's min(w/3.6, h/2.35)
+// at the 1440×900 reference viewport, and the canvas is sized from it so the
+// drawing lines up with the live page. Stroke weight does not — the export
+// uses ONE stroke-to-image ratio across every size (logo + favicons), set to
+// the Airbnb Bélo's line-to-height ratio, so the mark reads at the same
+// boldness everywhere. And unlike the page — which
+// layers a dimmer box under a brighter polyline — the export draws the whole
+// mark in ONE mint tone via a single stroked path, so where the polyline
+// crosses the box the coverage is unioned, not alpha-stacked: overlaps stay
+// that flat color instead of darkening into a denser square.
 //
-// Also emits favicons (same composition, size-relative strokes and
-// boosted alphas so the mark stays legible at tab size) into public/.
+// Also emits favicons (same composition and stroke ratio, alpha boosted so
+// the thinner small marks stay legible at tab size) into public/.
 import { chromium } from "playwright";
 
 const SPAN = 1.0;                                  // half-extent shown — box (±1) is 0-margin, edge to edge
@@ -20,7 +25,7 @@ const faviconDir = process.env.FAVICON_OUT ?? "public";
 const html = `<!doctype html><html><body style="margin:0">
 <canvas id="logo" width="${SIZE}" height="${SIZE}"></canvas>
 <script>
-const F_RE = 0.362, F_IM = 0.953;
+const F_RE = 0.363, F_IM = 0.965;
 const MINT = "176,222,240";
 const SPAN = ${SPAN};
 
@@ -37,9 +42,10 @@ const pts = [[F_RE, F_IM]];
 	}
 }
 
-// m: { line, alphaBox, alphaLine } — logo uses the page's exact stroke
-// metrics; favicons scale them up for tab-size legibility. Lines only —
-// the export draws no orbit points.
+// m: { line, alpha } — one mint tone for the whole mark. The box and the F
+// polyline share a single path stroked once, so overlaps are unioned into
+// one flat color rather than compositing two translucent strokes into a
+// darker square. Lines only — the export draws no orbit points.
 function draw(size, withBg, m) {
 	const canvas = document.getElementById("logo");
 	canvas.width = size;
@@ -53,16 +59,13 @@ function draw(size, withBg, m) {
 	const s = size / (2 * SPAN);
 	const cx = size / 2, cy = size / 2;
 
-	// 0-margin box: inset by half the stroke so the full line width stays
-	// visible while the box hugs the image edge.
-	ctx.strokeStyle = "rgba(" + MINT + "," + m.alphaBox + ")";
-	ctx.lineWidth = m.line;
+	// Box + F polyline as ONE path, stroked once. 0-margin box: inset by half
+	// the stroke so the full line width stays visible while it hugs the edge.
 	const inset = m.line / 2;
-	ctx.strokeRect(cx - s + inset, cy - s + inset, 2 * (s - inset), 2 * (s - inset));
-
-	ctx.strokeStyle = "rgba(" + MINT + "," + m.alphaLine + ")";
+	ctx.strokeStyle = "rgba(" + MINT + "," + m.alpha + ")";
 	ctx.lineWidth = m.line;
 	ctx.beginPath();
+	ctx.rect(cx - s + inset, cy - s + inset, 2 * (s - inset), 2 * (s - inset));
 	pts.forEach(([re, im], i) => {
 		const x = cx + re * s, y = cy - im * s;
 		if (i === 0) ctx.moveTo(x, y);
@@ -71,14 +74,21 @@ function draw(size, withBg, m) {
 	ctx.stroke();
 }
 
-// Page-matched boldness: 2x the page stroke-to-box ratio (5.2px at the
-// 766 box) — a PNG is typically viewed scaled down, which visually
-// halves its strokes next to the live canvas.
-const LOGO_METRICS = { line: 5.2, alphaBox: 0.4, alphaLine: 0.55 };
-// Favicon metrics: strokes scale with size, alphas boosted.
+// Unified stroke weight: ONE stroke-to-image ratio for every export, matched
+// to the Airbnb Bélo — its uniform line measures 7.023 units on the symbol's
+// 99.9-unit height in the official SVG (viewBox 320.1×99.9, symbol 92.8×99.9),
+// ≈7.03% of the mark's height. Our box spans the image edge to edge, so the
+// image size IS the mark height: same ratio at every size. Floored at 2px as
+// a safety net (never hit at our sizes — 64px → 4.5px).
+const STROKE_RATIO = 7.023 / 99.9;           // Bélo parity ≈0.0703 → ≈54px on the 766 logo, 12.7px at 180, 4.5px at 64
+const strokeFor = (size) => Math.max(2, size * STROKE_RATIO);
+// One ink for every export: mint at 0.85 over #0a0a0a — the favicon/apple-touch
+// brightness. A single alpha per mark also keeps box + F a flat, un-stacked color.
+const INK_ALPHA = 0.85;
+const LOGO_METRICS = { line: strokeFor(${SIZE}), alpha: INK_ALPHA };
 const faviconMetrics = (size) => ({
-	line: Math.max(2, size * 0.035),
-	alphaBox: 0.7, alphaLine: 0.85,
+	line: strokeFor(size),
+	alpha: INK_ALPHA,
 });
 
 window.drawLogo = (withBg) => draw(${SIZE}, withBg, LOGO_METRICS);

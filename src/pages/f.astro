@@ -10,9 +10,10 @@
 // by the unit box. Inside |z₀| = 1 the powers spiral to 0; outside they
 // blow up.
 //
-// One seed is special: z₀ = 0.362 + 0.953i — at 3:41 in the video its
-// polyline strokes the character F. A dashed ring marks it; whenever the
-// cursor reaches it the whole drawing shifts from mint phosphor to amber.
+// One seed is special: z₀ = 0.363 + 0.965i — a nudge off the video's 3:41
+// value (≈0.362 + 0.953i), where the polyline strokes the character F. A
+// dashed ring marks it; whenever the cursor reaches it the whole drawing
+// shifts from mint phosphor to amber.
 ---
 <!DOCTYPE html>
 <html lang="en">
@@ -64,8 +65,8 @@
 				The angle doubling here is the germ of all that chaos.
 			</p>
 			<p>
-				At <span class="fn-math">z₀ = 0.362 + 0.953i</span> the polyline strokes an F
-				— the 3:41 moment of Numberphile's Mandelbrot video. Reach the ring
+				At <span class="fn-math">z₀ = 0.363 + 0.965i</span> the polyline strokes an F
+				— a nudge off the 3:41 moment (≈0.362 + 0.953i) of Numberphile's Mandelbrot video. Reach the ring
 				(radius 0.035) and the drawing turns amber.
 			</p>
 		</aside>
@@ -134,10 +135,11 @@
 </style>
 
 <script>
-	// The ƒ-seed — z₀ whose squaring polyline strokes an F (Numberphile
-	// FFftmWSzgmk @ 3:41). Reaching it within LOCK_RADIUS re-colors the drawing.
-	const F_RE = 0.362;
-	const F_IM = 0.953;
+	// The ƒ-seed — z₀ whose squaring polyline strokes an F, tuned off the
+	// Numberphile 3:41 value ≈ 0.362 + 0.953i (FFftmWSzgmk). Reaching it within
+	// LOCK_RADIUS re-colors the drawing.
+	const F_RE = 0.363;
+	const F_IM = 0.965;
 	const LOCK_RADIUS = 0.035;
 
 	const MAX_STEPS = 32;
@@ -250,7 +252,7 @@
 			ctx.font = '10px "JetBrains Mono", monospace';
 			ctx.textBaseline = "top";
 			ctx.fillStyle = `rgba(${ink},0.85)`;
-			ctx.fillText("0.362 + 0.953i", fx + ringR + 5, fy + ringR + 4);
+			ctx.fillText("0.363 + 0.965i", fx + ringR + 5, fy + ringR + 4);
 		}
 
 		// Powers of z₀ by repeated squaring — connected points. Inside the
