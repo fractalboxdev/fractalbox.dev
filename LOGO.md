@@ -16,8 +16,12 @@ z₀ ≈ 0.362 + 0.953i — the exported mark tunes the seed for shape).
 - **Without the circle** — no lock ring, no F glyph, no coordinate label, no axes.
 - **Lines only — no points.** The export draws no orbit points; the page keeps its.
 - **One stroke weight across every export**: a single stroke-to-image ratio,
-  anchored on the 180px apple-touch icon at **4.5px** (`STROKE_RATIO = 4.5/180` →
-  **≈19px** on the 766 logo, floored at 2px), so the mark reads at the same
+  matched to the **Airbnb Bélo's** line weight — the Bélo's uniform line
+  measures 7.023 units against its 99.9-unit symbol height in the official SVG,
+  so `STROKE_RATIO = 7.023/99.9 ≈ 0.0703` (**≈54px** on the 766 logo, 12.7px on
+  the 180px apple-touch, 4.5px on the 64px favicon; floored at 2px as a safety
+  net). Our box spans the image edge to edge, so the image size is the mark
+  height and the ratio carries over directly. The mark reads at the same
   boldness whether it's the full logo or a 64px favicon.
   This is heavier than the page's own strokes and intentionally does not track
   them — the reference plane scale `min(1440/3.6, 900/2.35) ≈ 382.98 px/unit`

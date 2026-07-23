@@ -4,8 +4,9 @@
 // Geometry matches the page: the plane scale is the page's min(w/3.6, h/2.35)
 // at the 1440×900 reference viewport, and the canvas is sized from it so the
 // drawing lines up with the live page. Stroke weight does not — the export
-// uses ONE stroke-to-image ratio across every size (logo + favicons) so the
-// mark reads at the same boldness everywhere. And unlike the page — which
+// uses ONE stroke-to-image ratio across every size (logo + favicons), set to
+// the Airbnb Bélo's line-to-height ratio, so the mark reads at the same
+// boldness everywhere. And unlike the page — which
 // layers a dimmer box under a brighter polyline — the export draws the whole
 // mark in ONE mint tone via a single stroked path, so where the polyline
 // crosses the box the coverage is unioned, not alpha-stacked: overlaps stay
@@ -73,11 +74,13 @@ function draw(size, withBg, m) {
 	ctx.stroke();
 }
 
-// Unified stroke weight: ONE stroke-to-image ratio for every export, anchored
-// on the 180px apple-touch icon at 4.5px, so the mark reads at the same boldness
-// at any size. Floored at 2px so the 64px favicon stays visible where the
-// proportional stroke drops sub-2px.
-const STROKE_RATIO = 4.5 / 180;              // apple-touch 180px → 4.5px; ≈19px on the 766 logo
+// Unified stroke weight: ONE stroke-to-image ratio for every export, matched
+// to the Airbnb Bélo — its uniform line measures 7.023 units on the symbol's
+// 99.9-unit height in the official SVG (viewBox 320.1×99.9, symbol 92.8×99.9),
+// ≈7.03% of the mark's height. Our box spans the image edge to edge, so the
+// image size IS the mark height: same ratio at every size. Floored at 2px as
+// a safety net (never hit at our sizes — 64px → 4.5px).
+const STROKE_RATIO = 7.023 / 99.9;           // Bélo parity ≈0.0703 → ≈54px on the 766 logo, 12.7px at 180, 4.5px at 64
 const strokeFor = (size) => Math.max(2, size * STROKE_RATIO);
 // One ink for every export: mint at 0.85 over #0a0a0a — the favicon/apple-touch
 // brightness. A single alpha per mark also keeps box + F a flat, un-stacked color.
